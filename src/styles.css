@@ -1,14 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap') layer(base);
-
 @import 'tailwindcss';
 
 @theme {
   --font-finlandica: 'Finlandica', system-ui, sans-serif;
 }
 
-@layer base {
-    body {
-        font-family: var(--font-finlandica);
-        background-color: red;
-    }
+@font-face {
+  font-family: 'Finlandica';
+  font-style: normal;
+  font-weight: 400;
+  src: url('app/assets/fonts/Finlandica/Finlandica-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Finlandica';
+  font-style: italic;
+  font-weight: 400;
+  src: url('app/assets/fonts/Finlandica/Finlandica-Italic.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Finlandica';
+  font-style: normal;
+  font-weight: 700;
+  src: url('app/assets/fonts/Finlandica/Finlandica-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Finlandica';
+  font-style: italic;
+  font-weight: 700;
+  src: url('app/assets/fonts/Finlandica/Finlandica-BoldItalic.ttf') format('truetype');
+}
+
+/* Переопределяем переменные Taiga UI */
+:root,
+[tuiTheme='light'] {
+  --tui-background-base: transparent !important;
+  --tui-background-base-alt: transparent !important;
+  --tui-background-elevation-1: transparent !important;
+  --tui-background-elevation-2: transparent !important;
+  --tui-background-elevation-3: transparent !important;
+  --tui-font-base: var(--font-finlandica) !important;
+  --tui-font-heading: var(--font-finlandica) !important;
+}
+
+/* Ваш градиент */
+html {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  min-height: 100vh;
+}
+
+/* Применяем шрифт глобально */
+html,
+body,
+* {
+  font-family: var(--font-finlandica) !important;
 }
