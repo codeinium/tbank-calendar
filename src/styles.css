@@ -1,14 +1,178 @@
-@import url('https://fonts.googleapis.com/css2?family=Finlandica:ital,wght@0,400..700;1,400..700&display=swap') layer(base);
+@import "tailwindcss";
 
-@import 'tailwindcss';
 
-@theme {
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Medium.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Bold.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Italic */
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Italic.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-MediumItalic.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-SemiBoldItalic.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-BoldItalic.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+
+}
+
+/* design token */
+:root {
   --font-finlandica: 'Finlandica', system-ui, sans-serif;
+  
+  --background: #FFFDF5;
+  --foreground: #2E2E2E;
+
+  --card: #FFFDF5;
+  --card-2: #cecbc1d8;
+  --card-3: #FFFBEDb3;
+  --card-4: #DFD9CCb3;
+  --card-non-incoming: #DDDDDD;
+
+  --income-background:oklch(0.8181 0.0596 131.15);
+  --income-dark: oklch(0.3255 0.0216 182.11);
+  --expense-background: oklch(0.768 0.0389 49.92);
+  --expense-dark: oklch(0.3481 0.0956 14.56);
+
+  --primary: oklch(0.9043 0.154 95.32);
+  --primary-hover: oklch(74.597% 0.13001 94.588);
+  --primary-foreground: oklch(0.3012 0 0);
+
+  --input: oklch(0.9934 0.0107 95.16);
 }
 
 @layer base {
-    body {
-        font-family: var(--font-finlandica);
-        background-color: red;
-    }
+  body {
+    font-family: var(--font-finlandica) !important;
+
+    background: linear-gradient(135deg, #E3E4E7 0%, #FAEFC2 100%);
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .bg-background {
+    background: var(--background);
+  }
+
+  .text-background {
+    color: var(--background);
+  }
+
+  .bg-foreground {
+    background: var(--foreground);
+  }
+
+  .text-foreground {
+    color: var(--foreground);
+  }
+
+  .bg-card {
+    background: var(--card);
+  }
+  .bg-card-2 {
+    background: var(--card-2);
+  }
+  .bg-card-3 {
+    background: var(--card-3);
+  }
+  .bg-card-4 {
+    background: var(--card-4);
+  }
+  .bg-card-non-incoming {
+    background: var(--card-non-incoming);
+  }
+
+  .bg-income-background {
+    background: var(--income-background);
+  }
+  .text-income-dark {
+    background: var(--income-dark);
+  }
+
+  .bg-expense-background {
+    background: var(--expense-background);
+  }
+
+  .text-expense-dark {
+    background: var(--expense-background);
+  }
+
+  .bg-primary {
+    background: var(--primary);
+  }
+
+  
+}
+
+/* taiga ui override */
+:root,
+[tuiTheme='light'] {
+  --tui-font-base: var(--font-finlandica);
+  --tui-font-heading: var(--font-finlandica);
+  --tui-font-text: var(--font-finlandica);
+
+  --tui-background-base: transparent;
+  --tui-background-base-alt: transparent;
+  --tui-background-elevation-1: transparent;
 }

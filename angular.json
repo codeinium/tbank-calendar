@@ -35,7 +35,8 @@
                 "glob": "**/*",
                 "input": "node_modules/@taiga-ui/icons/src",
                 "output": "assets/taiga-ui/icons"
-              }
+              },
+              { "glob": "**/*", "input": "src/app/assets", "output": "assets" }
             ],
             "styles": [
               "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
