@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { Transaction } from '@/app/models/transaction/model/transaction.model';
 
 export function getWeekDays(currentDate: dayjs.Dayjs, firstDayOfWeek: number): dayjs.Dayjs[] {
   const startOfWeekFromCurrentDate = currentDate.startOf('week').day(firstDayOfWeek);
@@ -78,3 +79,6 @@ export function getMonthWeeksList(
     );
 }
 
+export function filterTransactionsByDay(transactions: Transaction[], day: dayjs.Dayjs): Transaction[] {
+  return transactions.filter((t) => dayjs(t.date).isSame(day, 'day'));
+}

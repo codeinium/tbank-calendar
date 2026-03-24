@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed} from '@angular/core';
-import { CalendarService } from '../../pages/services/calendar.service';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
+import { CalendarService } from '../../services/calendar.service';
 import { AsyncPipe } from '@angular/common';
 import { WeekDay } from '@/app/models/calendar/types';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -61,7 +61,6 @@ export class CalendarSettings {
     { value: 1000, label: 'Без лимита' },
   ];
 
-  // текущий выбранный лимит как объект
   readonly selectedLimit = computed((): LimitOption => {
     const count = this.dayMaxTransaction();
     return this.transactionLimits.find((l) => l.value === count) ?? this.transactionLimits[0];

@@ -1,5 +1,5 @@
 <header
-  class="fixed z-30 left-1/2 -translate-x-1/2 top-2 w-full max-w-[1702px] mx-auto min-h-[60px] px-8 bg-background rounded-xl flex justify-between items-center"
+  class="fixed z-30 left-1/2 -translate-x-1/2 top-2 w-full max-w-[1702px] mx-auto min-h-[60px] px-8 bg-(--background) rounded-xl flex justify-between items-center"
 >
   <div class="w-full flex items-center justify-between">
     <nav class="h-full flex items-center gap-6">
@@ -10,8 +10,8 @@
           #rla="routerLinkActive"
           class="text-base h-[3.4rem] flex items-center rounded-xl px-1 transition-colors duration-200"
           [ngClass]="{
-            'bg-foreground text-background': rla.isActive,
-            'bg-background text-foreground': !rla.isActive,
+            'bg-(--foreground) text-(--background)': rla.isActive,
+            'bg-(--background) text-(--foreground)': !rla.isActive,
           }"
         >
           {{ item.label }}

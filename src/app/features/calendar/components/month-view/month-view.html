@@ -1,1 +1,29 @@
-<p>month-view works!</p>
+<div>
+  
+  <div class="grid grid-cols-7 mt-3 sticky top-[72px] z-10">
+    @for (dayLabel of orderedLabels(); track dayLabel; let index = $index) {
+      <div class="flex justify-center">
+        <div 
+          class="bg-(--card-2) w-14 lg:w-35 rounded-xl text-center text-normal py-2"
+        >
+          <span class="hidden sm:inline">{{ dayLabel }}</span>
+          <span class="sm:hidden">{{ orderedShortLabels()[index] }}</span>
+        </div>
+      </div>
+    }
+  </div>
+  
+  <div class="mt-2 flex flex-col gap-px lg:gap-1">
+    @for (week of weeks(); track $index) {
+      <div class="grid grid-cols-7 gap-px lg:gap-1">
+        @for (day of week; track day.toISOString()) {
+          <app-day-cell
+            [date]="day"
+            [isCurrentMonth]="isCurrentMonth(day)"
+            [transactions]="getTransactionsForDay(day)"
+          />
+        }
+      </div>
+    }
+  </div>
+</div>

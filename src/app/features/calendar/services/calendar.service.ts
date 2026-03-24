@@ -29,7 +29,6 @@ export class CalendarService {
   private readonly _showIncomes = signal(true);
   private readonly _showExpenses = signal(true);
 
-  // состояние
   private readonly _currentDate = signal<Dayjs>(dayjs());
   private readonly _today = signal<Dayjs>(dayjs());
 
@@ -52,7 +51,7 @@ export class CalendarService {
   constructor() {
   }
 
-  // сеттеры
+
   setView(view: CalendarView) {
     this._view.set(view);
   }
@@ -116,7 +115,6 @@ export class CalendarService {
     this._modalState.set({ date: null, transactions: [] });
   }
 
-  // опционально: инициализация с параметрами
   initialize(options?: {
     initialView?: CalendarView;
     initialDate?: Date | Dayjs;

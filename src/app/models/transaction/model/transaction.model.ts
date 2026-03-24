@@ -1,4 +1,4 @@
-import { Category } from "../../category/model/category.model";
+import { Category } from '../../category/model/category.model';
 
 export interface Transaction {
   id: string;
@@ -8,3 +8,5 @@ export interface Transaction {
   date: string;
   category: Category;
 }
+
+export type transactionType = 'income' | 'expense';

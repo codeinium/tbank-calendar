@@ -1,15 +1,13 @@
 <div class="grid grid-cols-1 lg:grid-cols-[1fr_343px] gap-3">
-  <section class="bg-card-2 rounded-2xl">
+  <section class="w-full bg-(--card-2) rounded-(--tui-radius-l) px-1 py-2.5 lg:py-5 lg:px-10">
     <app-calendar-header/>
-    <!-- @if (view$ | async; as view) {
-      <app-calendar-header></app-calendar-header>
-      @if (view === 'month') {
-        <app-month-view></app-month-view>
+      @if (view() === 'month') {
+        <app-month-view [transactions]="transactions()"></app-month-view>
       } 
       @else {
         <app-week-view></app-week-view>
       }
-    } -->
+
   </section>
   
 

@@ -1,0 +1,33 @@
+<div *ngIf="variant === 'month'"
+     class="w-39 flex items-center gap-3 h-4 lg:h-7 p-[2px] 
+            rounded-xs lg:rounded-md text-xs lg:text-sm overflow-hidden"
+     [ngClass]="isIncome ? 'bg-(--income-background) text-(--income-dark)' 
+                         : 'bg-(--expense-background) text-(--expense-dark)'">
+
+  <span class="shrink-0">
+    {{ amountLabel }} 
+  </span>
+
+  <span class="truncate min-w-0">
+    {{ transaction.category.name }}
+  </span>
+</div>
+
+<div *ngIf="variant === 'week'"
+     class="lg:min-h-12 p-[4px] rounded-xs lg:rounded-md text-xs lg:text-sm overflow-hidden"
+     [ngClass]="isIncome ? 'bg-(--income-background) text-(--income-dark)' 
+                         : 'bg-(--expense-background) text-(--expense-dark)'">
+
+  <div class="flex gap-2 overflow-hidden">
+    <span class="shrink-0">
+      {{ amountLabel }}
+    </span>
+    <span class="truncate min-w-0">
+      {{ transaction.category.name }}
+    </span>
+  </div>
+
+  <span class="break-words">
+    {{ transaction.title }}
+  </span>
+</div>

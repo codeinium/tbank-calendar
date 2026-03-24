@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CalendarService } from '../../pages/services/calendar.service';
+import { CalendarService } from '../../services/calendar.service';
 import { MONTHS, WeekItem } from '@/app/models/calendar/types';
 import { formatWeekRange, getMonthWeeksList } from '@/app/shared/config/date/date';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { CommonModule } from '@angular/common';
 import { tuiItemsHandlersProvider, TuiTextfield, TuiButton, TuiIcon } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from '@taiga-ui/kit';
-
 
 @Component({
   selector: 'app-calendar-header',
@@ -54,7 +53,7 @@ export class CalendarHeader {
   );
   readonly years = computed(() => {
     const year = this.currentYear();
-    return Array.from({ length: 11 }, (_, i) => year - 5 + i);
+    return Array.from({ length: 11 }, (_, i) => year - 9 + i);
   });
 
   stringifyMonth = (item: number) => MONTHS[item];

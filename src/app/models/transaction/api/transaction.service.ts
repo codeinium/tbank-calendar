@@ -1,33 +1,55 @@
-import { Injectable } from '@angular/core';
-import { Observable, of, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable, signal, computed, effect } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-
+// import { environment } from '@/environments/environment';
 import { Transaction } from '../model/transaction.model';
-import { ApiTransaction } from './transaction.api';
 import { TRANSACTIONS_MOCK } from './transaction.mock';
-import { mapTransaction } from './transaction.mapper';
 import { CategoryService } from '../../category/api/category.service';
 
-const USE_MOCK = true;
+const useMock = true;
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
+  private readonly _loading = signal(false);
+  private readonly _error = signal<string | null>(null);
+
+
+  private readonly _transactions = signal<Transaction[]>(
+    useMock ? TRANSACTIONS_MOCK : [],
+  );
+
+  readonly transactions = this._transactions.asReadonly();
+  readonly loading = this._loading.asReadonly();
+  readonly error = this._error.asReadonly();
+
   constructor(
     private http: HttpClient,
     private categoryService: CategoryService,
-  ) {}
+  ) {
+    this.loadTransactions();
+  }
 
-  getTransactions(): Observable<Transaction[]> {
-    if (USE_MOCK) {
-      return of(TRANSACTIONS_MOCK);
+  loadTransactions() {
+    this._loading.set(true);
+    this._error.set(null);
+
+    if (useMock) {
+      setTimeout(() => {
+        this._transactions.set(TRANSACTIONS_MOCK);
+        this._loading.set(false);
+      }, 300);
+      return;
     }
 
-    return combineLatest([
-      this.http.get<ApiTransaction[]>('/'),
-      this.categoryService.getCategories(),
-    ]).pipe(
-      map(([transactions, categories]) => transactions.map((t) => mapTransaction(t, categories))),
-    );
+    this.http.get<Transaction[]>('/api/transactions').subscribe({
+      next: (data) => {
+        this._transactions.set(data);
+        this._loading.set(false);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+        this._loading.set(false);
+      },
+    });
   }
 }

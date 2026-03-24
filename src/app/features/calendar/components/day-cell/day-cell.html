@@ -1,0 +1,31 @@
+<div >
+  <div class="flex justify-between truncate mb-1.5">
+    <div
+      class="w-4 h-4 lg:w-8 lg:h-8 rounded-sm lg:rounded-lg flex items-center justify-center text-base lg:text-2xl"
+      [class.bg-primary]="isToday()"
+    >
+      {{ dayNumber() }}
+    </div>
+    
+    @if (sumOfDay() !== 0) {
+      <span class="text-xs lg:text-xl truncate" [class]="sumClass()">
+        {{ formatSum(sumOfDay()) }} ₽
+      </span>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1 lg:gap-1.5">
+    @for (transaction of displayedTransactions(); track transaction.id) {
+      <app-transaction-card 
+        [transaction]="transaction" 
+        [variant]="view()" 
+      />
+    }
+  </div>
+  
+  <div class="w-full mt-auto flex justify-center text-2xl">
+    @if (hasMore()) {
+      <span>...</span>
+    }
+  </div>
+</div>
