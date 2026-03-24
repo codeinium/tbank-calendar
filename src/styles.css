@@ -171,7 +171,12 @@
   --tui-font-base: var(--font-finlandica);
   --tui-font-heading: var(--font-finlandica);
   --tui-font-text: var(--font-finlandica);
-
+  
+  /* --tui-text-primary: var(--foreground); */
+  --tui-text-action: var(--foreground);
+  --tui-text-primary-on-accent-1: var(--foreground);
+  --tui-background-accent-1: var(--primary);
+  --tui-background-accent-1-hover: var(--primary-hover);
   --tui-background-base: transparent;
   --tui-background-base-alt: transparent;
   --tui-background-elevation-1: transparent;

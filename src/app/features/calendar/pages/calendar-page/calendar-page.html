@@ -1,1 +1,20 @@
-<p>calendar-page works!</p>
+<div class="grid grid-cols-1 lg:grid-cols-[1fr_343px] gap-3">
+  <section class="bg-card-2 rounded-2xl">
+    <app-calendar-header/>
+    <!-- @if (view$ | async; as view) {
+      <app-calendar-header></app-calendar-header>
+      @if (view === 'month') {
+        <app-month-view></app-month-view>
+      } 
+      @else {
+        <app-week-view></app-week-view>
+      }
+    } -->
+  </section>
+  
+
+
+  <aside class="flex flex-col gap-3">
+    <app-calendar-settings></app-calendar-settings>
+  </aside>
+</div>

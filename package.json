@@ -20,8 +20,9 @@
     "@taiga-ui/cdk": "^4.74.1",
     "@taiga-ui/core": "^4.74.1",
     "@taiga-ui/event-plugins": "^4.0.2",
-    "@taiga-ui/icons": "^4.74.1",
+    "@taiga-ui/icons": "^4.76.0",
     "@taiga-ui/kit": "^4.74.1",
+    "dayjs": "^1.11.20",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

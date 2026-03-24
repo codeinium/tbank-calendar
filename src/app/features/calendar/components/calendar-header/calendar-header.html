@@ -1,0 +1,29 @@
+<div class="flex gap-3 w-full">
+  <!-- месяц -->
+  <tui-textfield tuiChevron class="w-30" [tuiTextfieldCleaner]="false" [stringify]="stringifyMonth">
+    <input tuiSelect [ngModel]="currentMonth()" (ngModelChange)="goToMonth($event)" />
+    <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="months" />
+  </tui-textfield>
+
+  <!-- год -->
+  <tui-textfield tuiChevron class="w-30" [tuiTextfieldCleaner]="false" [stringify]="stringifyYear">
+    <input tuiSelect [ngModel]="currentYear()" (ngModelChange)="goToYear($event)" />
+    <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="years()" />
+  </tui-textfield>
+
+  <!-- кнопки -->
+  <div class="flex gap-1.5 items-center">
+    <button tuiButton type="button" (click)="navigatePrev()"><tui-icon icon="@tui.arrow-left"></tui-icon></button>
+    <button tuiButton type="button" (click)="goToday()">Сегодня</button>
+    <button tuiButton type="button" (click)="navigateNext()"><tui-icon icon="@tui.arrow-right"></tui-icon></button>
+  </div>
+
+  @if (view() === 'week') {
+    <tui-textfield tuiChevron class="w-40" [tuiTextfieldCleaner]="false" [stringify]="stringifyWeek">
+      <input tuiSelect [ngModel]="currentWeek()" (ngModelChange)="goToWeek($event.start.toISOString())" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="weeks()" />
+    </tui-textfield>
+  }
+</div>
+
+<span>{{ currentDate().format('MMMM YYYY') }}</span>
