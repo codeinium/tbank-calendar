@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { WeekDay } from '@/app/models/calendar/types';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { tuiItemsHandlersProvider, TuiTextfield, TuiButton, TuiIcon } from '@taiga-ui/core';
@@ -25,7 +25,8 @@ interface LimitOption {
     TuiCheckbox,
     FormsModule,
     ReactiveFormsModule,
-  ],
+    NgClass
+],
   templateUrl: './calendar-settings.html',
   styleUrl: './calendar-settings.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

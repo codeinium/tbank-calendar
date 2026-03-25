@@ -1,14 +1,14 @@
-<div >
-  <div class="flex justify-between truncate mb-1.5">
+<div [class]="heightClass()">
+  <div class="flex justify-between items-center truncate mb-1.5">
     <div
-      class="w-4 h-4 lg:w-8 lg:h-8 rounded-sm lg:rounded-lg flex items-center justify-center text-base lg:text-2xl"
-      [class.bg-primary]="isToday()"
+      class="px-1 h-full lg:h-8 rounded-sm lg:rounded-lg flex items-center justify-center text-base sm:text-xl lg:text-2xl"
+      [ngClass]="isToday() ? 'bg-(--primary)' : ''"
     >
       {{ dayNumber() }}
     </div>
     
     @if (sumOfDay() !== 0) {
-      <span class="text-xs lg:text-xl truncate" [class]="sumClass()">
+      <span class="text-xs sm:text-base lg:text-xl " [class]="sumClass()">
         {{ formatSum(sumOfDay()) }} ₽
       </span>
     }

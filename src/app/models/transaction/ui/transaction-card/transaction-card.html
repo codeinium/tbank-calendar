@@ -1,6 +1,6 @@
 <div *ngIf="variant === 'month'"
-     class="w-39 flex items-center gap-3 h-4 lg:h-7 p-[2px] 
-            rounded-xs lg:rounded-md text-xs lg:text-sm overflow-hidden"
+     class="w-full flex sm:flex-wrap lg:items-center gap-3 h-full p-0.5 
+            rounded-md lg:rounded-md text-xs lg:text-sm overflow-hidden"
      [ngClass]="isIncome ? 'bg-(--income-background) text-(--income-dark)' 
                          : 'bg-(--expense-background) text-(--expense-dark)'">
 
@@ -14,7 +14,7 @@
 </div>
 
 <div *ngIf="variant === 'week'"
-     class="lg:min-h-12 p-[4px] rounded-xs lg:rounded-md text-xs lg:text-sm overflow-hidden"
+     class="lg:min-h-12 p-1 rounded-xs lg:rounded-md text-xs lg:text-sm overflow-hidden"
      [ngClass]="isIncome ? 'bg-(--income-background) text-(--income-dark)' 
                          : 'bg-(--expense-background) text-(--expense-dark)'">
 

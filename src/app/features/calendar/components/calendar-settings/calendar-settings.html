@@ -1,5 +1,5 @@
-<div class="px-6.5 py-4 bg-(--card-4) rounded-(--tui-radius-l) flex flex-col gap-4.25">
-  <h1 class="text-xl">Настройки календаря</h1>
+<div class="px-6.5 py-4 bg-(--card-4) rounded-(--tui-radius-l) flex flex-col gap-4.25 shadow-(--tui-shadow-m)">
+  <p class="text-2xl">Настройки календаря</p>
   <button
     tuiButton
     type="button"
@@ -26,7 +26,7 @@
     </tui-textfield>
   </label>
   <label tuiLabel>
-    <label class="text-base">Транзакций в день</label>
+    <label class="text-base">Максимум транзакций в день</label>
     <tui-textfield tuiChevron [tuiTextfieldCleaner]="false" [stringify]="stringifyDayTransaction">
       <input
         tuiSelect

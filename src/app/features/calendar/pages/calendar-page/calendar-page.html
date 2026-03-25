@@ -1,5 +1,5 @@
-<div class="grid grid-cols-1 lg:grid-cols-[1fr_343px] gap-3">
-  <section class="w-full bg-(--card-2) rounded-(--tui-radius-l) px-1 py-2.5 lg:py-5 lg:px-10">
+<div class="grid grid-cols-1 2xl:grid-cols-[1fr_343px] gap-3">
+  <section class="w-full bg-(--card-2) rounded-(--tui-radius-l) px-1 py-2.5 lg:py-5 lg:px-10 shadow-(--tui-shadow-m)">
     <app-calendar-header/>
       @if (view() === 'month') {
         <app-month-view [transactions]="transactions()"></app-month-view>

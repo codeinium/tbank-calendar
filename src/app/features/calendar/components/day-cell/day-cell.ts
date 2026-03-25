@@ -22,7 +22,7 @@ import type { CalendarView } from '@/app/models/calendar/types';
     '(click)': 'openModal()',
     '[class]': 'backgroundClass()',
     class:
-      'min-w-16 min-h-27 p-0.5 lg:min-w-15 lg:min-h-44 rounded-md lg:rounded-3xl lg:p-2.75 flex flex-col cursor-pointer',
+      'min-w-12 min-h-27 sm:min-w-6.3 sm:min-h-30 lg:min-w-15 lg:min-h-44 rounded-md sm:rounded-xl lg:rounded-3xl p-0.5 sm:p-1.5 lg:p-2.75 flex flex-col cursor-pointer shadow-(--tui-shadow-m)',
   },
 })
 export class DayCell {
@@ -81,14 +81,13 @@ export class DayCell {
     return classes.join(' ');
   });
 
-  readonly heightClass = computed(() => (this.view() === 'week' ? 'h-[1000px]' : ''));
+  readonly heightClass = computed(() => (this.view() === 'week' ? 'min-h-[1000px]' : ''));
 
   readonly sumClass = computed(() => {
     const sum = this.sumOfDay();
     if (sum === 0) return '';
     return sum > 0 ? 'text-(--income-background)' : 'text-(--expense-background)';
   });
-
 
   openModal() {
     this.calendar.openDayModal(this.date(), this.transactions());

@@ -1,4 +1,4 @@
-<div class="flex gap-3 w-full">
+<div class="flex flex-wrap gap-3 w-full">
   <tui-textfield class="w-35" tuiChevron  [tuiTextfieldCleaner]="false" [stringify]="stringifyMonth">
     <input  tuiSelect [ngModel]="currentMonth()" (ngModelChange)="goToMonth($event)" />
     <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="months" />
@@ -25,7 +25,7 @@
   </div>
 
   @if (view() === 'week') {
-    <tui-textfield tuiChevron class="w-40" [tuiTextfieldCleaner]="false" [stringify]="stringifyWeek">
+    <tui-textfield tuiChevron class="w-49" [tuiTextfieldCleaner]="false" [stringify]="stringifyWeek">
       <input tuiSelect [ngModel]="currentWeek()" (ngModelChange)="goToWeek($event.start.toISOString())" />
       <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="weeks()" />
     </tui-textfield>

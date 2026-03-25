@@ -118,7 +118,7 @@
   --card-2: #cecbc1d8;
   --card-3: #FFFBEDb3;
   --card-4: #DFD9CCb3;
-  --card-non-incoming: #DDDDDD;
+  --card-non-incoming: #cfcfcf;
   --card-calendar-item: #F3F3F3;
 
   --income-background:oklch(0.8181 0.0596 131.15);
@@ -152,4 +152,3 @@ button[tuiButton] {
 .btn-auto {
   width: fit-content;
 }
-
