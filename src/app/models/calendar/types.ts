@@ -41,3 +41,16 @@ export const WEEK_DAY_TO_NUMBER: Record<WeekDay, number> = {
     Суббота: 6,
     Воскресенье: 0,
 };
+
+
+export const weekDayLabels = [
+    'Воскресенье',
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота',
+  ];
+
+export const weekDayLabelsShort = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];

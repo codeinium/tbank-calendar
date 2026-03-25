@@ -5,6 +5,7 @@ import { CalendarService } from '@/app/features/calendar/services/calendar.servi
 import { getMonthWeeks, filterTransactionsByDay } from '@/app/shared/config/date/date';
 import type { Transaction } from '@/app/models/transaction/model/transaction.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
+import { weekDayLabels, weekDayLabelsShort } from '@/app/models/calendar/types';
 
 @Component({
   selector: 'app-month-view',
@@ -22,29 +23,16 @@ export class MonthView {
 
   readonly weeks = computed(() => getMonthWeeks(this.currentDate(), this.firstDayOfWeekNumber()));
 
-
-  private readonly weekDayLabels = [
-    'Воскресенье',
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота',
-  ];
-
-  private readonly weekDayLabelsShort = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-
   readonly orderedLabels = computed(() => {
     const firstDay = this.firstDayOfWeekNumber();
-    return [...this.weekDayLabels.slice(firstDay), ...this.weekDayLabels.slice(0, firstDay)];
+    return [...weekDayLabels.slice(firstDay), ...weekDayLabels.slice(0, firstDay)];
   });
 
   readonly orderedShortLabels = computed(() => {
     const firstDay = this.firstDayOfWeekNumber();
     return [
-      ...this.weekDayLabelsShort.slice(firstDay),
-      ...this.weekDayLabelsShort.slice(0, firstDay),
+      ...weekDayLabelsShort.slice(firstDay),
+      ...weekDayLabelsShort.slice(0, firstDay),
     ];
   });
 

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout';
 
+
 export const routes: Routes = [
     {
         path: '',
@@ -20,7 +21,7 @@ export const routes: Routes = [
                 path: 'stats',
                 loadComponent: () => 
                     import('./features/statistic/pages/statistic-page/statistic-page').then(m => m.StatisticPageComponent)
-            }
+            }   
         ]
     }
 ];
