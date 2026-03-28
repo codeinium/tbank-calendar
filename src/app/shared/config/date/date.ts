@@ -38,7 +38,7 @@ export function getWeekRange(
 
 export function formatWeekRange(currentDate: dayjs.Dayjs, firstDayOfWeek: number): string {
   const { start, end } = getWeekRange(currentDate, firstDayOfWeek);
-  /* 
+  /*
   если неделя в одном месяце
   start.isSame(end, "month") проверяет одинаковый ли месяц у начала и конца недели
    */
@@ -79,6 +79,9 @@ export function getMonthWeeksList(
     );
 }
 
-export function filterTransactionsByDay(transactions: Transaction[], day: dayjs.Dayjs): Transaction[] {
+export function filterTransactionsByDay(
+  transactions: Transaction[],
+  day: dayjs.Dayjs,
+): Transaction[] {
   return transactions.filter((t) => dayjs(t.date).isSame(day, 'day'));
 }
