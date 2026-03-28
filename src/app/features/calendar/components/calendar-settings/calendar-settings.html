@@ -1,0 +1,49 @@
+<div class="px-6.5 py-4 bg-(--card-4) rounded-(--tui-radius-l) flex flex-col gap-4.25 shadow-(--tui-shadow-m)">
+  <p class="text-2xl">Настройки календаря</p>
+  <button
+    tuiButton
+    type="button"
+    class="btn-fixed"
+    [appearance]="view() === 'month' ? 'primary' : 'secondary'"
+    (click)="setView('month')"
+  >
+    Месяц
+  </button>
+  <button
+    tuiButton
+    type="button"
+    class="btn-fixed"
+    [appearance]="view() === 'week' ? 'primary' : 'secondary'"
+    (click)="setView('week')"
+  >
+    Неделя
+  </button>
+  <label tuiLabel>
+    <label class="text-base">Первый день недели</label>
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
+      <input tuiSelect [ngModel]="firstDayOfWeek()" (ngModelChange)="setFirstDayOfWeek($event)" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="weekDays" />
+    </tui-textfield>
+  </label>
+  <label tuiLabel>
+    <label class="text-base">Максимум транзакций в день</label>
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false" [stringify]="stringifyDayTransaction">
+      <input
+        tuiSelect
+        [ngModel]="selectedLimit()"
+        (ngModelChange)="setDayMaxTransaction($event.value)"
+      />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="transactionLimits" />
+    </tui-textfield>
+  </label>
+  <div class="flex items-center gap-2">
+    <input tuiCheckbox type="checkbox" [ngModel]="true" (ngModelChange)="setShowExpenses($event)" />
+    <label class="text-base">Показывать расходы</label>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <input tuiCheckbox type="checkbox" [ngModel]="true" (ngModelChange)="setShowIncomes($event)" />
+    <label class="text-base">Показывать доходы</label>
+  </div>
+</div>
+

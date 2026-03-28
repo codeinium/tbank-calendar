@@ -1,3 +1,154 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
 
-@import 'tailwindcss';
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Medium.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-SemiBold.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Bold.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Italic */
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-Italic.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-MediumItalic.ttf")
+    format("truetype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-SemiBoldItalic.ttf")
+    format("truetype");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Finlandica";
+  src: url("/assets/fonts/Finlandica/Finlandica-BoldItalic.ttf")
+    format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+
+@layer base {
+  body {
+    background: linear-gradient(135deg, #E3E4E7 0%, #FAEFC2 100%);
+    min-height: 100vh;
+  }
+}
+
+
+/* taiga ui override */
+:root,
+[tuiTheme='light'] {
+  --tui-font-base: 'Finlandica', system-ui, sans-serif;
+  --tui-font-heading: 'Finlandica', system-ui, sans-serif;
+  --tui-font-text: 'Finlandica', system-ui, sans-serif;
+  
+  --tui-text-action: #2E2E2E;
+  --tui-text-primary-on-accent-1: #2E2E2E;
+  --tui-background-accent-1: #FFDE57;
+  --tui-background-accent-1-hover: #c7ab3d;
+  --tui-background-accent-1-pressed: #998227;
+
+  --tui-radius-xs: 0.25rem;
+  --tui-radius-s: 0.5rem;
+  --tui-radius-m: 0.75rem;
+  --tui-radius-l: 1rem;
+  --tui-radius-xl: 1.5rem;
+
+  --tui-height-l: 36px;  
+  --tui-font-size-l: 16px;
+
+  --tui-shadow-s: 0 4px 10px rgba(0, 0, 0, 0.25);
+  --tui-shadow-m: 0 4px 10px rgba(0, 0, 0, 0.15);
+  --tui-shadow-l: 0 8px 20px rgba(0, 0, 0, 0.18);
+
+
+  --background: #FFFDF5;
+  --foreground: #2E2E2E;
+
+  --card: #FFFDF5;
+  --card-2: #cecbc1d8;
+  --card-3: #FFFBEDb3;
+  --card-4: #DFD9CCb3;
+  --card-non-incoming: #cfcfcf;
+  --card-calendar-item: #F3F3F3;
+
+  --income-background:oklch(0.8181 0.0596 131.15);
+  --income-dark: oklch(0.3255 0.0216 182.11);
+  --expense-background: oklch(0.768 0.0389 49.92);
+  --expense-dark: oklch(0.3481 0.0956 14.56);
+
+  --primary: oklch(0.9043 0.154 95.32);
+  --primary-hover: oklch(74.597% 0.13001 94.588);
+  --primary-foreground: oklch(0.3012 0 0);
+
+  --input: oklch(0.9934 0.0107 95.16);
+
+  --tui-background-base: transparent;
+  --tui-background-base-alt: transparent;
+  --tui-background-elevation-1: transparent;
+}
+
+
+button[tuiButton] {
+  font-weight: normal;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-fixed {
+  width: 146px;
+}
+
+.btn-auto {
+  width: fit-content;
+}
