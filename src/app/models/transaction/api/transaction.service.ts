@@ -1,7 +1,6 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
-// import { environment } from '@/environments/environment';
 import { Transaction } from '../model/transaction.model';
 import { TRANSACTIONS_MOCK } from './transaction.mock';
 import { CategoryService } from '../../category/api/category.service';
