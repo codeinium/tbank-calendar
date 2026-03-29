@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, computed, effect } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
+import dayjs from '@/app/shared/config/dayjs/dayjs-config'
 import { CalendarSettings } from '../../components/calendar-settings/calendar-settings';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MonthView } from '../../components/month-view/month-view';
@@ -20,7 +21,35 @@ export class CalendarPageComponent {
   private transactionService = inject(TransactionService);
 
   readonly view = this.calendar.view;
-  readonly transactions = this.transactionService.transactions;
-  readonly loading = this.transactionService.loading;
-  readonly error = this.transactionService.error;
+
+  readonly range = computed(() => {
+    const view = this.calendar.view();
+    const date = this.calendar.currentDate();
+
+    if (view === 'month') {
+      return {
+        from: dayjs(date).startOf('month').toISOString(),
+        to: dayjs(date).endOf('month').toISOString(),
+      };
+    }
+
+    return {
+      from: dayjs(date).startOf('week').toISOString(),
+      to: dayjs(date).endOf('week').toISOString(),
+    };
+  });
+
+  constructor() {
+    effect(() => {
+      const { from, to } = this.range();
+
+      this.transactionService.loadTransactions(from, to);
+    });
+  }
+
+  readonly transactions = computed(() => {
+    const { from, to } = this.range();
+
+    return this.transactionService.getTransactions(from, to);
+  });
 }

@@ -1,1 +1,47 @@
-<p>chart-pie works!</p>
+@if (transactions.length > 0) {
+  <div class="flex flex-col items-center mt-6 relative">
+    <canvas
+      baseChart
+      [data]="chartData"
+      [options]="chartOptions"
+      [type]="'doughnut'"
+      class="w-44! h-44! drop-shadow-xl"
+    >
+    </canvas>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl">Траты</div>
+  </div>
+
+  @if (chartData.labels && chartData.labels.length > 0) {
+    <div class="mt-5 flex gap-2 flex-wrap">
+      @for (label of visibleLabels; track $index) {
+        <div class="flex items-center gap-1">
+          <div
+            class="w-3.25 h-3.25 rounded-2xl"
+            [style.background]="chartData.datasets[0].backgroundColor[$index]"
+          ></div>
+          <span class="text-base">{{ label }}</span>
+        </div>
+      }
+      
+      @if (hasMoreCategories && !isExpanded) {
+        <button 
+          (click)="toggleExpand()"
+          class="text-base font-medium cursor-pointer border-none"
+        >
+          ... ({{ remainingCount }})
+        </button>
+      }
+      
+      @if (isExpanded && hasMoreCategories) {
+        <button 
+          (click)="toggleExpand()"
+          class="text-base font-medium cursor-pointer border-none"
+        >
+          Скрыть
+        </button>
+      }
+    </div>
+  }
+} @else {
+  <p class="mt-3 text-base">Нет данных для отображения</p>
+}

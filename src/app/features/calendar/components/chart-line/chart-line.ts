@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Transaction } from '@/app/models/transaction/model/transaction.model';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-chart-line',
@@ -7,4 +8,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './chart-line.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartLine {}
+export class ChartLine {
+  @Input() transactions: Transaction[] = [];
+}
