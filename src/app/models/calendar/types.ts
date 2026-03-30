@@ -1,6 +1,7 @@
 import dayjs from '@/app/shared/config/dayjs/dayjs-config'
 
 export type CalendarView = 'month' | 'week';
+export type ChartView = 'pie' | 'line';
 
 export type WeekDay =
   | 'Понедельник'

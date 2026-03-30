@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Category } from '../model/category.model';
 import { CATEGORIES_MOCK } from './category.mock';
@@ -11,15 +11,25 @@ const USE_MOCK = true;
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService {
-  constructor(private http: HttpClient) {}
+  private readonly _categories = signal<Category[]>([]);
 
-  getCategories(): Observable<Category[]> {
+  readonly categories = this._categories.asReadonly();
+
+  constructor(private http: HttpClient) {
+    this.loadCategories();
+  }
+
+  loadCategories() {
     if (USE_MOCK) {
-      return of(CATEGORIES_MOCK);
+      this._categories.set(CATEGORIES_MOCK);
+      return;
     }
 
-    return this.http
-      .get<ApiCategory[]>('/')
-      .pipe(map((data) => data.map(mapCategory)));
+    this.http
+      .get<ApiCategory[]>('/api/categories')
+      .pipe(map((data) => data.map(mapCategory)))
+      .subscribe((data) => {
+        this._categories.set(data);
+      });
   }
 }

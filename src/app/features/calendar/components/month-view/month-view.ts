@@ -1,11 +1,8 @@
-import { Component, inject, input, computed } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BaseCalendarView } from '../base-calendar-view/base-calendar-view';
 import { DayCell } from '../day-cell/day-cell';
-import { CalendarService } from '@/app/features/calendar/services/calendar.service';
-import { getMonthWeeks, filterTransactionsByDay } from '@/app/shared/config/date/date';
-import type { Transaction } from '@/app/models/transaction/model/transaction.model';
-import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { weekDayLabels, weekDayLabelsShort } from '@/app/models/calendar/types';
+import { getMonthWeeks } from '@/app/shared/config/date/date';
 
 @Component({
   selector: 'app-month-view',
@@ -13,34 +10,16 @@ import { weekDayLabels, weekDayLabelsShort } from '@/app/models/calendar/types';
   imports: [CommonModule, DayCell],
   templateUrl: './month-view.html',
 })
-export class MonthView {
-  readonly transactions = input.required<Transaction[]>();
+export class MonthView extends BaseCalendarView {
+  protected override getCalendarDays() {
+    const weeks = getMonthWeeks(this.currentDate(), this.firstDayOfWeekNumber());
 
-  private calendar = inject(CalendarService);
-
-  readonly currentDate = this.calendar.currentDate;
-  readonly firstDayOfWeekNumber = this.calendar.firstDayOfWeekNumber;
-
-  readonly weeks = computed(() => getMonthWeeks(this.currentDate(), this.firstDayOfWeekNumber()));
-
-  readonly orderedLabels = computed(() => {
-    const firstDay = this.firstDayOfWeekNumber();
-    return [...weekDayLabels.slice(firstDay), ...weekDayLabels.slice(0, firstDay)];
-  });
-
-  readonly orderedShortLabels = computed(() => {
-    const firstDay = this.firstDayOfWeekNumber();
-    return [
-      ...weekDayLabelsShort.slice(firstDay),
-      ...weekDayLabelsShort.slice(0, firstDay),
-    ];
-  });
-
-  isCurrentMonth(day: dayjs.Dayjs): boolean {
-    return day.isSame(this.currentDate(), 'month');
-  }
-
-  getTransactionsForDay(day: dayjs.Dayjs): Transaction[] {
-    return filterTransactionsByDay(this.transactions(), day);
+    return weeks.map((week) =>
+      week.map((date) => ({
+        date,
+        isCurrentMonth: this.isCurrentMonth(date),
+        transactions: this.getTransactionsForDay(date),
+      })),
+    );
   }
 }

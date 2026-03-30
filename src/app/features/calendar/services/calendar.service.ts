@@ -2,7 +2,7 @@ import { Injectable, signal, computed, Signal } from '@angular/core';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { Dayjs } from 'dayjs';
 import { Transaction } from '@/app/models/transaction/model/transaction.model';
-import { CalendarView, WeekDay, WEEK_DAY_TO_NUMBER } from '@/app/models/calendar/types';
+import { CalendarView, WeekDay, WEEK_DAY_TO_NUMBER, ChartView } from '@/app/models/calendar/types';
 
 export interface ModalState {
   date: Dayjs | null;
@@ -28,6 +28,7 @@ export class CalendarService {
   private readonly _dayMaxTransaction = signal(2);
   private readonly _showIncomes = signal(true);
   private readonly _showExpenses = signal(true);
+  private readonly _chartView = signal<ChartView>('line');
 
   private readonly _currentDate = signal<Dayjs>(dayjs());
   private readonly _today = signal<Dayjs>(dayjs());
@@ -44,6 +45,7 @@ export class CalendarService {
   readonly dayMaxTransaction: Signal<number> = this._dayMaxTransaction.asReadonly();
   readonly showIncomes: Signal<boolean> = this._showIncomes.asReadonly();
   readonly showExpenses: Signal<boolean> = this._showExpenses.asReadonly();
+  readonly chartView: Signal<ChartView> = this._chartView.asReadonly();
   readonly currentDate: Signal<Dayjs> = this._currentDate.asReadonly();
   readonly today: Signal<Dayjs> = this._today.asReadonly();
   readonly modalState: Signal<ModalState> = this._modalState.asReadonly();
@@ -66,6 +68,9 @@ export class CalendarService {
   }
   setShowExpenses(show: boolean) {
     this._showExpenses.set(show);
+  }
+  setChartView(chartView: ChartView) {
+    this._chartView.set(chartView);
   }
   setCurrentDate(date: Dayjs | Date) {
     this._currentDate.set(dayjs.isDayjs(date) ? date : dayjs(date));
