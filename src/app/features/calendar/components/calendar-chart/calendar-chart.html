@@ -1,0 +1,28 @@
+<div class="h-full min-h-94 py-4 bg-(--card-3) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+  <div class="flex justify-between px-6.5">
+    <p class="text-2xl">Статистика</p>
+    <div class="flex gap-2">
+      <button
+        tuiButton
+        type="button"
+        [appearance]="chartView() === 'pie' ? 'primary' : 'secondary'"
+        (click)="setChartView('pie')"
+      >
+        <img src="assets/icons/icon-pie-chart.svg" alt="icon pie-chart" class="h-7.5" />
+      </button>
+      <button
+        tuiButton
+        type="button"
+        [appearance]="chartView() === 'line' ? 'primary' : 'secondary'"
+        (click)="setChartView('line')"
+      >
+        <img src="assets/icons/icon-line-chart.svg" alt="icon line-chart" class="h-5.5" />
+      </button>
+    </div>
+  </div>
+  @if (chartView() === 'pie') {
+    <app-chart-pie [transactions]="transactions"></app-chart-pie>
+  } @else {
+    <app-chart-line [transactions]="transactions"></app-chart-line>
+  }
+</div>
