@@ -1,16 +1,20 @@
-import { ApiTransaction } from './transaction.api';
 import { Transaction } from '../model/transaction.model';
-import { Category } from '../../category/model/category.model';
+import { ApiTransaction } from './transaction.api';
 
-export function mapTransaction(api: ApiTransaction, categories: Category[]): Transaction {
-  const category = categories.find((c) => c.id === api.category_id);
-
+/**
+ * Маппинг API транзакции в модель
+ */
+export function mapTransaction(api: ApiTransaction): Transaction {
   return {
     id: api.id,
-    title: api.description,
+    from_account_name: api.from_account_name,
+    to_account_name: api.to_account_name,
+    counterparty_name: api.counterparty_name,
+    category_name: api.category_name,
     amount: api.amount,
     type: api.type,
-    date: api.transaction_date,
-    category: category!,
+    transaction_date: api.transaction_date,
+    description: api.description,
+    category_color: api.category_color,
   };
 }
