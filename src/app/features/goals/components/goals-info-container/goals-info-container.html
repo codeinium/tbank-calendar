@@ -1,0 +1,29 @@
+<div class="flex flex-col gap-6">
+  <div class="flex gap-3 items-center">
+    <h1 class="text-[2.25rem]">Цель 1</h1>
+    <img src="assets/icons/icon-edit.svg" alt="edit" class="h-6 cursor-pointer" />
+  </div>
+  <p class="text-base">Осталось дней до закрытия цели: 52</p>
+  <div
+    class="w-full py-4 px-5 flex flex-col bg-(--card-6) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
+  >
+    <p class="text-base">Конечная сумма</p>
+    <p class="text-[2.25rem]">₽ 50 000</p>
+    <div class="flex gap-2.5 items-end">
+      <p class="text-base">Уже внесено: 35 000 ₽</p>
+      <button tuiButton type="button">Внести</button>
+      <button tuiButton type="button">Вывести</button>
+    </div>
+    <div class="mt-1 flex items-center gap-2.5">
+      <div class="flex-1 h-2.5 bg-(--primary) rounded-2xl overflow-hidden">
+        <div class="w-[70%] h-full bg-(--foreground) rounded-2xl"></div>
+      </div>
+      <div class="text-base">70%</div>
+    </div>
+  </div>
+  <div class="py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+    @for (item of weekDayLabels; track $index) {
+        <p></p>
+    }
+  </div>
+</div>

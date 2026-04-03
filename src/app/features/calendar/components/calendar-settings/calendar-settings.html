@@ -1,4 +1,4 @@
-<div class="px-6.5 py-4 bg-(--card-4) rounded-(--tui-radius-l) flex flex-col gap-4.25 shadow-(--tui-shadow-m)">
+<div class="px-6.5 min-w-86 py-4 bg-(--card-4) rounded-(--tui-radius-l) flex flex-col gap-4.25 shadow-(--tui-shadow-m)">
   <p class="text-2xl">Настройки календаря</p>
   <button
     tuiButton
@@ -14,7 +14,9 @@
     type="button"
     class="btn-fixed"
     [appearance]="view() === 'week' ? 'primary' : 'secondary'"
-    (click)="setView('week')"
+    (click)="
+      setView('week');
+      setDayMaxTransaction(1000)"
   >
     Неделя
   </button>
