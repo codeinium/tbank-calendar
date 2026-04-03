@@ -123,6 +123,7 @@
   --card-6: #DDDCD9;
   --card-non-incoming: #cfcfcf;
   --card-calendar-item: #F3F3F3;
+  --progress: #FFB753;
 
   --income-background:oklch(0.8181 0.0596 131.15);
   --income-dark: oklch(0.3255 0.0216 182.11);
