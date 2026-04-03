@@ -1,0 +1,57 @@
+export type GoalStatus = 'active' | 'achieved' | 'closed' | 'forfeited';
+export type BillingCycle = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+/* для списка */
+export interface Goal {
+  id: string;
+  name: string;
+  targetAmount: number;
+  currentAmount: number;
+  status: GoalStatus;
+}
+
+/* полная версия */
+export interface GoalDetails extends Goal {
+  accountId: string;
+  deadline: string;
+  achievedAt: string | null;
+  hardMode: boolean;
+  autoPay: boolean;
+}
+
+/* создание цели */
+export interface CreateGoalRequest {
+  name: string;
+  targetAmount: number;
+  deadline: string;
+  hardMode: boolean;
+  autoPay: boolean;
+  accountId?: string;
+  billingCycle?: BillingCycle;
+  billingInterval?: number;
+  autoPayAmount?: number;
+}
+
+/* пополнение/снятие */
+export interface GoalTransactionRequest {
+  id: number;
+  amount: number;
+  accountId: string;
+}
+
+/* изменение цели (название, дедлайн) */
+export interface UpdateGoalRequest {
+    id: number;
+    name: string;
+    dedline: string;
+}
+
+/* изменение цели (автопополнение) */
+export interface UpdateGoalAutoPayRequest {
+  id: string;
+  isActive: boolean;
+  accountId?: string;
+  billingCycle?: BillingCycle;
+  billingInterval?: number;
+  amount?: number;
+}
