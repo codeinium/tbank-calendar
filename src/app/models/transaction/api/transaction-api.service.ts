@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 import { Transaction, TransactionsQueryParams } from '../model/transaction.model';
-import { ApiTransaction, ApiTransactionsQueryParams } from './transaction.api';
-import { mapTransaction } from './transaction.mapper';
 
 const USE_MOCK = true;
 
@@ -33,9 +30,7 @@ export class TransactionApiService {
       httpParams = httpParams.set('dateTo', params.dateTo);
     }
 
-    return this.http
-      .get<ApiTransaction[]>(`${this.apiUrl}/transactions`, { params: httpParams })
-      .pipe(map((data) => data.map(mapTransaction)));
+    return this.http.get<Transaction[]>(`${this.apiUrl}/transactions`, { params: httpParams });
   }
 
   // ========== Mock данные ==========
