@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 import { Subscription, CreateSubscriptionRequest } from '../model/subscription.model';
 import { ScheduledPayment, CreateScheduledPaymentRequest } from '../model/scheduled-payment.model';
@@ -15,41 +13,82 @@ const USE_MOCK = true;
 export class ReminderPaymentService {
   private readonly apiUrl = '/api/v1';
 
-  constructor(private http: HttpClient) {}
+  private readonly _subscriptions = signal<Subscription[]>([]);
+  private readonly _scheduledPayments = signal<ScheduledPayment[]>([]);
+  private readonly _loading = signal(false);
+  private readonly _error = signal<string | null>(null);
 
-  /**
-   * Получить все подписки
-   * GET /api/v1/subscriptions
-   */
-  getSubscriptions(): Observable<Subscription[]> {
-    if (USE_MOCK) {
-      return of(this.getMockSubscriptions());
-    }
+  readonly subscriptions = this._subscriptions.asReadonly();
+  readonly scheduledPayments = this._scheduledPayments.asReadonly();
+  readonly loading = this._loading.asReadonly();
+  readonly error = this._error.asReadonly();
 
-    return this.http
-      .get<ApiSubscription[]>(`${this.apiUrl}/subscriptions`)
-      .pipe(map((data) => data.map(mapSubscription)));
+  constructor(private http: HttpClient) {
+    this.loadSubscriptions();
+    this.loadScheduledPayments();
   }
 
   /**
-   * Получить все запланированные платежи
-   * GET /api/v1/payments
+   * Загрузить все подписки
+   * GET /api/v1/subscriptions
    */
-  getScheduledPayments(): Observable<ScheduledPayment[]> {
+  loadSubscriptions() {
+    this._loading.set(true);
+    this._error.set(null);
+
     if (USE_MOCK) {
-      return of(this.getMockScheduledPayments());
+      setTimeout(() => {
+        this._subscriptions.set(this.getMockSubscriptions());
+        this._loading.set(false);
+      }, 300);
+      return;
     }
 
-    return this.http
-      .get<ApiScheduledPayment[]>(`${this.apiUrl}/payments`)
-      .pipe(map((data) => data.map(mapScheduledPayment)));
+    this.http.get<ApiSubscription[]>(`${this.apiUrl}/subscriptions`).subscribe({
+      next: (data) => {
+        this._subscriptions.set(data.map(mapSubscription));
+        this._loading.set(false);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+        this._loading.set(false);
+      },
+    });
+  }
+
+  /**
+   * Загрузить все запланированные платежи
+   * GET /api/v1/payments
+   */
+  loadScheduledPayments() {
+    this._loading.set(true);
+    this._error.set(null);
+
+    if (USE_MOCK) {
+      setTimeout(() => {
+        this._scheduledPayments.set(this.getMockScheduledPayments());
+        this._loading.set(false);
+      }, 300);
+      return;
+    }
+
+    this.http.get<ApiScheduledPayment[]>(`${this.apiUrl}/payments`).subscribe({
+      next: (data) => {
+        this._scheduledPayments.set(data.map(mapScheduledPayment));
+        this._loading.set(false);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+        this._loading.set(false);
+      },
+    });
   }
 
   /**
    * Создать подписку
    * POST /api/v1/subscriptions
    */
-  createSubscription(request: CreateSubscriptionRequest): Observable<Subscription> {
+  createSubscription(request: CreateSubscriptionRequest) {
     const apiRequest: ApiCreateSubscriptionRequest = {
       name: request.name,
       description: request.description,
@@ -62,19 +101,26 @@ export class ReminderPaymentService {
     };
 
     if (USE_MOCK) {
-      return of(this.createMockSubscription(apiRequest));
+      const newSubscription = this.createMockSubscription(apiRequest);
+      this._subscriptions.update((subs) => [...subs, newSubscription]);
+      return;
     }
 
-    return this.http
-      .post<ApiSubscription>(`${this.apiUrl}/subscriptions`, apiRequest)
-      .pipe(map(mapSubscription));
+    this.http.post<ApiSubscription>(`${this.apiUrl}/subscriptions`, apiRequest).subscribe({
+      next: (data) => {
+        this._subscriptions.update((subs) => [...subs, mapSubscription(data)]);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+      },
+    });
   }
 
   /**
    * Создать запланированный платеж
    * POST /api/v1/scheduled-payments
    */
-  createScheduledPayment(request: CreateScheduledPaymentRequest): Observable<ScheduledPayment> {
+  createScheduledPayment(request: CreateScheduledPaymentRequest) {
     const apiRequest: ApiCreateScheduledPaymentRequest = {
       title: request.title,
       description: request.description,
@@ -87,12 +133,19 @@ export class ReminderPaymentService {
     };
 
     if (USE_MOCK) {
-      return of(this.createMockScheduledPayment(apiRequest));
+      const newPayment = this.createMockScheduledPayment(apiRequest);
+      this._scheduledPayments.update((payments) => [...payments, newPayment]);
+      return;
     }
 
-    return this.http
-      .post<ApiScheduledPayment>(`${this.apiUrl}/scheduled-payments`, apiRequest)
-      .pipe(map(mapScheduledPayment));
+    this.http.post<ApiScheduledPayment>(`${this.apiUrl}/scheduled-payments`, apiRequest).subscribe({
+      next: (data) => {
+        this._scheduledPayments.update((payments) => [...payments, mapScheduledPayment(data)]);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+      },
+    });
   }
 
   // ========== Mock данные ==========

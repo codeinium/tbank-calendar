@@ -1,40 +1,12 @@
-/**
- * Тип транзакции
- */
-export type TransactionType = 'income' | 'expense';
+import { Category } from '../../category/model/category.model';
 
-/**
- * Транзакция для календаря
- */
 export interface Transaction {
-  /** UUID транзакции */
   id: string;
-  /** Имя отправителя (от кого пришли деньги) */
-  from_account_name: string;
-  /** Имя получателя (кому пришли деньги) */
-  to_account_name: string;
-  /** Название контрагента (если трата не между счетами, например "Пятерочка") */
-  counterparty_name: string;
-  /** Название категории */
-  category_name: string;
-  /** Сумма */
+  title: string;
   amount: number;
-  /** Тип транзакции */
-  type: TransactionType;
-  /** Дата транзакции */
-  transaction_date: string;
-  /** Описание */
-  description: string;
-  /** Цвет категории */
-  category_color: string;
+  type: 'income' | 'expense';
+  date: string;
+  category: Category;
 }
 
-/**
- * Параметры для запроса транзакций
- */
-export interface TransactionsQueryParams {
-  /** Дата начала (dateFrom) */
-  dateFrom?: string;
-  /** Дата окончания (dateTo) */
-  dateTo?: string;
-}
+export type transactionType = 'income' | 'expense';

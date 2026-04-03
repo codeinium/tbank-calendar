@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
 import {
   Goal,
@@ -25,45 +23,85 @@ const USE_MOCK = true;
 export class GoalsService {
   private readonly apiUrl = '/api/v1';
 
-  constructor(private http: HttpClient) {}
+  private readonly _goals = signal<Goal[]>([]);
+  private readonly _selectedGoal = signal<GoalDetails | null>(null);
+  private readonly _loading = signal(false);
+  private readonly _error = signal<string | null>(null);
 
-  /**
-   * Получить все цели (краткий список)
-   * GET /api/v1/goals
-   */
-  getGoals(): Observable<Goal[]> {
-    if (USE_MOCK) {
-      return of(this.getMockGoals());
-    }
+  readonly goals = this._goals.asReadonly();
+  readonly selectedGoal = this._selectedGoal.asReadonly();
+  readonly loading = this._loading.asReadonly();
+  readonly error = this._error.asReadonly();
 
-    return this.http
-      .get<ApiGoal[]>(`${this.apiUrl}/goals`)
-      .pipe(map((data) => data.map(mapGoal)));
+  constructor(private http: HttpClient) {
+    this.loadGoals();
   }
 
   /**
-   * Получить детальную информацию о цели
+   * Загрузить все цели (краткий список)
+   * GET /api/v1/goals
+   */
+  loadGoals() {
+    this._loading.set(true);
+    this._error.set(null);
+
+    if (USE_MOCK) {
+      setTimeout(() => {
+        this._goals.set(this.getMockGoals());
+        this._loading.set(false);
+      }, 300);
+      return;
+    }
+
+    this.http.get<ApiGoal[]>(`${this.apiUrl}/goals`).subscribe({
+      next: (data) => {
+        this._goals.set(data.map(mapGoal));
+        this._loading.set(false);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+        this._loading.set(false);
+      },
+    });
+  }
+
+  /**
+   * Загрузить детальную информацию о цели
    * GET /api/v1/goals/{goalId}
    */
-  getGoalDetails(goalId: string): Observable<GoalDetails> {
+  loadGoalDetails(goalId: string) {
+    this._loading.set(true);
+    this._error.set(null);
+
     if (USE_MOCK) {
       const mockGoal = this.getMockGoalDetails(goalId);
       if (!mockGoal) {
-        throw new Error(`Goal with id ${goalId} not found`);
+        this._error.set(`Goal with id ${goalId} not found`);
+        this._loading.set(false);
+        return;
       }
-      return of(mockGoal);
+      this._selectedGoal.set(mockGoal);
+      this._loading.set(false);
+      return;
     }
 
-    return this.http
-      .get<ApiGoalDetails>(`${this.apiUrl}/goals/${goalId}`)
-      .pipe(map(mapGoalDetails));
+    this.http.get<ApiGoalDetails>(`${this.apiUrl}/goals/${goalId}`).subscribe({
+      next: (data) => {
+        this._selectedGoal.set(mapGoalDetails(data));
+        this._loading.set(false);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+        this._loading.set(false);
+      },
+    });
   }
 
   /**
    * Создать цель
    * POST /api/v1/goals
    */
-  createGoal(request: CreateGoalRequest): Observable<GoalDetails> {
+  createGoal(request: CreateGoalRequest) {
     const apiRequest: ApiCreateGoalRequest = {
       name: request.name,
       target_amount: request.target_amount,
@@ -77,60 +115,113 @@ export class GoalsService {
     };
 
     if (USE_MOCK) {
-      return of(this.createMockGoal(apiRequest));
+      const newGoal = this.createMockGoal(apiRequest);
+      this._goals.update((goals) => [...goals, mapGoal(newGoal as any)]);
+      this._selectedGoal.set(newGoal);
+      return;
     }
 
-    return this.http
-      .post<ApiGoalDetails>(`${this.apiUrl}/goals`, apiRequest)
-      .pipe(map(mapGoalDetails));
+    this.http.post<ApiGoalDetails>(`${this.apiUrl}/goals`, apiRequest).subscribe({
+      next: (data) => {
+        const mapped = mapGoalDetails(data);
+        this._goals.update((goals) => [...goals, { ...mapped }]);
+        this._selectedGoal.set(mapped);
+      },
+      error: (err) => {
+        this._error.set(err.message);
+      },
+    });
   }
 
   /**
    * Пополнить цель
    * POST /api/v1/goals/{goalId}/deposit
    */
-  depositToGoal(goalId: string, request: GoalTransactionRequest): Observable<GoalDetails> {
+  depositToGoal(goalId: string, request: GoalTransactionRequest) {
     const apiRequest: ApiGoalTransactionRequest = {
       amount: request.amount,
       account_id: request.account_id,
     };
 
     if (USE_MOCK) {
-      return of(this.mockDepositToGoal(goalId, apiRequest));
+      const updated = this.mockDepositToGoal(goalId, apiRequest);
+      this._selectedGoal.set(updated);
+      this._goals.update((goals) =>
+        goals.map((g) =>
+          g.id === goalId
+            ? { ...g, current_amount: updated.current_amount, status: updated.status }
+            : g,
+        ),
+      );
+      return;
     }
 
-    return this.http
-      .post<ApiGoalDetails>(`${this.apiUrl}/goals/${goalId}/deposit`, apiRequest)
-      .pipe(map(mapGoalDetails));
+    this.http.post<ApiGoalDetails>(`${this.apiUrl}/goals/${goalId}/deposit`, apiRequest).subscribe({
+      next: (data) => {
+        const mapped = mapGoalDetails(data);
+        this._selectedGoal.set(mapped);
+        this._goals.update((goals) =>
+          goals.map((g) =>
+            g.id === goalId
+              ? { ...g, current_amount: mapped.current_amount, status: mapped.status }
+              : g,
+          ),
+        );
+      },
+      error: (err) => {
+        this._error.set(err.message);
+      },
+    });
   }
 
   /**
    * Снять с цели
    * POST /api/v1/goals/{goalId}/withdraw
    */
-  withdrawFromGoal(goalId: string, request: GoalTransactionRequest): Observable<GoalDetails> {
+  withdrawFromGoal(goalId: string, request: GoalTransactionRequest) {
     const apiRequest: ApiGoalTransactionRequest = {
       amount: request.amount,
       account_id: request.account_id,
     };
 
     if (USE_MOCK) {
-      return of(this.mockWithdrawFromGoal(goalId, apiRequest));
+      const updated = this.mockWithdrawFromGoal(goalId, apiRequest);
+      this._selectedGoal.set(updated);
+      this._goals.update((goals) =>
+        goals.map((g) =>
+          g.id === goalId
+            ? { ...g, current_amount: updated.current_amount, status: updated.status }
+            : g,
+        ),
+      );
+      return;
     }
 
-    return this.http
+    this.http
       .post<ApiGoalDetails>(`${this.apiUrl}/goals/${goalId}/withdraw`, apiRequest)
-      .pipe(map(mapGoalDetails));
+      .subscribe({
+        next: (data) => {
+          const mapped = mapGoalDetails(data);
+          this._selectedGoal.set(mapped);
+          this._goals.update((goals) =>
+            goals.map((g) =>
+              g.id === goalId
+                ? { ...g, current_amount: mapped.current_amount, status: mapped.status }
+                : g,
+            ),
+          );
+        },
+        error: (err) => {
+          this._error.set(err.message);
+        },
+      });
   }
 
   /**
    * Изменить настройки автопополнения
    * PATCH /api/v1/goals/{goalId}/auto-pay
    */
-  updateGoalAutoPay(
-    goalId: string,
-    request: UpdateGoalAutoPayRequest,
-  ): Observable<GoalDetails> {
+  updateGoalAutoPay(goalId: string, request: UpdateGoalAutoPayRequest) {
     const apiRequest: ApiUpdateGoalAutoPayRequest = {
       goal_id: request.goal_id,
       is_active: request.is_active,
@@ -141,12 +232,21 @@ export class GoalsService {
     };
 
     if (USE_MOCK) {
-      return of(this.mockUpdateGoalAutoPay(goalId, apiRequest));
+      const updated = this.mockUpdateGoalAutoPay(goalId, apiRequest);
+      this._selectedGoal.set(updated);
+      return;
     }
 
-    return this.http
+    this.http
       .patch<ApiGoalDetails>(`${this.apiUrl}/goals/${goalId}/auto-pay`, apiRequest)
-      .pipe(map(mapGoalDetails));
+      .subscribe({
+        next: (data) => {
+          this._selectedGoal.set(mapGoalDetails(data));
+        },
+        error: (err) => {
+          this._error.set(err.message);
+        },
+      });
   }
 
   // ========== Mock данные ==========
@@ -241,15 +341,14 @@ export class GoalsService {
       throw new Error(`Goal with id ${goalId} not found`);
     }
 
+    const newAmount = goal.current_amount + request.amount;
+    const isAchieved = newAmount >= goal.target_amount;
+
     return {
       ...goal,
-      current_amount: goal.current_amount + request.amount,
-      status:
-        goal.current_amount + request.amount >= goal.target_amount ? 'achieved' : goal.status,
-      achieved_at:
-        goal.current_amount + request.amount >= goal.target_amount
-          ? new Date().toISOString()
-          : goal.achieved_at,
+      current_amount: newAmount,
+      status: isAchieved ? 'achieved' : goal.status,
+      achieved_at: isAchieved ? new Date().toISOString() : goal.achieved_at,
     };
   }
 
@@ -269,10 +368,7 @@ export class GoalsService {
     };
   }
 
-  private mockUpdateGoalAutoPay(
-    goalId: string,
-    request: ApiUpdateGoalAutoPayRequest,
-  ): GoalDetails {
+  private mockUpdateGoalAutoPay(goalId: string, request: ApiUpdateGoalAutoPayRequest): GoalDetails {
     const goal = this.getMockGoalDetails(goalId);
     if (!goal) {
       throw new Error(`Goal with id ${goalId} not found`);

@@ -1,10 +1,7 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-// import { environment } from '@/environments/environment';
 import { Transaction } from '../model/transaction.model';
 import { TRANSACTIONS_MOCK } from './transaction.mock';
-import { CategoryService } from '../../category/api/category.service';
 
 const useMock = true;
 
@@ -12,20 +9,13 @@ const useMock = true;
 export class TransactionService {
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
-
-
-  private readonly _transactions = signal<Transaction[]>(
-    useMock ? TRANSACTIONS_MOCK : [],
-  );
+  private readonly _transactions = signal<Transaction[]>([]);
 
   readonly transactions = this._transactions.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
 
-  constructor(
-    private http: HttpClient,
-    private categoryService: CategoryService,
-  ) {
+  constructor(private http: HttpClient) {
     this.loadTransactions();
   }
 

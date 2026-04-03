@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import { Transaction, TransactionsQueryParams } from '../model/transaction.model';
+import { TransactionDto } from './transaction.dto';
 
 const USE_MOCK = true;
 
@@ -10,32 +9,83 @@ const USE_MOCK = true;
 export class TransactionApiService {
   private readonly apiUrl = '/api/v1';
 
+  private readonly _cache = signal<Record<string, TransactionDto[]>>({});
+  private readonly _loading = signal<Record<string, boolean>>({});
+  private readonly _error = signal<Record<string, string | null>>({});
+
+  readonly cache = this._cache.asReadonly();
+
   constructor(private http: HttpClient) {}
 
+  private getKey(dateFrom: string, dateTo: string): string {
+    return `${dateFrom}_${dateTo}`;
+  }
+
   /**
-   * Получить транзакции за период
+   * Загрузить транзакции за период
    * GET /api/v1/transactions?dateFrom=&dateTo=
    */
-  getTransactions(params?: TransactionsQueryParams): Observable<Transaction[]> {
+  loadTransactions(dateFrom: string, dateTo: string) {
+    const key = this.getKey(dateFrom, dateTo);
+
+    if (this._cache()[key]) return;
+
+    this._loading.update((l) => ({ ...l, [key]: true }));
+    this._error.update((e) => ({ ...e, [key]: null }));
+
     if (USE_MOCK) {
-      return of(this.getMockTransactions());
+      setTimeout(() => {
+        const filtered = this.getMockTransactions().filter((t) => {
+          return t.transaction_date >= dateFrom && t.transaction_date <= dateTo;
+        });
+
+        this._cache.update((c) => ({ ...c, [key]: filtered }));
+        this._loading.update((l) => ({ ...l, [key]: false }));
+      }, 300);
+      return;
     }
 
-    let httpParams = new HttpParams();
+    this.http
+      .get<TransactionDto[]>(`${this.apiUrl}/transactions`, {
+        params: { dateFrom, dateTo },
+      })
+      .subscribe({
+        next: (data) => {
+          this._cache.update((c) => ({ ...c, [key]: data }));
+          this._loading.update((l) => ({ ...l, [key]: false }));
+        },
+        error: (err) => {
+          this._error.update((e) => ({ ...e, [key]: err.message }));
+          this._loading.update((l) => ({ ...l, [key]: false }));
+        },
+      });
+  }
 
-    if (params?.dateFrom) {
-      httpParams = httpParams.set('dateFrom', params.dateFrom);
-    }
-    if (params?.dateTo) {
-      httpParams = httpParams.set('dateTo', params.dateTo);
-    }
+  /**
+   * Статус загрузки для диапазона
+   */
+  isLoading(dateFrom: string, dateTo: string): boolean {
+    return this._loading()[this.getKey(dateFrom, dateTo)] ?? false;
+  }
 
-    return this.http.get<Transaction[]>(`${this.apiUrl}/transactions`, { params: httpParams });
+  /**
+   * Ошибка для диапазона
+   */
+  getError(dateFrom: string, dateTo: string): string | null {
+    return this._error()[this.getKey(dateFrom, dateTo)] ?? null;
+  }
+
+  /**
+   * Получить транзакции из кэша для диапазона
+   */
+  getTransactions(dateFrom: string, dateTo: string): TransactionDto[] {
+    const key = this.getKey(dateFrom, dateTo);
+    return this._cache()[key] ?? [];
   }
 
   // ========== Mock данные ==========
 
-  private getMockTransactions(): Transaction[] {
+  private getMockTransactions(): TransactionDto[] {
     return [
       {
         id: 'txn-1',
