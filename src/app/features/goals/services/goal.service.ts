@@ -11,7 +11,7 @@ import {
   UpdateGoalAutoPayRequest,
 } from '@/app/models/goal/model/goal.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class GoalsPageStore {
   private readonly _goals = signal<Goal[]>([]);
   private readonly _selectedGoal = signal<GoalDetails | null>(null);

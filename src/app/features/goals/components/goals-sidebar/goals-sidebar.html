@@ -1,11 +1,22 @@
 <aside class="h-full p-5 rounded-(--tui-radius-l) shadow-(--tui-shadow-s) bg-(--card-4)">
-    <button
-    tuiButton
-    type="button"
-    class="w-full text-base">Создать цель</button>
-    <h2 class="mt-5 mb-2 text-base">Ваши цели</h2>
-    <ul class="flex flex-col gap-4">
-        <li class="w-full h-8 pl-3 text-base flex items-center rounded-(--tui-radius-l) bg-(--background) shadow-(--tui-shadow-m) cursor-pointer">Цель 1</li>
-        <li class="w-full h-8 pl-3 text-base flex items-center rounded-(--tui-radius-l) text-(--background) bg-(--foreground) shadow-(--tui-shadow-m) cursor-pointer">Цель 2</li>
-    </ul>
+  <button tuiButton type="button" class="w-full text-base">Создать цель</button>
+  <h2 class="mt-5 mb-2 text-base">Ваши цели</h2>
+  <ul class="flex flex-col gap-4">
+    @for (item of goals(); track item.id) {
+      <li>
+        <button
+          type="button"
+          class="w-full h-8 pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer"
+          [ngClass]="
+            item.id === selectedGoal()?.id
+              ? 'text-(--background) bg-(--foreground)'
+              : 'bg-(--background) shadow-(--tui-shadow-m) hover:bg-(--background-hover) transition delay-150 focus:bg-(--foreground-hover)'
+          "
+          (click)="selectGoal(item.id)"
+        >
+          {{ item.name }}
+        </button>
+      </li>
+    }
+  </ul>
 </aside>
