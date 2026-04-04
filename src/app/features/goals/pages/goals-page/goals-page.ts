@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { tuiItemsHandlersProvider, TuiTextfield, TuiButton, TuiIcon } from '@taiga-ui/core';
 import { GoalsSidebar } from '../../components/goals-sidebar/goals-sidebar'; 
 import { GoalsInfoContainer } from '../../components/goals-info-container/goals-info-container';
 
 @Component({
   selector: 'app-goals-page',
-  imports: [TuiButton, GoalsSidebar, GoalsInfoContainer],
+  imports: [ GoalsSidebar, GoalsInfoContainer],
   templateUrl: './goals-page.html',
   styleUrl: './goals-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoalsPageComponent {}
+export class GoalsPageComponent {
+  
+}

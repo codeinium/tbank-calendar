@@ -9,17 +9,6 @@ export interface ModalState {
   transactions: Transaction[];
 }
 
-export interface CalendarState {
-  view: CalendarView;
-  firstDayOfWeek: WeekDay;
-  firstDayOfWeekNumber: number;
-  dayMaxTransaction: number;
-  showIncomes: boolean;
-  showExpenses: boolean;
-  currentDate: Dayjs;
-  today: Dayjs;
-}
-
 @Injectable({ providedIn: 'root' })
 export class CalendarService {
   // настройки — сигналы

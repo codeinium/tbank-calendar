@@ -66,7 +66,7 @@ export function mapUpdateGoal(model: UpdateGoalRequest): ApiUpdateGoalRequest {
   return {
     id: model.id,
     name: model.name,
-    dedline: model.dedline
+    deadline: model.deadline
   }
 }
 

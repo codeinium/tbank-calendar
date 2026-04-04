@@ -38,7 +38,7 @@ export interface ApiCreateGoalRequest {
 
 /* пополнение/снятие */
 export interface ApiGoalTransactionRequest {
-  id: number;
+  id: string;
   amount: number;
   account_id: string;
 }
@@ -47,7 +47,7 @@ export interface ApiGoalTransactionRequest {
 export interface ApiUpdateGoalRequest {
     id: number;
     name: string;
-    dedline: string;
+    deadline: string;
 }
 
 /* изменение цели (автопополнение) */
