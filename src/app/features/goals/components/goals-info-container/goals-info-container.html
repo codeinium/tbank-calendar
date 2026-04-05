@@ -1,45 +1,58 @@
-<div class="flex flex-col gap-6">
-  <div class="flex gap-3 items-center">
-    <h1 class="text-[2.25rem]">Цель 1</h1>
-    <img src="assets/icons/icon-edit.svg" alt="edit" class="h-6 cursor-pointer" />
-  </div>
-  <span class="text-base">Осталось дней до закрытия цели: 52</span>
-  <div
-    class="w-full py-4 px-5 flex flex-col bg-(--card-6) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
-  >
-    <p class="text-base">Конечная сумма</p>
-    <p class="text-[2.25rem]">₽ 50 000</p>
-    <div class="flex gap-2.5 items-end">
-      <span class="text-base">Уже внесено: 35 000 ₽</span>
-      <button tuiButton type="button">Внести</button>
-      <button tuiButton type="button">Вывести</button>
-    </div>
-    <div class="mt-1 flex items-center gap-2.5">
-      <div class="flex-1 h-2.5 bg-(--primary) rounded-2xl overflow-hidden">
-        <div class="w-[70%] h-full bg-(--foreground) rounded-2xl"></div>
+@switch (viewState()) {
+  @case ('loading') {
+    <app-goals-info-skeleton></app-goals-info-skeleton>
+  }
+  @case ('empty') {
+    <p class="text-xl">Создайте свою первую цель!</p>
+  }
+  @case ('not-selected') {
+    <p class="text-xl">Выберите цель из спика или создайте новую!</p>
+  }
+  @case ('ready') {
+    <div class="flex flex-col gap-4">
+      <div class="flex gap-3 items-center">
+        <h1 class="text-[2.25rem]">{{ goal()?.name }}</h1>
+        <img src="assets/icons/icon-edit.svg" alt="edit" class="h-6 cursor-pointer" />
       </div>
-      <div class="text-base">70%</div>
-    </div>
-  </div>
-  <div class="w-58 py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-    <span class="text-base">3 дня подряд 🔥</span>
-    <div class="flex flex-row gap-1">
-      @for (item of weekDayLabels; track $index) {
-        <div class="flex flex-col items-center">
-          <span>{{ item }}</span>
-          <div class="w-6 h-6 rounded-2xl bg-white"></div>
+      <span class="text-base">Осталось дней до закрытия цели: {{ restDays() }}</span>
+      <div
+        class="w-full py-4 px-5 flex flex-col bg-(--card-6) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
+      >
+        <p class="text-base">Конечная сумма</p>
+        <p class="text-[2.25rem]">₽ {{ goal()?.targetAmount }}</p>
+        <div class="flex gap-2.5 items-end">
+          <span class="text-base">Уже внесено: {{ goal()?.currentAmount }}</span>
+          <button tuiButton type="button">Внести</button>
+          <button tuiButton type="button">Вывести</button>
         </div>
-      }
+        <div class="mt-1 flex items-center gap-2.5">
+          <div class="flex-1 h-2.5 bg-(--primary) rounded-2xl overflow-hidden">
+            <div class="h-full bg-(--foreground) rounded-2xl" [style.width.%]="percent()"></div>
+          </div>
+          <div class="text-base">{{ percent() }} %</div>
+        </div>
+      </div>
+      <div class="w-58 py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+        <span class="text-base">3 дня подряд 🔥</span>
+        <div class="flex flex-row gap-1">
+          @for (item of weekDayLabels; track $index) {
+            <div class="flex flex-col items-center">
+              <span>{{ item }}</span>
+              <div class="w-6 h-6 rounded-2xl bg-white"></div>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+        <div class="flex gap-2">
+          <button tuiButton type="button">Дни</button>
+          <button tuiButton type="button">Недели</button>
+          <button tuiButton type="button">Месяцы</button>
+        </div>
+      </div>
+      <div class="py-4 px-5 bg-(--card-6) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+        <span class="text-base">История транзакций за август 2025</span>
+      </div>
     </div>
-  </div>
-  <div class="py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-    <div class="flex gap-2">
-      <button tuiButton type="button">Дни</button>
-      <button tuiButton type="button">Недели</button>
-      <button tuiButton type="button">Месяцы</button>
-    </div>
-  </div>
-  <div class="py-4 px-5 bg-(--card-6) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-    <span class="text-base">История транзакций за август 2025</span>
-  </div>
-</div>
+  }
+}

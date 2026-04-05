@@ -15,46 +15,48 @@ import {
 export class GoalsPageStore {
   private readonly _goals = signal<Goal[]>([]);
   private readonly _selectedGoal = signal<GoalDetails | null>(null);
-  private readonly _loading = signal(false);
+  private readonly _loadingList = signal(false);
+  private readonly _loadingSelectedGoal = signal(false);
   private readonly _error = signal<string | null>(null);
 
   readonly goals = this._goals.asReadonly();
   readonly selectedGoal = this._selectedGoal.asReadonly();
-  readonly loading = this._loading.asReadonly();
+  readonly loadingList = this._loadingList.asReadonly();
+  readonly loadingSelectedGlobal = this._loadingSelectedGoal.asReadonly();
   readonly error = this._error.asReadonly();
 
   constructor(private goalsService: GoalsService) {}
 
   /* загрузка списка */
   loadGoals() {
-    this._loading.set(true);
+    this._loadingList.set(true);
     this._error.set(null);
 
     this.goalsService.getGoals().subscribe({
       next: (goals) => {
         this._goals.set(goals);
-        this._loading.set(false);
+        this._loadingList.set(false);
       },
       error: (err) => {
         this._error.set(err.message);
-        this._loading.set(false);
+        this._loadingList.set(false);
       },
     });
   }
 
   /* выбор цели */
   selectGoal(goalId: string) {
-    this._loading.set(true);
+    this._loadingSelectedGoal.set(true);
     this._error.set(null);
 
     this.goalsService.getGoalDetails(goalId).subscribe({
       next: (goal) => {
         this._selectedGoal.set(goal);
-        this._loading.set(false);
+        this._loadingSelectedGoal.set(false);
       },
       error: (err) => {
         this._error.set(err.message);
-        this._loading.set(false);
+        this._loadingSelectedGoal.set(false);
       },
     });
   }

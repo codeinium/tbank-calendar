@@ -34,7 +34,7 @@ import {
 } from './goal.mock';
 
 const USE_MOCK = true;
-const MOCK_DELAY = 800;
+const MOCK_DELAY = 3000;
 
 @Injectable({ providedIn: 'root' })
 export class GoalsService {
