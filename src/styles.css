@@ -114,13 +114,21 @@
 
   --background: #FFFDF5;
   --foreground: #2E2E2E;
+  --background-hover: #D7D7D7;
+  --foreground-hover: #acacac;
+
+  --loading-1: #A7A297;
+  --loading-2: #dfd8c9;
 
   --card: #FFFDF5;
   --card-2: #cecbc1d8;
   --card-3: #FFFBEDb3;
   --card-4: #DFD9CCb3;
+  --card-5: #B7B1A7b3;
+  --card-6: #DDDCD9;
   --card-non-incoming: #cfcfcf;
   --card-calendar-item: #F3F3F3;
+  --progress: #FFB753;
 
   --income-background:oklch(0.8181 0.0596 131.15);
   --income-dark: oklch(0.3255 0.0216 182.11);
