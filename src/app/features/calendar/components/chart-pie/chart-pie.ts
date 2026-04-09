@@ -21,11 +21,11 @@ export class ChartPie {
     this._transactions()
       .filter((t) => t.type === 'expense')
       .forEach((t) => {
-        const current = map.get(t.category.name);
+        const current = map.get(t.categoryName);
 
-        map.set(t.category.name, {
+        map.set(t.categoryName, {
           amount: (current?.amount ?? 0) + t.amount,
-          color: t.category.color,
+          color: t.categoryColor,
         });
       });
 

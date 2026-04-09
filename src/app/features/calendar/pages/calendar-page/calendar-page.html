@@ -2,17 +2,17 @@
   <section class="w-full bg-(--card-2) rounded-(--tui-radius-l) px-1 py-2.5 lg:py-5 lg:px-10 shadow-(--tui-shadow-m)">
     <app-calendar-header/>
       @if (view() === 'month') {
-        <app-month-view [transactions]="transactions()"></app-month-view>
+        <app-month-view [transactions]="vm().transactions"></app-month-view>
       } 
       @else {
-        <app-week-view [transactions]="transactions()"></app-week-view>
+        <app-week-view [transactions]="vm().transactions"></app-week-view>
       }
   </section>
   
 
 
   <aside class="flex flex-col gap-3">
-    <app-calendar-chart [transactions]="transactions()"></app-calendar-chart>
+    <app-calendar-chart [transactions]="vm().transactions"></app-calendar-chart>
     <app-calendar-settings></app-calendar-settings>
   </aside>
 </div>
