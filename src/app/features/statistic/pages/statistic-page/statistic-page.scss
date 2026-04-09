@@ -1,3 +1,536 @@
-:host {
+$color-text: var(--tui-text-primary, #2e2e2e);
+$color-text-secondary: var(--loading-1, #a7a297);
+$color-gold-light: var(--tui-background-accent-1, #ffde57);
+$color-positive-bg: rgba(123, 168, 107, 0.2);
+$color-negative-bg: rgba(168, 107, 107, 0.2);
+$color-positive: #7ba86b;
+$color-negative: #a86b6b;
+$color-card: var(--card, #fffdf5);
+$color-card-3: var(--card-3, #fffbedb3);
+$color-card-4: var(--card-4, #dfd9ccb3);
+$color-goal-fill: var(--foreground, #2e2e2e);
+$shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+$radius: var(--tui-radius-l, 1rem);
+
+.stats-page {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  color: $color-text;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  margin: 0;
+  color: $color-text-secondary;
+}
+
+.period-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.period-buttons {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.25rem;
+  border-radius: var(--tui-radius-s, 0.5rem);
+}
+
+.period-btn {
+  padding: 0.4rem 1.25rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  color: #6b632d;
+  &:hover {
+    background: rgba(255, 222, 87, 0.2);
+  }
+  &.active {
+    background: $color-gold-light;
+    color: $color-text;
+  }
+}
+
+.period-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  color: #6b632d;
+  &:hover {
+    background: rgba(255, 222, 87, 0.2);
+  }
+}
+
+.year-select,
+.month-select {
+  padding: 0.4rem 0.75rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  color: $color-text;
+  font-weight: 500;
+}
+.month-select {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.summary-card {
+  background: $color-card;
+  border-radius: $radius;
+  padding: 1.25rem 1.5rem;
+  box-shadow: $shadow;
+  transition: box-shadow 0.2s;
+  &:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+  .card-main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .card-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    &.positive {
+      background: $color-positive-bg;
+      color: $color-positive;
+    }
+    &.negative {
+      background: $color-negative-bg;
+      color: $color-negative;
+    }
+  }
+  .card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 0.75rem;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: $color-text-secondary;
+  }
+  .meta-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $color-gold-light;
+  }
+  .card-footer {
+    font-size: 0.75rem;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+}
+
+.middle-row {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.donut-card {
+  background: $color-card-4;
+  border-radius: $radius;
+  padding: 1.25rem;
+  box-shadow: $shadow;
+}
+
+.donut-header {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 0.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+}
+
+.donut-tab {
+  flex: 1;
+  padding: 0.4rem;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  color: #6b632d;
+  &.active {
+    background: $color-gold-light;
+    color: $color-text;
+  }
+}
+
+.donut-content {
+  position: relative;
+}
+.donut-chart-wrapper {
+  position: relative;
+  height: 180px;
+  margin-bottom: 1rem;
+}
+
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.donut-center-label {
   display: block;
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  margin-bottom: 0.125rem;
+}
+.donut-center-amount {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.donut-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-label {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+}
+
+.line-chart-card {
+  background: $color-card-3;
+  border-radius: $radius;
+  padding: 1.25rem;
+  box-shadow: $shadow;
+}
+.chart-card-header {
+  margin-bottom: 1rem;
+}
+.chart-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+.chart-wrapper {
+  height: 280px;
+  position: relative;
+}
+
+.subscriptions-card {
+  background: $color-card-4;
+  border-radius: $radius;
+  padding: 1.25rem;
+  box-shadow: $shadow;
+}
+.subscriptions-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+}
+.subscriptions-total {
+  margin-bottom: 0.5rem;
+}
+.subscriptions-amount {
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.subscriptions-label {
+  display: block;
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  margin-top: 0.125rem;
+}
+.subscriptions-avg {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  margin-bottom: 1rem;
+}
+
+.subscriptions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 160px;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color-gold-light;
+    border-radius: 2px;
+  }
+}
+
+.subscription-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.subscription-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+.subscription-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.subscription-name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+.subscription-date {
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+}
+.subscription-amount {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bottom-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.card-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.goals-card {
+  background: $color-card-4;
+  border-radius: $radius;
+  padding: 1.25rem;
+  box-shadow: $shadow;
+}
+.goals-subtitle {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  margin: 0 0 1rem 0;
+}
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+.goal-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.goal-name {
+  font-size: 0.8125rem;
+  min-width: 50px;
+}
+.goal-bar-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.goal-bar {
+  flex: 1;
+  height: 10px;
+  background: $color-gold-light;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.goal-bar-fill {
+  height: 100%;
+  background: $color-goal-fill;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+.goal-percent {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+  min-width: 35px;
+  text-align: right;
+}
+
+.impulse-card {
+  background: $color-card-3;
+  border-radius: $radius;
+  padding: 1.25rem;
+  box-shadow: $shadow;
+}
+.impulse-subtitle {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  margin: 0 0 1.25rem 0;
+}
+.impulse-value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+.impulse-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+.impulse-percent {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: $color-text-secondary;
+}
+.impulse-footer {
+  font-size: 0.8125rem;
+  color: $color-text-secondary;
+  margin: 0;
+}
+
+.speed-card {
+  background: $color-card-4;
+  border-radius: $radius;
+  padding: 1.25rem;
+  box-shadow: $shadow;
+}
+.speed-value {
+  margin-bottom: 0.5rem;
+}
+.speed-day {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.speed-description {
+  font-size: 0.75rem;
+  color: $color-text-secondary;
+  margin: 0 0 1rem 0;
+}
+.speed-history {
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(155, 146, 96, 0.15);
+}
+.speed-history-title {
+  font-size: 0.6875rem;
+  color: $color-text-secondary;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.speed-history p {
+  font-size: 0.75rem;
+  color: #6b632d;
+  margin: 0.125rem 0;
+}
+
+@media (max-width: 1200px) {
+  .middle-row {
+    grid-template-columns: 1fr;
+  }
+  .donut-chart-wrapper {
+    height: 200px;
+  }
+}
+@media (max-width: 900px) {
+  .stats-page {
+    padding: 1rem;
+  }
+  .summary-row,
+  .bottom-row {
+    grid-template-columns: 1fr;
+  }
+  .period-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .card-amount {
+    font-size: 1.5rem !important;
+  }
 }
