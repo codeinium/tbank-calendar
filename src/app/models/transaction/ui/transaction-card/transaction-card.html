@@ -1,43 +1,42 @@
 @switch (variant) {
   @case ('month') {
     <div
-      class="w-full flex sm:flex-wrap lg:items-center gap-3 h-full p-0.5 rounded-md lg:rounded-md text-xs lg:text-sm overflow-hidden"
+      class="w-full flex flex-col sm:flex-wrap gap-2 h-full p-0.5 rounded-md lg:rounded-md text-xs lg:text-sm overflow-hidden"
       [ngClass]="
         isIncome
           ? 'bg-(--income-background) text-(--income-dark)'
           : 'bg-(--expense-background) text-(--expense-dark)'
       "
     >
-      <span class="shrink-0">
-        {{ amountLabel }}
-      </span>
 
-      <span class="truncate min-w-0">
+      <p class="shrink-0">
+        {{ amountLabel }} {{ categotyLabel }}
+      </p>
+
+      <p class="truncate min-w-0">
         {{ title }}
-      </span>
+      </p>
     </div>
   }
   @case ('week') {
     <div
-      class="lg:min-h-12 p-1 rounded-xs lg:rounded-md text-xs lg:text-sm overflow-hidden"
+      class="lg:min-h-12 p-1 rounded-xs lg:rounded-md text-xs lg:text-sm break-all"
       [ngClass]="
         isIncome
           ? 'bg-(--income-background) text-(--income-dark)'
           : 'bg-(--expense-background) text-(--expense-dark)'
       "
     >
-      <div class="flex gap-2 overflow-hidden">
-        <span class="shrink-0">
+        <p class="shrink-0">
           {{ amountLabel }}
-        </span>
-        <span class="truncate min-w-0">
+        </p>
+        <p class="min-w-0 break-words">
           {{ title }}
-        </span>
-      </div>
+        </p>
 
-      <span class="wrap-break-words">
+      <p class="wrap-break-words">
         {{ subtitle }}
-      </span>
+      </p>
     </div>
   }
 }

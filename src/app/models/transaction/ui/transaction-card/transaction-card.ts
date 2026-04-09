@@ -17,6 +17,10 @@ export class TransactionCard {
     return this.transaction.type === 'income';
   }
 
+  get categotyLabel() {
+    return this.transaction.categoryName;
+  }
+
   get amountLabel() {
     const sign = this.isIncome ? '+' : '-';
     return `${sign}${this.transaction.amount.toLocaleString()} ₽`;
@@ -29,11 +33,6 @@ export class TransactionCard {
   get title(): string {
     const t = this.transaction;
 
-    if (t.toAccountName) {
-      return `${t.fromAccountName} → ${t.toAccountName}`;
-    }
-
-    // расход (в магазин)
     if (t.counterpartyName) {
       return t.counterpartyName;
     }
