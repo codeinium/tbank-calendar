@@ -17,6 +17,10 @@ export class TransactionCard {
     return this.transaction.type === 'income';
   }
 
+  get categotyLabel() {
+    return this.transaction.categoryName;
+  }
+
   get amountLabel() {
     const sign = this.isIncome ? '+' : '-';
     return `${sign}${this.transaction.amount.toLocaleString()} ₽`;
@@ -24,5 +28,32 @@ export class TransactionCard {
 
   get timeLabel() {
     return dayjs(this.transaction.date).format('HH:mm');
+  }
+
+  get title(): string {
+    const t = this.transaction;
+
+    if (t.counterpartyName) {
+      return t.counterpartyName;
+    }
+    if (t.toAccountName) {
+      return t.fromAccountName;
+    }
+
+    return ' ';
+  }
+
+  get subtitle(): string {
+    const t = this.transaction;
+
+    if (t.counterpartyName) {
+      return t.categoryName;
+    }
+
+    if (t.toAccountName && !t.counterpartyName) {
+      return 'Перевод';
+    }
+
+    return t.categoryName;
   }
 }
