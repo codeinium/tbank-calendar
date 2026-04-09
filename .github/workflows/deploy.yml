@@ -39,13 +39,29 @@ jobs:
         run: |
           echo "=== Dist structure ==="
           find dist -type f -name "*.html" || true
-          echo "=== Full dist tree (first 50 lines) ==="
-          find dist -type f | head -50 || true
+          echo "=== Full dist tree ==="
+          find dist -type d || true
+          ls -la dist/ || true
+          ls -la dist/*/ || true
+          ls -la dist/*/*/ || true
+
+      - name: Set upload path
+        id: set-path
+        run: |
+          if [ -d "dist/browser" ]; then
+            echo "UPLOAD_PATH=dist/browser" >> $GITHUB_OUTPUT
+          elif [ -d "dist/tbank-calendar/browser" ]; then
+            echo "UPLOAD_PATH=dist/tbank-calendar/browser" >> $GITHUB_OUTPUT
+          else
+            UPLOAD_PATH=$(find dist -name "index.html" -exec dirname {} \; | head -1)
+            echo "UPLOAD_PATH=$UPLOAD_PATH" >> $GITHUB_OUTPUT
+          fi
+          echo "Upload path: ${{ steps.set-path.outputs.UPLOAD_PATH }}"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/tbank-calendar/browser
+          path: ${{ steps.set-path.outputs.UPLOAD_PATH }}
 
   deploy:
     environment:
