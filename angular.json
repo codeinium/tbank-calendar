@@ -59,7 +59,7 @@
                 }
               ],
               "outputHashing": "all",
-              "baseHref": "/"
+              "baseHref": "/tbank-calendar/"
             },
             "development": {
               "optimization": false,
