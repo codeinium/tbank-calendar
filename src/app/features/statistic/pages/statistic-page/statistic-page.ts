@@ -269,7 +269,7 @@ export class StatisticPageComponent implements OnInit {
     const month = this.selectedMonth();
     const from = dayjs(`${year}-${String(month + 1).padStart(2, '0')}-01`).format('YYYY-MM-DD');
     const to = dayjs(`${year}-${String(month + 1).padStart(2, '0')}-28`).format('YYYY-MM-DD');
-    this.transactionService.loadTransactions(from, to);
+    this.transactionService.getTransactions(from, to).subscribe();
   }
 
   onPeriodChange(period: PeriodType) {
