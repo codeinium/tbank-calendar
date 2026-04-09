@@ -35,6 +35,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Debug - show dist structure
+        run: |
+          echo "=== Dist structure ==="
+          find dist -type f -name "*.html" || true
+          echo "=== Full dist tree (first 50 lines) ==="
+          find dist -type f | head -50 || true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
