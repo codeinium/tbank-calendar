@@ -1,12 +1,14 @@
-import { Category } from '../../category/model/category.model';
-
 export interface Transaction {
   id: string;
-  title: string;
+  fromAccountName: string;
+  toAccountName?: string | null;
+  counterpartyName?: string | null;
+  categoryName: string;
   amount: number;
   type: 'income' | 'expense';
   date: string;
-  category: Category;
+  description: string;
+  categoryColor: string;
 }
 
 export type transactionType = 'income' | 'expense';

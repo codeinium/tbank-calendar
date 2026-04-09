@@ -25,4 +25,36 @@ export class TransactionCard {
   get timeLabel() {
     return dayjs(this.transaction.date).format('HH:mm');
   }
+
+  get title(): string {
+    const t = this.transaction;
+
+    if (t.toAccountName) {
+      return `${t.fromAccountName} → ${t.toAccountName}`;
+    }
+
+    // расход (в магазин)
+    if (t.counterpartyName) {
+      return t.counterpartyName;
+    }
+    if (t.toAccountName) {
+      return t.fromAccountName;
+    }
+
+    return ' ';
+  }
+
+  get subtitle(): string {
+    const t = this.transaction;
+
+    if (t.counterpartyName) {
+      return t.categoryName;
+    }
+
+    if (t.toAccountName && !t.counterpartyName) {
+      return 'Перевод';
+    }
+
+    return t.categoryName;
+  }
 }
