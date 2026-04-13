@@ -12,7 +12,6 @@ import { CalendarPageStore } from '../../services/calendar-page.store';
 
 @Component({
   selector: 'app-calendar-page',
-  standalone: true,
   imports: [CommonModule, CalendarHeader, CalendarSettings, MonthView, WeekView, CalendarChart],
   templateUrl: './calendar-page.html',
   styleUrl: './calendar-page.scss',

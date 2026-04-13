@@ -6,7 +6,6 @@ import { getMonthWeeks } from '@/app/shared/config/date/date';
 
 @Component({
   selector: 'app-month-view',
-  standalone: true,
   imports: [CommonModule, DayCell],
   templateUrl: './month-view.html',
 })

@@ -5,7 +5,6 @@ import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 
 @Component({
   selector: 'app-transaction-card',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './transaction-card.html',
 })

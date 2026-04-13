@@ -1,8 +1,7 @@
-// goals.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, delay, map } from 'rxjs';
-
+import { environment } from '@/environments/environment';
 import {
   Goal,
   GoalDetails,
@@ -33,19 +32,19 @@ import {
   mockUpdateGoal,
 } from './goal.mock';
 
-const USE_MOCK = true;
-const MOCK_DELAY = 3000;
 
 @Injectable({ providedIn: 'root' })
 export class GoalsService {
-  private readonly apiUrl = '/api/v1';
+  private readonly apiUrl = environment.apiUrl;
+  private readonly useMock = environment.useMock;
+  private readonly mockDelay = environment.mockDelay;
 
   constructor(private http: HttpClient) {}
 
   /* список целей */
   getGoals(): Observable<Goal[]> {
-    if (USE_MOCK) {
-      return of(MOCK_GOALS).pipe(delay(MOCK_DELAY));
+    if (this.useMock) {
+      return of(MOCK_GOALS).pipe(delay(this.mockDelay));
     }
 
     return this.http.get<ApiGoal[]>(`${this.apiUrl}/goals`).pipe(map((data) => data.map(mapGoal)));
@@ -53,11 +52,11 @@ export class GoalsService {
 
   /* детали цели */
   getGoalDetails(goalId: string): Observable<GoalDetails> {
-    if (USE_MOCK) {
+    if (this.useMock) {
       const goal = getMockGoalDetails(goalId);
       if (!goal) throw new Error('Goal not found');
 
-      return of(goal).pipe(delay(MOCK_DELAY));
+      return of(goal).pipe(delay(this.mockDelay));
     }
 
     return this.http
@@ -69,9 +68,9 @@ export class GoalsService {
   createGoal(request: CreateGoalRequest): Observable<GoalDetails> {
     const apiRequest: ApiCreateGoalRequest = mapCreateGoal(request);
 
-    if (USE_MOCK) {
+    if (this.useMock) {
       const created = createMockGoal(apiRequest);
-      return of(created).pipe(delay(MOCK_DELAY));
+      return of(created).pipe(delay(this.mockDelay));
     }
 
     return this.http
@@ -83,9 +82,9 @@ export class GoalsService {
   deposit(goalId: string, request: GoalTransactionRequest): Observable<GoalDetails> {
     const apiRequest = mapTransactionGoal(request);
 
-    if (USE_MOCK) {
+    if (this.useMock) {
       const updated = mockDepositToGoal(goalId, apiRequest);
-      return of(updated).pipe(delay(MOCK_DELAY));
+      return of(updated).pipe(delay(this.mockDelay));
     }
 
     return this.http
@@ -97,9 +96,9 @@ export class GoalsService {
   withdraw(goalId: string, request: GoalTransactionRequest): Observable<GoalDetails> {
     const apiRequest = mapTransactionGoal(request);
 
-    if (USE_MOCK) {
+    if (this.useMock) {
       const updated = mockWithdrawFromGoal(goalId, apiRequest);
-      return of(updated).pipe(delay(MOCK_DELAY));
+      return of(updated).pipe(delay(this.mockDelay));
     }
 
     return this.http
@@ -111,9 +110,9 @@ export class GoalsService {
   updateGoal(goalId: string, request: UpdateGoalRequest): Observable<GoalDetails> {
     const apiRequest = mapUpdateGoal(request);
 
-    if (USE_MOCK) {
+    if (this.useMock) {
       const updated = mockUpdateGoal(goalId, apiRequest);
-      return of(updated).pipe(delay(MOCK_DELAY));
+      return of(updated).pipe(delay(this.mockDelay));
     }
 
     return this.http
@@ -125,9 +124,9 @@ export class GoalsService {
   updateGoalAutoPay(goalId: string, request: UpdateGoalAutoPayRequest): Observable<GoalDetails> {
     const apiRequest = mapUpdateGoalAutoPay(request);
 
-    if (USE_MOCK) {
+    if (this.useMock) {
       const updated = mockUpdateGoalAutoPay(goalId, apiRequest);
-      return of(updated).pipe(delay(MOCK_DELAY));
+      return of(updated).pipe(delay(this.mockDelay));
     }
 
     return this.http

@@ -6,7 +6,6 @@ import { getWeekDays } from '@/app/shared/config/date/date';
 
 @Component({
   selector: 'app-week-view',
-  standalone: true,
   imports: [CommonModule, DayCell],
   templateUrl: './week-view.html',
 })

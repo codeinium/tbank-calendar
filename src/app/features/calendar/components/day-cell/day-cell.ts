@@ -15,7 +15,6 @@ import type { CalendarView } from '@/app/models/calendar/types';
 
 @Component({
   selector: 'app-day-cell',
-  standalone: true,
   imports: [CommonModule, TransactionCard],
   templateUrl: './day-cell.html',
   host: {

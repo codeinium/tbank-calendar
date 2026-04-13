@@ -23,7 +23,6 @@ import { TuiChevron, TuiDataListWrapper, TuiSelect } from '@taiga-ui/kit';
   templateUrl: './calendar-header.html',
   styleUrl: './calendar-header.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [],
 })
 export class CalendarHeader {
   private calendar = inject(CalendarService);
