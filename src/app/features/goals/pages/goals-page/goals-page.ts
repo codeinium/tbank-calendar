@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { GoalsSidebar } from '../../components/goals-sidebar/goals-sidebar'; 
 import { GoalsInfoContainer } from '../../components/goals-info-container/goals-info-container';
+import { GoalsPageStore } from '../../services/goal.service';
 
 @Component({
   selector: 'app-goals-page',
@@ -8,6 +9,7 @@ import { GoalsInfoContainer } from '../../components/goals-info-container/goals-
   templateUrl: './goals-page.html',
   styleUrl: './goals-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [GoalsPageStore]
 })
 export class GoalsPageComponent {
   

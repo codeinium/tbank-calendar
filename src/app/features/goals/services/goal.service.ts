@@ -1,4 +1,3 @@
-// goals-page.store.ts
 import { Injectable, signal } from '@angular/core';
 import { GoalsService } from '@/app/models/goal/api/goal.service';
 

@@ -15,6 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withComponentInputBinding()),
     provideEventPlugins(),
-    provideHttpClient()
+    provideHttpClient(),
+    provideAnimations()
   ],
 };

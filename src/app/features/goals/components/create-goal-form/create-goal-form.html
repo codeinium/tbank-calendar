@@ -1,0 +1,70 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+  <label class="text-base mt-5">
+    Название
+    <tui-textfield>
+      <input tuiTextfield type="text" placeholder="Например: новый ноутбук" formControlName="name" />
+    </tui-textfield>
+  </label>
+
+  <label class="text-base">
+    Конечная сумма
+    <tui-textfield>
+      <input tuiTextfield type="number" placeholder="100 000" formControlName="targetAmount" />
+    </tui-textfield>
+  </label>
+
+  <label class="text-base">
+    Дата окончания
+    <tui-textfield>
+      <input tuiInputDate formControlName="deadline" />
+      <tui-calendar *tuiTextfieldDropdown />
+    </tui-textfield>
+  </label>
+
+  <label class="flex gap-2 items-center text-base">
+    <input tuiCheckbox type="checkbox" formControlName="hardMode" />
+    Сложный режим
+  </label>
+
+  <label class="flex gap-2 items-center text-base">
+    <input tuiCheckbox type="checkbox" formControlName="autoPay" />
+    Автопополнение
+  </label>
+
+  @if (form.get('autoPay')?.value) {
+    <div [@autoPaySlide] class="flex flex-col gap-2">
+      <label class="text-base">
+        Account ID
+        <tui-textfield>
+          <input tuiTextfield type="text" placeholder="Введите ID" formControlName="accountId" />
+        </tui-textfield>
+      </label>
+      <label tuiLabel>
+        <label class="text-base">Выберите промежуток времени</label>
+        <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
+          <input tuiSelect formControlName="billingCycle" />
+          <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="billingCycles" />
+        </tui-textfield>
+      </label>
+      <label class="text-base">
+        Интервал
+        <tui-textfield>
+          <input tuiTextfield type="number" placeholder="Например: 1" formControlName="billingInterval" />
+        </tui-textfield>
+      </label>
+
+      <label class="text-base">
+        Сумма автоплатежа
+        <tui-textfield>
+          <input tuiTextfield type="number" placeholder="Сумма" formControlName="autoPayAmount" />
+        </tui-textfield>
+      </label>
+    </div>
+  }
+
+  <div class="flex justify-center gap-10">
+    <button tuiButton type="button" (click)="close.emit()">Отмена</button>
+    <button tuiButton type="submit" [disabled]="form.invalid">Создать</button>
+  </div>
+</form>
+
