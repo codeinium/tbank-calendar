@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { DayModal } from '../../components/day-modal/day-modal';
 import { CalendarHeader } from '../../components/calendar-header/calendar-header';
 import { CalendarSettings } from '../../components/calendar-settings/calendar-settings';
 import { MonthView } from '../../components/month-view/month-view';
@@ -12,8 +12,7 @@ import { CalendarPageStore } from '../../services/calendar-page.store';
 
 @Component({
   selector: 'app-calendar-page',
-  standalone: true,
-  imports: [CommonModule, CalendarHeader, CalendarSettings, MonthView, WeekView, CalendarChart],
+  imports: [CommonModule, CalendarHeader, CalendarSettings, MonthView, WeekView, CalendarChart, DayModal],
   templateUrl: './calendar-page.html',
   styleUrl: './calendar-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

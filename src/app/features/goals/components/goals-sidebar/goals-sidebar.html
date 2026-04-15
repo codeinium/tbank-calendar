@@ -1,12 +1,14 @@
 <aside class="h-full p-5 rounded-(--tui-radius-l) shadow-(--tui-shadow-s) bg-(--card-4)">
-  <button tuiButton type="button" class="w-full text-base">Создать цель</button>
+  <button tuiButton type="button" class="w-full text-base" (click)="openModal()">
+    Создать цель
+  </button>
   <h2 class="mt-5 mb-2 text-base">Ваши цели</h2>
   <ul class="flex flex-col gap-4">
     @for (item of goals(); track item.id) {
       <li>
         <button
           type="button"
-          class="w-full h-8 pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer duration-300 hover:scale-[1.02]"
+          class="w-full min-h-8 h-full pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer duration-300 hover:scale-[1.02]"
           [ngClass]="
             item.id === selectedGoal()?.id
               ? 'text-(--background) bg-(--foreground)'
@@ -20,3 +22,10 @@
     }
   </ul>
 </aside>
+@if (isCreateModalOpen()) {
+  <app-modal-dialog
+    title="Создать новую цель"
+    (close)="closeModal()">
+    <app-create-goal-form (close)="closeModal()" />
+  </app-modal-dialog>
+}

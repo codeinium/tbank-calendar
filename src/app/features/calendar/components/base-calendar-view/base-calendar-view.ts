@@ -19,7 +19,6 @@ export interface CalendarViewData {
 }
 
 @Component({
-  standalone: true,
   imports: [CommonModule],
   template: '', // пустой — переопределяется в наследниках
 })

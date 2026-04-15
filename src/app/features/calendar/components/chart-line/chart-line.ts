@@ -6,7 +6,6 @@ import { ChartConfiguration } from 'chart.js';
 
 @Component({
   selector: 'app-chart-line',
-  standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './chart-line.html',
   styleUrl: './chart-line.scss',

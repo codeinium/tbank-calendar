@@ -5,23 +5,23 @@ import { TRANSACTIONS_MOCK } from './transaction.mock';
 import { mapTransaction } from './transaction.mapper';
 import { ApiTransaction } from './transaction.api';
 import { Observable, of, delay, map } from 'rxjs';
-
-const useMock = true;
-const MOCK_DELAY = 1000;
+import { environment } from '@/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionService {
-  private readonly apiUrl = '/api/v1';
+  private readonly apiUrl = environment.apiUrl;
+  private readonly useMock = environment.useMock;
+  private readonly mockDelay = environment.mockDelay;
 
   constructor(private http: HttpClient) {}
 
   getTransactions(from: string, to: string): Observable<Transaction[]> {
-    if (useMock) {
+    if (this.useMock) {
       const filtered = TRANSACTIONS_MOCK.filter((t) => {
         return t.date >= from && t.date <= to;
       });
 
-      return of(filtered).pipe(delay(MOCK_DELAY));
+      return of(filtered).pipe(delay(this.mockDelay));
     }
 
     return this.http

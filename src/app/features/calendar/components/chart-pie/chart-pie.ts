@@ -4,7 +4,6 @@ import { Transaction } from '@/app/models/transaction/model/transaction.model';
 
 @Component({
   selector: 'app-chart-pie',
-  standalone: true,
   imports: [BaseChartDirective],
   templateUrl: './chart-pie.html',
   styleUrls: ['./chart-pie.scss'],

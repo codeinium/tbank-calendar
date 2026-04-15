@@ -9,9 +9,10 @@ export class CalendarPageStore {
   private transactionService = inject(TransactionService);
   private calendar = inject(CalendarService);
 
-  private readonly cache = signal<Record<string, Transaction[]>>({});
-  private readonly loading = signal<Record<string, boolean>>({});
-  private readonly error = signal<Record<string, string | null>>({});
+  private readonly currentCache = signal<{ key: string; data: Transaction[] } | null>(null);
+  private readonly previousCache = signal<{ key: string; data: Transaction[] } | null>(null);
+  private readonly loading = signal<boolean>(false);
+  private readonly error = signal<string | null>(null);
 
   readonly range = computed(() => {
     const view = this.calendar.view();
@@ -38,29 +39,41 @@ export class CalendarPageStore {
     effect(() => {
       const { from, to } = this.range();
       const key = this.getKey(from, to);
+      const current = this.currentCache();
+      const previous = this.previousCache();
 
-      // если есть кеш, не загружаем
-      if (this.cache()[key]) return;
+      // 1. период не изменился — ничего не делаем
+      if (current?.key === key) {
+        this.error.set(null);
+        return;
+      }
 
-      this.loading.update((l) => ({ ...l, [key]: true }));
-      this.error.update((e) => ({ ...e, [key]: null }));
+      // 2. пользователь вернулся к предыдущему периоду — восстанавливаем из кэша
+      //    меняем местами: предыдущий становится текущим, текущий — предыдущим
+      if (previous?.key === key) {
+        this.currentCache.set(previous);
+        this.previousCache.set(current);
+        this.loading.set(false);
+        this.error.set(null);
+        return;
+      }
+
+      // 3. новый период: сохраняем текущий как предыдущий, загружаем данные
+      if (current) {
+        this.previousCache.set(current);
+      }
+
+      this.loading.set(true);
+      this.error.set(null);
 
       this.transactionService.getTransactions(from, to).subscribe({
         next: (data) => {
-          this.cache.update((c) => ({
-            ...c,
-            [key]: data,
-          }));
-
-          this.loading.update((l) => ({ ...l, [key]: false }));
+          this.currentCache.set({ key, data });
+          this.loading.set(false);
         },
         error: (err) => {
-          this.error.update((e) => ({
-            ...e,
-            [key]: err?.message ?? 'Ошибка загрузки',
-          }));
-
-          this.loading.update((l) => ({ ...l, [key]: false }));
+          this.error.set(err?.message ?? 'Ошибка загрузки');
+          this.loading.set(false);
         },
       });
     });
@@ -68,19 +81,16 @@ export class CalendarPageStore {
 
   readonly transactions = computed(() => {
     const { from, to } = this.range();
-    return this.cache()[this.getKey(from, to)] ?? [];
+    const key = this.getKey(from, to);
+    const current = this.currentCache();
+
+    return current?.key === key ? current.data : [];
   });
 
-  readonly isLoading = computed(() => {
-    const { from, to } = this.range();
-    return this.loading()[this.getKey(from, to)] ?? false;
-  });
+  readonly isLoading = computed(() => this.loading());
 
-  readonly errorMessage = computed(() => {
-    const { from, to } = this.range();
-    return this.error()[this.getKey(from, to)] ?? null;
-  });
-  
+  readonly errorMessage = computed(() => this.error());
+
   readonly vm = computed(() => ({
     transactions: this.transactions(),
     loading: this.isLoading(),
