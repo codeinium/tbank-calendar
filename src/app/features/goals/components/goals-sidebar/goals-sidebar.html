@@ -8,7 +8,7 @@
       <li>
         <button
           type="button"
-          class="w-full h-8 pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer duration-300 hover:scale-[1.02]"
+          class="w-full min-h-8 h-full pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer duration-300 hover:scale-[1.02]"
           [ngClass]="
             item.id === selectedGoal()?.id
               ? 'text-(--background) bg-(--foreground)'
@@ -23,17 +23,9 @@
   </ul>
 </aside>
 @if (isCreateModalOpen()) {
-  <div
-    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-  >
-    <div
-      class="z-51 w-90 md:w-120.75 max-h-[90vh] py-2.75 px-7.75 bg-(--background) relative rounded-(--tui-radius-l) overflow-hidden flex flex-col"
-    >
-      <div class="flex justify-between">
-        <h1 class="text-2xl">Создать новую цель</h1>
-        <button class="text-base cursor-pointer" (click)="closeModal()">✖</button>
-      </div>
-      <app-create-goal-form (close)="closeModal()"></app-create-goal-form>
-    </div>
-  </div>
+  <app-modal-dialog
+    title="Создать новую цель"
+    (close)="closeModal()">
+    <app-create-goal-form (close)="closeModal()" />
+  </app-modal-dialog>
 }

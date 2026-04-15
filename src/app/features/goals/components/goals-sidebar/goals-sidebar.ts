@@ -2,12 +2,12 @@ import { CreateGoalForm } from './../create-goal-form/create-goal-form';
 import { NgClass } from '@angular/common';
 import { GoalsPageStore } from './../../services/goal.service';
 import { ChangeDetectionStrategy, Component, inject, signal, } from '@angular/core';
-import { tuiItemsHandlersProvider, TuiTextfield, TuiButton, TuiIcon } from '@taiga-ui/core';
-import { TuiDialogService } from '@taiga-ui/core';
+import {TuiButton} from '@taiga-ui/core';
+import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
 
 @Component({
   selector: 'app-goals-sidebar',
-  imports: [TuiButton, NgClass, CreateGoalForm],
+  imports: [TuiButton, NgClass, CreateGoalForm, ModalDialog],
   templateUrl: './goals-sidebar.html',
   styleUrl: './goals-sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,0 +1,31 @@
+@if (modal().date) {
+  <app-modal-dialog
+    [title]="date()"
+    (close)="close()"
+    [widthVariant]="'sm'">
+    <div class="py-5 px-8 overflow-y-auto flex flex-col gap-6">
+      @for (hour of hours; track hour) {
+        <div>
+          <div class="flex items-end justify-between">
+            <span class="mr-2">{{ hour < 10 ? '0' + hour : hour }}:00</span>
+            <div class="h-px w-full bg-(--foreground) mb-2"></div>
+          </div>
+          <div class="flex flex-col gap-2">
+            @if (transactionsByHour()[hour]) {
+              @for (t of transactionsByHour()[hour]; track t.id) {
+                <app-transaction-card
+                  variant="day"
+                  [transaction]="t"
+                />
+              }
+            }
+          </div>
+        </div>
+      }
+      <div class="flex items-end justify-end mt-5">
+        <div class="h-px w-full bg-(--foreground)"></div>
+      </div>
+
+    </div>
+  </app-modal-dialog>
+}

@@ -39,4 +39,28 @@
       </p>
     </div>
   }
+  @case ('day') {
+    <div
+      class="min-h-12 p-2 rounded-lg text-lg flex items-center justify-between gap-3 break-all"
+      [ngClass]="
+        isIncome
+          ? 'bg-(--income-background) text-(--income-dark)'
+          : 'bg-(--expense-background) text-(--expense-dark)'
+      "
+    >
+        <p class="shrink-0">
+          {{ amountLabel }}
+        </p>
+        <p class="min-w-0 break-words">
+          {{ title }}
+        </p>
+
+      <p class="wrap-break-words">
+        {{ subtitle }}
+      </p>
+      <p>
+        {{timeLabel}}
+      </p>
+    </div>
+  }
 }
