@@ -19,11 +19,15 @@
       <input tuiInputDate formControlName="deadline" />
       <tui-calendar *tuiTextfieldDropdown />
     </tui-textfield>
+    @if (monthlyPayment()) {
+      <p class="text-sm">Нужно откладывать примерно {{ monthlyPayment() }} ₽/месяц</p>
+    }
   </label>
 
   <label class="flex gap-2 items-center text-base">
     <input tuiCheckbox type="checkbox" formControlName="hardMode" />
     Сложный режим
+    <tui-icon tuiHintDirection="right" tuiTooltip="Внимание! В сложном режиме невозможно снять деньги с цели, если вы не успеете закрыть цель до дедлайна, ваши деньги сгорят!" />
   </label>
 
   <label class="flex gap-2 items-center text-base">

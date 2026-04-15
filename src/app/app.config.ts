@@ -16,6 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideEventPlugins(),
     provideHttpClient(),
-    provideAnimations()
+    provideAnimations(),
   ],
 };

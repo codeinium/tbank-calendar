@@ -19,7 +19,7 @@ export class GoalsInfoContainer {
 
   readonly goal = this.store.selectedGoal;
 
-  readonly loading = this.store.loadingSelectedGlobal;
+  readonly loading = this.store.loadingSelectedGoal;
   readonly restDays = computed(() => {
     const goal = this.goal();
 

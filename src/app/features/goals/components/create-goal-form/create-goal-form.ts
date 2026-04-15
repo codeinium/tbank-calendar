@@ -1,10 +1,19 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { GoalsPageStore } from '@/app/features/goals/services/goal.service';
-import { TuiButton, TuiIcon, tuiItemsHandlersProvider, TuiTextfield, } from '@taiga-ui/core';
+import { TuiButton, TuiIcon, tuiItemsHandlersProvider, TuiTextfield, TuiLabel} from '@taiga-ui/core';
 import { BillingCycle, CreateGoalRequest } from '@/app/models/goal/model/goal.model';
-import { TuiInputDate, TuiCheckbox, TuiChevron, TuiDataListWrapper, TuiSelect} from '@taiga-ui/kit';
+import {
+  TuiInputDate,
+  TuiCheckbox,
+  TuiChevron,
+  TuiDataListWrapper,
+  TuiSelect,
+  TuiTooltip,
+} from '@taiga-ui/kit';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { TuiDay } from '@taiga-ui/cdk';
+import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 
 
 @Component({
@@ -18,6 +27,9 @@ import { trigger, transition, style, animate } from '@angular/animations';
     TuiChevron,
     TuiDataListWrapper,
     TuiSelect,
+    TuiLabel,
+    TuiIcon,
+    TuiTooltip,
   ],
   animations: [
     trigger('autoPaySlide', [
@@ -54,6 +66,8 @@ export class CreateGoalForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
 
+  readonly monthlyPayment = signal<number | null>(null);
+
   readonly billingCycles: { value: BillingCycle; label: string }[] = [
     { value: 'daily', label: 'Ежедневно' },
     { value: 'weekly', label: 'Еженедельно' },
@@ -64,9 +78,9 @@ export class CreateGoalForm {
   @Output() close = new EventEmitter<void>();
 
   form = this.fb.group({
-    name: ['', [Validators.required]],
-    targetAmount: [0, [Validators.required, Validators.min(0)]],
-    deadline: [null as string | Date | null, [Validators.required, this.minDateValidator()]],
+    name: ['', [Validators.required, this.notEmptyStringValidator()]],
+    targetAmount: [null as number | null, [Validators.required, Validators.min(1)]],
+    deadline: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
     hardMode: [false],
     autoPay: [false],
 
@@ -78,7 +92,7 @@ export class CreateGoalForm {
     ],
     autoPayAmount: [
       { value: null as number | null, disabled: true },
-      [Validators.required, Validators.min(0.01)],
+      [Validators.required, Validators.min(1)],
     ],
   });
 
@@ -90,10 +104,26 @@ export class CreateGoalForm {
         if (enabled) {
           control?.enable();
         } else {
-          control?.setValue(null, { emitEvent: false });
+          control?.reset();
           control?.disable();
         }
       });
+    });
+    this.form.valueChanges.subscribe(() => {
+      const { targetAmount, deadline } = this.form.getRawValue();
+      if (!targetAmount || !deadline) {
+        this.monthlyPayment.set(null);
+        return;
+      }
+      const today = dayjs().startOf('day');
+      const endDate = dayjs(deadline.toLocalNativeDate());
+      const months = (endDate.year() - today.year()) * 12 + (endDate.month() - today.month());
+      if (months <= 0) {
+        this.monthlyPayment.set(null);
+        return;
+      }
+      const perMonth = targetAmount / months;
+      this.monthlyPayment.set(Number(Math.round(perMonth)));
     });
   }
 
@@ -101,14 +131,16 @@ export class CreateGoalForm {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = TuiDay.currentLocal();
 
-      const val = control.value;
-      const controlDate = val.toLocalNativeDate ? val.toLocalNativeDate() : new Date(val);
-      controlDate.setHours(0, 0, 0, 0);
+      return control.value.dayBefore(today) ? { minDate: true } : null;
+    };
+  }
 
-      return controlDate < today ? { minDate: true } : null;
+  private notEmptyStringValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const isNotEmpty = control.value && control.value.trim().length > 0;
+      return isNotEmpty ? null : { emptyString: true };
     };
   }
 
@@ -123,7 +155,7 @@ export class CreateGoalForm {
     const request: CreateGoalRequest = {
       name: raw.name!,
       targetAmount: raw.targetAmount!,
-      deadline: raw.deadline?.toString()!,
+      deadline: raw.deadline!.toLocalNativeDate().toISOString(),
       hardMode: raw.hardMode ?? false,
       autoPay: raw.autoPay ?? false,
 

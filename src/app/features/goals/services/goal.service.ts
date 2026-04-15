@@ -9,6 +9,7 @@ import {
   UpdateGoalRequest,
   UpdateGoalAutoPayRequest,
 } from '@/app/models/goal/model/goal.model';
+import { take } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class GoalsPageStore {
@@ -21,7 +22,7 @@ export class GoalsPageStore {
   readonly goals = this._goals.asReadonly();
   readonly selectedGoal = this._selectedGoal.asReadonly();
   readonly loadingList = this._loadingList.asReadonly();
-  readonly loadingSelectedGlobal = this._loadingSelectedGoal.asReadonly();
+  readonly loadingSelectedGoal = this._loadingSelectedGoal.asReadonly();
   readonly error = this._error.asReadonly();
 
   constructor(private goalsService: GoalsService) {}
@@ -31,7 +32,9 @@ export class GoalsPageStore {
     this._loadingList.set(true);
     this._error.set(null);
 
-    this.goalsService.getGoals().subscribe({
+    this.goalsService.getGoals()
+    .pipe(take(1))
+    .subscribe({
       next: (goals) => {
         this._goals.set(goals);
         this._loadingList.set(false);
@@ -48,7 +51,9 @@ export class GoalsPageStore {
     this._loadingSelectedGoal.set(true);
     this._error.set(null);
 
-    this.goalsService.getGoalDetails(goalId).subscribe({
+    this.goalsService.getGoalDetails(goalId)
+    .pipe(take(1))
+    .subscribe({
       next: (goal) => {
         this._selectedGoal.set(goal);
         this._loadingSelectedGoal.set(false);
@@ -62,7 +67,9 @@ export class GoalsPageStore {
 
   /* создать */
   createGoal(request: CreateGoalRequest) {
-    this.goalsService.createGoal(request).subscribe({
+    this.goalsService.createGoal(request)
+    .pipe(take(1))
+    .subscribe({
       next: (goal) => {
         this._goals.update((g) => [...g, goal]);
         this._selectedGoal.set(goal);
@@ -73,61 +80,77 @@ export class GoalsPageStore {
 
   /* пополнение */
   deposit(goalId: string, request: GoalTransactionRequest) {
-    this.goalsService.deposit(goalId, request).subscribe({
-      next: (updated) => {
-        this._selectedGoal.set(updated);
+    this.goalsService
+      .deposit(goalId, request)
+      .pipe(take(1))
+      .subscribe({
+        next: (updated) => {
+          this._selectedGoal.set(updated);
 
-        this._goals.update((goals) =>
-          goals.map((g) =>
-            g.id === goalId
-              ? {
-                  ...g,
-                  currentAmount: updated.currentAmount,
-                  status: updated.status,
-                }
-              : g,
-          ),
-        );
-      },
-    });
+          this._goals.update((goals) =>
+            goals.map((g) =>
+              g.id === goalId
+                ? {
+                    ...g,
+                    currentAmount: updated.currentAmount,
+                    status: updated.status,
+                  }
+                : g,
+            ),
+          );
+        },
+        error: (err) => this._error.set(err.message),
+      });
   }
 
   /* снятие */
   withdraw(goalId: string, request: GoalTransactionRequest) {
-    this.goalsService.withdraw(goalId, request).subscribe({
-      next: (updated) => {
-        this._selectedGoal.set(updated);
+    this.goalsService
+      .withdraw(goalId, request)
+      .pipe(take(1))
+      .subscribe({
+        next: (updated) => {
+          this._selectedGoal.set(updated);
 
-        this._goals.update((goals) =>
-          goals.map((g) =>
-            g.id === goalId
-              ? {
-                  ...g,
-                  currentAmount: updated.currentAmount,
-                  status: updated.status,
-                }
-              : g,
-          ),
-        );
-      },
-    });
+          this._goals.update((goals) =>
+            goals.map((g) =>
+              g.id === goalId
+                ? {
+                    ...g,
+                    currentAmount: updated.currentAmount,
+                    status: updated.status,
+                  }
+                : g,
+            ),
+          );
+        },
+        error: (err) => this._error.set(err.message),
+      });
   }
 
   /* обновление */
   updateGoal(goalId: string, request: UpdateGoalRequest) {
-    this.goalsService.updateGoal(goalId, request).subscribe({
-      next: (updated) => {
-        this._selectedGoal.set(updated);
-      },
-    });
+    this.goalsService
+      .updateGoal(goalId, request)
+      .pipe(take(1))
+      .subscribe({
+        next: (updated) => {
+          this._selectedGoal.set(updated);
+        },
+        error: (err) => this._error.set(err.message),
+      });
   }
 
   /* auto-pay */
   updateGoalAutoPay(goalId: string, request: UpdateGoalAutoPayRequest) {
-    this.goalsService.updateGoalAutoPay(goalId, request).subscribe({
-      next: (updated) => {
-        this._selectedGoal.set(updated);
-      },
-    });
+    this.goalsService
+      .updateGoalAutoPay(goalId, request)
+      .pipe(take(1))
+      .subscribe({
+        next: (updated) => {
+          this._selectedGoal.set(updated);
+        },
+        error: (err) => this._error.set(err.message),
+      });
   }
 }
