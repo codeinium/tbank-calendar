@@ -31,7 +31,6 @@ export class DayModal {
   });
 
   close() {
-    console.log(this.modal());
     this.calendar.closeDayModal();
   }
 }
