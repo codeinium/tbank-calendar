@@ -1,6 +1,27 @@
 <div
-  class="max-w-250 mx-auto min-h-213 px-4.5 py-2.5 md:p-3 lg:px-11.5 lg:py-5 grid grid-cols-1 md:grid-cols-[213px_1fr] gap-10 lg:grid-cols-[270px_1fr] bg-(--card-5) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
+  class="max-w-250 mx-auto px-4.5 py-2.5 md:p-3 lg:px-11.5 lg:py-5 
+         grid grid-cols-1 md:grid-cols-[213px_1fr] gap-2 md:gap-10 
+         lg:grid-cols-[270px_1fr] 
+         bg-(--card-5) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)
+         md:min-h-213"
 >
-<app-goals-sidebar></app-goals-sidebar>
-<app-goals-info-container></app-goals-info-container>
+  <div class="hidden md:block">
+    <app-goals-sidebar class="h-full"></app-goals-sidebar>
+  </div>
+  <div class="md:hidden">
+    <button tuiButton type="button" (click)="isSidebarOpen.set(true)">Открыть цели</button>
+  </div>
+  <app-goals-info-container></app-goals-info-container>
 </div>
+@if (isSidebarOpen()) {
+  <div class="fixed inset-0 z-50 flex">
+    <div
+      class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      (click)="isSidebarOpen.set(false)"></div>
+
+    <div class="relative w-80 max-w-full h-full pt-15 px-2 bg-(--background) shadow-(--tui-shadow-m)">
+      <app-goals-sidebar class="h-full"></app-goals-sidebar>
+    </div>
+
+  </div>
+}
