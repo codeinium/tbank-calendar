@@ -13,6 +13,7 @@ export interface Goal {
 /* полная версия */
 export interface GoalDetails extends Goal {
   accountId: string;
+  createdAt: string;
   deadline: string;
   achievedAt: string | null;
   hardMode: boolean;

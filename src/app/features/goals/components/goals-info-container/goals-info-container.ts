@@ -4,6 +4,7 @@ import { weekDayLabelsShort } from '@/app/models/calendar/types';
 import { GoalsPageStore } from '../../services/goal.service';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { GoalsInfoSkeleton } from '../goals-info-skeleton/goals-info-skeleton';
+import { Transaction } from '@/app/models/transaction/model/transaction.model';
 
 @Component({
   selector: 'app-goals-info-container',
@@ -14,6 +15,8 @@ import { GoalsInfoSkeleton } from '../goals-info-skeleton/goals-info-skeleton';
 })
 export class GoalsInfoContainer {
   private store = inject(GoalsPageStore);
+
+  readonly listGoals = this.store.goals;
 
   readonly weekDayLabels = weekDayLabelsShort;
 
@@ -40,8 +43,6 @@ export class GoalsInfoContainer {
 
     return Math.round((goal.currentAmount / goal.targetAmount) * 100);
   });
-
-  readonly listGoals = this.store.goals;
 
   readonly viewState = computed(() => {
     const goal = this.goal();

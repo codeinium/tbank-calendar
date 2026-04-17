@@ -30,7 +30,9 @@ import {
   mockWithdrawFromGoal,
   mockUpdateGoalAutoPay,
   mockUpdateGoal,
+  getMockTransactions,
 } from './goal.mock';
+import { Transaction } from '../../transaction/model/transaction.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -62,6 +64,20 @@ export class GoalsService {
     return this.http
       .get<ApiGoalDetails>(`${this.apiUrl}/goals/${goalId}`)
       .pipe(map(mapGoalDetails));
+  }
+
+  /* загрузить транзакции цели за выбранный период */
+  getGoalTransactions(goalId: string, from?: string, to?: string): Observable<Transaction[]> {
+    if (this.useMock) {
+      return of(getMockTransactions(goalId, from, to)).pipe(delay(this.mockDelay));
+    }
+
+    let params: any = {};
+
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.http.get<Transaction[]>(`${this.apiUrl}/goals/${goalId}/transactions`, { params });
   }
 
   /* создать */

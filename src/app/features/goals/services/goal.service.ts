@@ -9,7 +9,8 @@ import {
   UpdateGoalRequest,
   UpdateGoalAutoPayRequest,
 } from '@/app/models/goal/model/goal.model';
-import { take } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
+import { Transaction } from '@/app/models/transaction/model/transaction.model';
 
 @Injectable({ providedIn: 'root' })
 export class GoalsPageStore {
@@ -18,12 +19,16 @@ export class GoalsPageStore {
   private readonly _loadingList = signal(false);
   private readonly _loadingSelectedGoal = signal(false);
   private readonly _error = signal<string | null>(null);
+  private readonly _transactions = signal<Transaction[]>([]);
+  private readonly _loadingTransactions = signal(false);
 
   readonly goals = this._goals.asReadonly();
   readonly selectedGoal = this._selectedGoal.asReadonly();
   readonly loadingList = this._loadingList.asReadonly();
   readonly loadingSelectedGoal = this._loadingSelectedGoal.asReadonly();
   readonly error = this._error.asReadonly();
+  readonly transactions = this._transactions.asReadonly();
+  readonly loadingTransactions = this._loadingTransactions.asReadonly();
 
   constructor(private goalsService: GoalsService) {}
 
@@ -33,49 +38,76 @@ export class GoalsPageStore {
     this._error.set(null);
 
     this.goalsService.getGoals()
-    .pipe(take(1))
-    .subscribe({
-      next: (goals) => {
-        this._goals.set(goals);
-        this._loadingList.set(false);
-      },
-      error: (err) => {
-        this._error.set(err.message);
-        this._loadingList.set(false);
-      },
-    });
+      .pipe(take(1))
+      .subscribe({
+        next: (goals) => {
+          this._goals.set(goals);
+          this._loadingList.set(false);
+        },
+        error: (err) => {
+          this._error.set(err.message);
+          this._loadingList.set(false);
+        },
+      });
   }
 
   /* выбор цели */
   selectGoal(goalId: string) {
     this._loadingSelectedGoal.set(true);
+    this._loadingTransactions.set(true);
     this._error.set(null);
 
-    this.goalsService.getGoalDetails(goalId)
-    .pipe(take(1))
-    .subscribe({
-      next: (goal) => {
-        this._selectedGoal.set(goal);
-        this._loadingSelectedGoal.set(false);
-      },
-      error: (err) => {
-        this._error.set(err.message);
-        this._loadingSelectedGoal.set(false);
-      },
-    });
+    forkJoin({
+      goal: this.goalsService.getGoalDetails(goalId),
+      transactions: this.goalsService.getGoalTransactions(goalId),
+    })
+      .pipe(take(1))
+      .subscribe({
+        next: ({ goal, transactions }) => {
+          this._selectedGoal.set(goal);
+          this._transactions.set(transactions);
+
+          this._loadingSelectedGoal.set(false);
+          this._loadingTransactions.set(false);
+        },
+        error: (err) => {
+          this._error.set(err.message);
+          this._loadingSelectedGoal.set(false);
+          this._loadingTransactions.set(false);
+        },
+      });
+  }
+
+  loadTransactions(goalId: string, from?: string, to?: string) {
+    this._loadingTransactions.set(true);
+    this._error.set(null);
+
+    this.goalsService
+      .getGoalTransactions(goalId, from, to)
+      .pipe(take(1))
+      .subscribe({
+        next: (transactions) => {
+          this._transactions.set(transactions);
+          this._loadingTransactions.set(false);
+        },
+        error: (err) => {
+          this._error.set(err.message);
+          this._loadingTransactions.set(false);
+        },
+      });
   }
 
   /* создать */
   createGoal(request: CreateGoalRequest) {
     this.goalsService.createGoal(request)
-    .pipe(take(1))
-    .subscribe({
-      next: (goal) => {
-        this._goals.update((g) => [...g, goal]);
-        this._selectedGoal.set(goal);
-      },
-      error: (err) => this._error.set(err.message),
-    });
+      .pipe(take(1))
+      .subscribe({
+        next: (goal) => {
+          this._goals.update((g) => [...g, goal]);
+          this._selectedGoal.set(goal);
+        },
+        error: (err) => this._error.set(err.message),
+      });
   }
 
   /* пополнение */

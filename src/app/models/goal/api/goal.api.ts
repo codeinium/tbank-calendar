@@ -17,6 +17,7 @@ export interface ApiGoalDetails {
   target_amount: number;
   current_amount: number;
   deadline: string;
+  created_at: string;
   achieved_at: string | null;
   hard_mode: boolean;
   status: GoalStatus;

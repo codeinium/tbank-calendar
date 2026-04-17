@@ -32,6 +32,7 @@ export function mapGoalDetails(api: ApiGoalDetails): GoalDetails {
     name: api.name,
     targetAmount: api.target_amount,
     currentAmount: api.current_amount,
+    createdAt: api.created_at,
     deadline: api.deadline,
     achievedAt: api.achieved_at,
     hardMode: api.hard_mode,
