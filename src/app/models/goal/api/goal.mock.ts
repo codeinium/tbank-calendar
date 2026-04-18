@@ -81,20 +81,11 @@ export function getMockGoalDetails(goalId: string): GoalDetails | null {
   return MOCK_GOAL_DETAILS[goalId] || null;
 }
 
-export function getMockTransactions(goalId: string, from?: string, to?: string): Transaction[] {
-  let txs = TRANSACTIONS_MOCK.filter(
+export function getMockTransactions(goalId: string): Transaction[] {
+  let transactions = TRANSACTIONS_MOCK.filter(
     (t) => t.toAccountName === goalId || t.fromAccountName === goalId,
   );
-
-  if (from) {
-    txs = txs.filter((t) => dayjs(t.date).isSameOrAfter(dayjs(from)));
-  }
-
-  if (to) {
-    txs = txs.filter((t) => dayjs(t.date).isSameOrBefore(dayjs(to)));
-  }
-
-  return txs;
+  return transactions;
 }
 
 export function createMockGoal(request: ApiCreateGoalRequest): GoalDetails {

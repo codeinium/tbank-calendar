@@ -1,8 +1,8 @@
 import { CreateGoalForm } from './../create-goal-form/create-goal-form';
 import { NgClass } from '@angular/common';
-import { GoalsPageStore } from './../../services/goal.service';
-import { ChangeDetectionStrategy, Component, inject, signal, } from '@angular/core';
-import {TuiButton} from '@taiga-ui/core';
+import { GoalsPageStore } from '../../services/goal-page.store';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { TuiButton } from '@taiga-ui/core';
 import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
 
 @Component({

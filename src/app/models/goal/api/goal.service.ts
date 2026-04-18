@@ -67,17 +67,11 @@ export class GoalsService {
   }
 
   /* загрузить транзакции цели за выбранный период */
-  getGoalTransactions(goalId: string, from?: string, to?: string): Observable<Transaction[]> {
+  getGoalTransactions(goalId: string): Observable<Transaction[]> {
     if (this.useMock) {
-      return of(getMockTransactions(goalId, from, to)).pipe(delay(this.mockDelay));
+      return of(getMockTransactions(goalId)).pipe(delay(this.mockDelay));
     }
-
-    let params: any = {};
-
-    if (from) params.from = from;
-    if (to) params.to = to;
-
-    return this.http.get<Transaction[]>(`${this.apiUrl}/goals/${goalId}/transactions`, { params });
+    return this.http.get<Transaction[]>(`${this.apiUrl}/goals/${goalId}/transactions`);
   }
 
   /* создать */

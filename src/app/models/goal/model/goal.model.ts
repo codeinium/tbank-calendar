@@ -42,9 +42,9 @@ export interface GoalTransactionRequest {
 
 /* изменение цели (название, дедлайн) */
 export interface UpdateGoalRequest {
-    id: number;
-    name: string;
-    deadline: string;
+  id: number;
+  name: string;
+  deadline: string;
 }
 
 /* изменение цели (автопополнение) */
@@ -56,3 +56,14 @@ export interface UpdateGoalAutoPayRequest {
   billingInterval?: number;
   amount?: number;
 }
+
+export interface ChartDataPoint {
+  period: string;
+  label: string;
+  deposits: number;
+  withdrawals: number;
+  percent: number;
+  isNegative: boolean;
+}
+
+export type ChartRange = 'days' | 'months' | 'years';

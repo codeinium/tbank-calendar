@@ -1,188 +1,98 @@
-import { Injectable, signal } from '@angular/core';
-import { GoalsService } from '@/app/models/goal/api/goal.service';
-
-import {
-  Goal,
-  GoalDetails,
-  CreateGoalRequest,
-  GoalTransactionRequest,
-  UpdateGoalRequest,
-  UpdateGoalAutoPayRequest,
-} from '@/app/models/goal/model/goal.model';
-import { forkJoin, take } from 'rxjs';
+import { transition } from '@angular/animations';
+import { inject, Injectable, signal, computed, effect } from '@angular/core';
+import { GoalsPageStore } from './goal-page.store';
 import { Transaction } from '@/app/models/transaction/model/transaction.model';
+import { ChartRange, GoalDetails } from '@/app/models/goal/model/goal.model';
+import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 
 @Injectable({ providedIn: 'root' })
-export class GoalsPageStore {
-  private readonly _goals = signal<Goal[]>([]);
-  private readonly _selectedGoal = signal<GoalDetails | null>(null);
-  private readonly _loadingList = signal(false);
-  private readonly _loadingSelectedGoal = signal(false);
-  private readonly _error = signal<string | null>(null);
-  private readonly _transactions = signal<Transaction[]>([]);
-  private readonly _loadingTransactions = signal(false);
+export class GoalService {
+  private store = inject(GoalsPageStore);
 
-  readonly goals = this._goals.asReadonly();
-  readonly selectedGoal = this._selectedGoal.asReadonly();
-  readonly loadingList = this._loadingList.asReadonly();
-  readonly loadingSelectedGoal = this._loadingSelectedGoal.asReadonly();
-  readonly error = this._error.asReadonly();
-  readonly transactions = this._transactions.asReadonly();
-  readonly loadingTransactions = this._loadingTransactions.asReadonly();
+  private readonly _range = signal<ChartRange>('months');
+  private readonly _selectedBucket = signal<string | null>(null);
 
-  constructor(private goalsService: GoalsService) {}
+  readonly range = this._range.asReadonly();
+  readonly selectedBucket = this._selectedBucket.asReadonly();
 
-  /* загрузка списка */
-  loadGoals() {
-    this._loadingList.set(true);
-    this._error.set(null);
-
-    this.goalsService.getGoals()
-      .pipe(take(1))
-      .subscribe({
-        next: (goals) => {
-          this._goals.set(goals);
-          this._loadingList.set(false);
-        },
-        error: (err) => {
-          this._error.set(err.message);
-          this._loadingList.set(false);
-        },
-      });
+  setRange(range: ChartRange) {
+    this._range.set(range);
+    this._selectedBucket.set(null);
   }
 
-  /* выбор цели */
-  selectGoal(goalId: string) {
-    this._loadingSelectedGoal.set(true);
-    this._loadingTransactions.set(true);
-    this._error.set(null);
-
-    forkJoin({
-      goal: this.goalsService.getGoalDetails(goalId),
-      transactions: this.goalsService.getGoalTransactions(goalId),
-    })
-      .pipe(take(1))
-      .subscribe({
-        next: ({ goal, transactions }) => {
-          this._selectedGoal.set(goal);
-          this._transactions.set(transactions);
-
-          this._loadingSelectedGoal.set(false);
-          this._loadingTransactions.set(false);
-        },
-        error: (err) => {
-          this._error.set(err.message);
-          this._loadingSelectedGoal.set(false);
-          this._loadingTransactions.set(false);
-        },
-      });
+  selectBucket(key: string | null) {
+    this._selectedBucket.set(key);
   }
 
-  loadTransactions(goalId: string, from?: string, to?: string) {
-    this._loadingTransactions.set(true);
-    this._error.set(null);
+  readonly chartData = computed(() => {
+    const goal = this.store.selectedGoal();
+    const transactions = this.store.transactions();
+    if (!goal) return [];
+    return this.buildChart(goal, transactions ?? [], this.range());
+  });
 
-    this.goalsService
-      .getGoalTransactions(goalId, from, to)
-      .pipe(take(1))
-      .subscribe({
-        next: (transactions) => {
-          this._transactions.set(transactions);
-          this._loadingTransactions.set(false);
-        },
-        error: (err) => {
-          this._error.set(err.message);
-          this._loadingTransactions.set(false);
-        },
-      });
+  private generatePeriods(goal: GoalDetails, range: ChartRange) {
+    const start = dayjs(goal.createdAt);
+    const end = dayjs();
+    const result: string[] = [];
+    let current = start.startOf(range === 'days' ? 'day' : range === 'years' ? 'year' : 'month');
+    const endDate = end.startOf(range === 'days' ? 'day' : range === 'years' ? 'year' : 'month');
+    while (current.isBefore(endDate) || current.isSame(endDate)) {
+      result.push(this.getKey(current.toISOString(), range));
+      current = current.add(1, range === 'days' ? 'day' : range === 'years' ? 'year' : 'month');
+    }
+    return result;
   }
 
-  /* создать */
-  createGoal(request: CreateGoalRequest) {
-    this.goalsService.createGoal(request)
-      .pipe(take(1))
-      .subscribe({
-        next: (goal) => {
-          this._goals.update((g) => [...g, goal]);
-          this._selectedGoal.set(goal);
-        },
-        error: (err) => this._error.set(err.message),
-      });
+
+  private buildChart(goal: GoalDetails, transitions: Transaction[], range: ChartRange) {
+    // генерируем периоды от создания цели до сегодня
+    const periods = this.generatePeriods(goal, range);
+
+    const map = new Map<string, number>();
+    periods.forEach((p) => map.set(p, 0));
+
+    
+    transitions.forEach((tx) => {
+      const key = this.getKey(tx.date, range);
+      if (!map.has(key)) return;
+      const value = tx.type === 'income' ? -tx.amount : tx.amount;
+      map.set(key, map.get(key)! + value);
+    });
+
+    // находим максимум для расчета процентов
+    const max = Math.max(...Array.from(map.values()).map((v) => Math.abs(v)), 1);
+
+    return periods.map((period) => {
+      const value = map.get(period)!;
+      return {
+        key: period,
+        label: this.getLabel(period, range),
+        value,
+        percent: Math.round((Math.abs(value) / max) * 100),
+        isNegative: value < 0,
+      };
+    });
   }
 
-  /* пополнение */
-  deposit(goalId: string, request: GoalTransactionRequest) {
-    this.goalsService
-      .deposit(goalId, request)
-      .pipe(take(1))
-      .subscribe({
-        next: (updated) => {
-          this._selectedGoal.set(updated);
-
-          this._goals.update((goals) =>
-            goals.map((g) =>
-              g.id === goalId
-                ? {
-                    ...g,
-                    currentAmount: updated.currentAmount,
-                    status: updated.status,
-                  }
-                : g,
-            ),
-          );
-        },
-        error: (err) => this._error.set(err.message),
-      });
+  private getLabel(period: string, range: string) {
+    const d = dayjs(period);
+    if (range === 'days') return d.format('D');
+    if (range === 'years') return d.format('YYYY');
+    return d.format('MMM');
   }
 
-  /* снятие */
-  withdraw(goalId: string, request: GoalTransactionRequest) {
-    this.goalsService
-      .withdraw(goalId, request)
-      .pipe(take(1))
-      .subscribe({
-        next: (updated) => {
-          this._selectedGoal.set(updated);
-
-          this._goals.update((goals) =>
-            goals.map((g) =>
-              g.id === goalId
-                ? {
-                    ...g,
-                    currentAmount: updated.currentAmount,
-                    status: updated.status,
-                  }
-                : g,
-            ),
-          );
-        },
-        error: (err) => this._error.set(err.message),
-      });
+  private getKey(date: string, range: string) {
+    const d = dayjs(date);
+    if (range === 'days') return d.format('YYYY-MM-DD');
+    if (range === 'years') return d.format('YYYY');
+    return d.format('YYYY-MM');
   }
 
-  /* обновление */
-  updateGoal(goalId: string, request: UpdateGoalRequest) {
-    this.goalsService
-      .updateGoal(goalId, request)
-      .pipe(take(1))
-      .subscribe({
-        next: (updated) => {
-          this._selectedGoal.set(updated);
-        },
-        error: (err) => this._error.set(err.message),
-      });
-  }
-
-  /* auto-pay */
-  updateGoalAutoPay(goalId: string, request: UpdateGoalAutoPayRequest) {
-    this.goalsService
-      .updateGoalAutoPay(goalId, request)
-      .pipe(take(1))
-      .subscribe({
-        next: (updated) => {
-          this._selectedGoal.set(updated);
-        },
-        error: (err) => this._error.set(err.message),
-      });
+  getPeriodKey(date: string, range: 'days' | 'months' | 'years'): string {
+    const d = dayjs(date);
+    if (range === 'days') return d.format('YYYY-MM-DD');
+    if (range === 'years') return d.format('YYYY');
+    return d.format('YYYY-MM');
   }
 }
