@@ -14,7 +14,7 @@
               ? 'text-(--background) bg-(--foreground)'
               : 'bg-(--background) shadow-(--tui-shadow-m) hover:bg-(--background-hover) focus:bg-(--foreground-hover)'
           "
-          (click)="selectGoal(item.id)"
+          (click)="selectGoal(item.id); setIsSidebarOpen(false)"
         >
           {{ item.name }}
         </button>

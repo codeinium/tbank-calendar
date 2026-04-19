@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
-import { GoalsPageStore } from '@/app/features/goals/services/goal.service';
+import { GoalsPageStore } from '@/app/features/goals/services/goal-page.store';
 import { TuiButton, TuiIcon, tuiItemsHandlersProvider, TuiTextfield, TuiLabel} from '@taiga-ui/core';
 import { BillingCycle, CreateGoalRequest } from '@/app/models/goal/model/goal.model';
 import {

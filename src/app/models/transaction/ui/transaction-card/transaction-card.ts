@@ -10,7 +10,7 @@ import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 })
 export class TransactionCard {
   @Input() transaction!: Transaction;
-  @Input() variant: 'month' | 'week' | 'day' | 'full' = 'month';
+  @Input() variant: 'month' | 'week' | 'day' | 'goal' = 'month';
 
   get isIncome() {
     return this.transaction.type === 'income';
@@ -27,6 +27,10 @@ export class TransactionCard {
 
   get timeLabel() {
     return dayjs(this.transaction.date).format('HH:mm');
+  }
+
+  get dateLabel() {
+    return dayjs(this.transaction.date).format('D MMMM YYYY');
   }
 
   get title(): string {

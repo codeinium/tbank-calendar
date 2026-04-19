@@ -1,9 +1,10 @@
 import { CreateGoalForm } from './../create-goal-form/create-goal-form';
 import { NgClass } from '@angular/common';
-import { GoalsPageStore } from './../../services/goal.service';
-import { ChangeDetectionStrategy, Component, inject, signal, } from '@angular/core';
-import {TuiButton} from '@taiga-ui/core';
+import { GoalsPageStore } from '../../services/goal-page.store';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { TuiButton } from '@taiga-ui/core';
 import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
+import { GoalService } from '../../services/goal.service';
 
 @Component({
   selector: 'app-goals-sidebar',
@@ -14,6 +15,12 @@ import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
 })
 export class GoalsSidebar {
   private store = inject(GoalsPageStore);
+  private service = inject(GoalService);
+  
+  isSidebarOpen = this.service.isSidebarOpen;
+  setIsSidebarOpen(value: boolean) {
+    this.service.setIsSidebarOpen(value);
+  }
 
   goals = this.store.goals;
   selectedGoal = this.store.selectedGoal;

@@ -6,7 +6,8 @@
     <p class="text-xl">Создайте свою первую цель!</p>
   }
   @case ('not-selected') {
-    <p class="text-xl">Выберите цель из спика или создайте новую!</p>
+    <p class="text-xl">Выберите цель из списка или создайте новую!</p>
+    <div class="min-h-190"></div>
   }
   @case ('ready') {
     <div class="flex flex-col gap-4">
@@ -27,32 +28,17 @@
         </div>
         <div class="mt-1 flex items-center gap-2.5">
           <div class="flex-1 h-2.5 bg-(--primary) rounded-2xl overflow-hidden">
-            <div class="h-full bg-(--foreground) rounded-2xl" [style.width.%]="percent()"></div>
+            <div
+              class="h-full bg-(--foreground) rounded-2xl"
+              [style.width.%]="progressPercent()"
+            ></div>
           </div>
-          <div class="text-base">{{ percent() }} %</div>
+          <div class="text-base">{{ progressPercent() }} %</div>
         </div>
       </div>
-      <div class="w-58 py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-        <span class="text-base">3 дня подряд 🔥</span>
-        <div class="flex flex-row gap-1">
-          @for (item of weekDayLabels; track $index) {
-            <div class="flex flex-col items-center">
-              <span>{{ item }}</span>
-              <div class="w-6 h-6 rounded-2xl bg-white"></div>
-            </div>
-          }
-        </div>
-      </div>
-      <div class="py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-        <div class="flex gap-2">
-          <button tuiButton type="button">Дни</button>
-          <button tuiButton type="button">Недели</button>
-          <button tuiButton type="button">Месяцы</button>
-        </div>
-      </div>
-      <div class="py-4 px-5 bg-(--card-6) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-        <span class="text-base">История транзакций за август 2025</span>
-      </div>
+      <app-goals-progress-bar></app-goals-progress-bar>
+      <app-goals-chart></app-goals-chart>
+      <app-goals-history></app-goals-history>
     </div>
   }
 }

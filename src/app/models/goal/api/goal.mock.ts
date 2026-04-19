@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { Goal, GoalDetails } from '../model/goal.model';
 
 import {
@@ -6,6 +7,8 @@ import {
   ApiUpdateGoalAutoPayRequest,
   ApiUpdateGoalRequest,
 } from './goal.api';
+import { Transaction } from '../../transaction/model/transaction.model';
+import { TRANSACTIONS_MOCK } from '../../transaction/api/transaction.mock';
 
 export const MOCK_GOALS: Goal[] = [
   {
@@ -38,6 +41,7 @@ export const MOCK_GOAL_DETAILS: Record<string, GoalDetails> = {
     name: 'На отпуск',
     targetAmount: 150000,
     currentAmount: 75000,
+    createdAt: '2025-01-01T12:00:00Z',
     deadline: '2026-08-01',
     achievedAt: null,
     hardMode: false,
@@ -50,6 +54,7 @@ export const MOCK_GOAL_DETAILS: Record<string, GoalDetails> = {
     name: 'Новый ноутбук',
     targetAmount: 200000,
     currentAmount: 50000,
+    createdAt: '2025-06-15T09:30:00Z',
     deadline: '2026-12-01',
     achievedAt: null,
     hardMode: true,
@@ -62,6 +67,7 @@ export const MOCK_GOAL_DETAILS: Record<string, GoalDetails> = {
     name: 'Подушка безопасности',
     targetAmount: 500000,
     currentAmount: 500000,
+    createdAt: '2024-03-10T15:45:00Z',
     deadline: '2026-03-15',
     achievedAt: '2026-03-15T10:30:00Z',
     hardMode: false,
@@ -75,6 +81,13 @@ export function getMockGoalDetails(goalId: string): GoalDetails | null {
   return MOCK_GOAL_DETAILS[goalId] || null;
 }
 
+export function getMockTransactions(goalId: string): Transaction[] {
+  let transactions = TRANSACTIONS_MOCK.filter(
+    (t) => t.toAccountName === goalId || t.fromAccountName === goalId,
+  );
+  return transactions;
+}
+
 export function createMockGoal(request: ApiCreateGoalRequest): GoalDetails {
   return {
     id: `goal-${Date.now()}`,
@@ -82,6 +95,7 @@ export function createMockGoal(request: ApiCreateGoalRequest): GoalDetails {
     name: request.name,
     targetAmount: request.target_amount,
     currentAmount: 0,
+    createdAt: dayjs().toISOString(),
     deadline: request.deadline,
     achievedAt: null,
     hardMode: request.hard_mode,
