@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, effect, ElementRef, inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { GoalService } from '../../services/goal.service';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { NgClass } from '@angular/common';
@@ -16,16 +16,8 @@ export class GoalsChart implements AfterViewInit {
   readonly chartData = this.service.chartData;
   readonly range = this.service.range;
   readonly selectedBucket = this.service.selectedBucket;
-
-  private getTodayIndex(): number {
-    const data = this.chartData();
-    const range = this.range();
-
-    const todayKey = this.service.getPeriodKey(dayjs().toISOString(), range);
-
-    return data.findIndex((item) => item.key === todayKey);
-  }
-
+  readonly isEmpty = computed(() => this.chartData().length === 0);
+  
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLDivElement>;
 
@@ -39,7 +31,7 @@ export class GoalsChart implements AfterViewInit {
   constructor() {
     effect(() => {
       this.chartData();
-      this.range(); 
+      this.range();
       queueMicrotask(() => {
         this.scrollToSelected();
       });
@@ -53,10 +45,9 @@ export class GoalsChart implements AfterViewInit {
     const items = this.itemsRef?.toArray();
     if (!items?.length) return;
 
-    const index = this.getTodayIndex();
-    if (index === -1) return;
+    const lastIndex = items.length - 1;
+    const selectedElement = items[lastIndex].nativeElement;
 
-    const selectedElement = items[index].nativeElement;
     const containerWidth = container.offsetWidth;
     const itemOffset = selectedElement.offsetLeft;
     const itemWidth = selectedElement.offsetWidth;

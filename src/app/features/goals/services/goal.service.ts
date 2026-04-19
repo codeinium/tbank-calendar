@@ -11,9 +11,15 @@ export class GoalService {
 
   private readonly _range = signal<ChartRange>('months');
   private readonly _selectedBucket = signal<string | null>(null);
+  private readonly _isSidebarOpen = signal(false);
 
   readonly range = this._range.asReadonly();
   readonly selectedBucket = this._selectedBucket.asReadonly();
+  readonly isSidebarOpen = this._isSidebarOpen.asReadonly();
+
+  setIsSidebarOpen(value: boolean) {
+    this._isSidebarOpen.set(value);
+  }
 
   setRange(range: ChartRange) {
     this._range.set(range);
@@ -28,31 +34,28 @@ export class GoalService {
     const goal = this.store.selectedGoal();
     const transactions = this.store.transactions();
     if (!goal) return [];
-    return this.buildChart(goal, transactions ?? [], this.range());
+    return this.buildChart(transactions ?? [], this.range());
   });
 
-  private generatePeriods(goal: GoalDetails, range: ChartRange) {
-    const start = dayjs(goal.createdAt);
-    const end = dayjs();
-    const result: string[] = [];
-    let current = start.startOf(range === 'days' ? 'day' : range === 'years' ? 'year' : 'month');
-    const endDate = end.startOf(range === 'days' ? 'day' : range === 'years' ? 'year' : 'month');
-    while (current.isBefore(endDate) || current.isSame(endDate)) {
-      result.push(this.getKey(current.toISOString(), range));
-      current = current.add(1, range === 'days' ? 'day' : range === 'years' ? 'year' : 'month');
+  private generatePeriods(transactions: Transaction[], range: ChartRange): string[] {
+    if (!transactions || transactions.length === 0) {
+      return [];
     }
-    return result;
+    const uniquePeriods = new Set<string>();
+    transactions.forEach((tx) => {
+      const periodKey = this.getKey(tx.date, range);
+      uniquePeriods.add(periodKey);
+    });
+    return Array.from(uniquePeriods).sort((a, b) => a.localeCompare(b));
   }
 
-
-  private buildChart(goal: GoalDetails, transitions: Transaction[], range: ChartRange) {
-        // генерируем периоды от создания цели до сегодня
-    const periods = this.generatePeriods(goal, range);
+  private buildChart(transitions: Transaction[], range: ChartRange) {
+    // генерируем периоды от создания цели до сегодня
+    const periods = this.generatePeriods(transitions, range);
 
     const map = new Map<string, number>();
     periods.forEach((p) => map.set(p, 0));
 
-    
     transitions.forEach((tx) => {
       const key = this.getKey(tx.date, range);
       if (!map.has(key)) return;
@@ -68,7 +71,8 @@ export class GoalService {
       const value = map.get(period)!;
       return {
         key: period,
-        label: this.getLabel(period, range),
+        topLabel: this.getTopLabel(period, range),
+        bottomLabel: this.getBottomLabel(period, range),
         value,
         percent: Math.round(targetAmount ? (Math.abs(value) / targetAmount) * 100 : 0),
         percentForUi: Math.round((Math.abs(value) / max) * 100),
@@ -77,11 +81,18 @@ export class GoalService {
     });
   }
 
-  private getLabel(period: string, range: string) {
+  private getTopLabel(period: string, range: string) {
     const d = dayjs(period);
-    if (range === 'days') return d.format('D');
+    if (range === 'days') return d.format('MMM-D');
     if (range === 'years') return d.format('YYYY');
     return d.format('MMM');
+  }
+
+  private getBottomLabel(period: string, range: string) {
+    const d = dayjs(period);
+    if (range === 'days') return d.format('YYYY');
+    if (range === 'years') return;
+    return d.format('YYYY');
   }
 
   private getKey(date: string, range: string) {

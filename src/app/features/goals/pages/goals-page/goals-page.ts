@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { GoalsSidebar } from '../../components/goals-sidebar/goals-sidebar';
 import { GoalsInfoContainer } from '../../components/goals-info-container/goals-info-container';
 import { GoalsPageStore } from '../../services/goal-page.store';
 import { TuiButton } from '@taiga-ui/core';
+import { GoalService } from '../../services/goal.service';
 
 @Component({
   selector: 'app-goals-page',
@@ -13,5 +14,9 @@ import { TuiButton } from '@taiga-ui/core';
   providers: [],
 })
 export class GoalsPageComponent {
-  isSidebarOpen = signal(false);
+  private service = inject(GoalService);
+  readonly isSidebarOpen = this.service.isSidebarOpen;
+  setIsSidebarOpen(value: boolean) {
+    this.service.setIsSidebarOpen(value);
+  }
 }

@@ -1,5 +1,16 @@
 <div class="py-4 px-5 bg-(--card-6) rounded-(--tui-radius-l)">
-  <span class="text-base"> История транзакций за {{ periodTitle() }} </span> 
-  <tui-icon tuiHintDirection="right" tuiTooltip="Чтобы посмотреть историю ваших пополнений/списаний цели кликните на период в графике" />
+  <span class="text-base"> История транзакций за {{ periodTitle() }} </span>
+  <tui-icon
+    tuiHintDirection="right"
+    tuiTooltip="Чтобы посмотреть историю ваших транзакций, кликните на период в графике"
+  />
+  @if (isEmpty()) {
+    <p class="text-base mt-2">Нет данных для отображения</p>
+  } @else {
+    <div class="h-90 flex flex-col gap-2 overflow-y-auto">
+      @for (transaction of filteredTransactions(); track transaction.id) {
+        <app-transaction-card variant="goal" [transaction]="transaction" />
+      }
+    </div>
+  }
 </div>
-

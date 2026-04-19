@@ -6,10 +6,11 @@ import { TuiIcon, TuiTextfield} from '@taiga-ui/core';
 import {
   TuiTooltip,
 } from '@taiga-ui/kit';
+import { TransactionCard } from '@/app/models/transaction/ui/transaction-card/transaction-card';
 
 @Component({
   selector: 'app-goals-history',
-  imports: [TuiTextfield, TuiIcon, TuiTooltip],
+  imports: [TuiTextfield, TuiIcon, TuiTooltip, TransactionCard],
   templateUrl: './goals-history.html',
   styleUrl: './goals-history.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,6 +18,7 @@ import {
 export class GoalsHistory {
   private goalService = inject(GoalService);
   private store = inject(GoalsPageStore);
+  readonly isEmpty = computed(() => this.goalService.chartData().length === 0);
 
   readonly filteredTransactions = computed(() => {
     const bucket = this.goalService.selectedBucket();
@@ -29,7 +31,7 @@ export class GoalsHistory {
   readonly periodTitle = computed(() => {
     const bucket = this.goalService.selectedBucket();
     const range = this.goalService.range();
-    if (!bucket) return 'выбранный период';
+    if (!bucket) return 'весь период';
     const d = dayjs(bucket);
     if (range === 'days') return d.format('D MMMM YYYY');
     if (range === 'years') return d.format('YYYY');

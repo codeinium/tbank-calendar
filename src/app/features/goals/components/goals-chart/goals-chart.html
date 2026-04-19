@@ -1,5 +1,5 @@
 <div
-  class="w-full min-h-53 py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
+  class="w-full min-h-59 py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
 >
   <div class="flex gap-2">
     <button
@@ -27,22 +27,31 @@
       Годы
     </button>
   </div>
-  <div class="w-full flex items-center">
-    <button tuiButton type="button" size="s" (click)="scrollLeft()"><img src="assets/icons/icon-arrow-left.svg" alt="scroll to left" class="w-3"></button>
-    <div #scrollContainer class="mx-2 flex overflow-x-auto scroll-w- scroll-smooth w-full gap-1">
+  @if (isEmpty()) {
+        <p class="text-base">Нет данных для отображения</p>
+
+  } @else {
+    <div class="w-full h-full flex items-center justify-center">
+    <button tuiButton type="button" size="s" (click)="scrollLeft()">
+      <img src="assets/icons/icon-arrow-left.svg" alt="scroll to left" class="w-3">
+    </button>
+    <div #scrollContainer class="mx-2 flex overflow-x-auto scroll-smooth scroll-hidden w-full gap-1">
       @for (item of chartData(); track item.key) {
         <div #carouselItem class="min-h-34 carousel flex flex-col justify-end items-center">
-          <span class="text-sm">{{item.value === 0 ? '' :  item.value > 0 ? '+' : '-'}} {{ item.percent }}%</span>
+          <span class="text-sm">{{ item.percent === 0 ? '' : (item.value === 0 ? '' : (item.value > 0 ? '+' : '-')) + item.percent + '%' }}</span>
           <div
             class="w-8 rounded-4xl cursor-pointer hover:opacity-80 transition"
             [style.height.px]="item.percentForUi"
-            [ngClass]="selectedBucket() === item.key ? 'bg-(--primary)' : item.value < 0 ? 'bg-(--expense-background)':'bg-(--foreground)'"
+            [ngClass]="selectedBucket() === item.key ? 'bg-(--primary)' : item.value < 0 ? 'bg-(--foreground-hover)':'bg-(--foreground)'"
             (click)="setBucket(item.key)"
           ></div>
-          <span class="text-xs">{{ item.label }}</span>
+          <span class="text-xs">{{ item.topLabel }}</span>
+          <span class="text-sm">{{ item.bottomLabel }}</span>
         </div>
       }
     </div>
-    <button tuiButton type="button" size="s" (click)="scrollRight()"><img src="assets/icons/icon-arrow-right.svg" alt="scroll to right" class="w-3"></button>
+    <button tuiButton type="button" size="s" (click)="scrollRight()">
+      <img src="assets/icons/icon-arrow-right.svg" alt="scroll to right" class="w-3"></button>
   </div>
+  }
 </div>
