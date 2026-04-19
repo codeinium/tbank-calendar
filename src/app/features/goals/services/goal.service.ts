@@ -46,7 +46,7 @@ export class GoalService {
 
 
   private buildChart(goal: GoalDetails, transitions: Transaction[], range: ChartRange) {
-    // генерируем периоды от создания цели до сегодня
+        // генерируем периоды от создания цели до сегодня
     const periods = this.generatePeriods(goal, range);
 
     const map = new Map<string, number>();
@@ -63,13 +63,15 @@ export class GoalService {
     // находим максимум для расчета процентов
     const max = Math.max(...Array.from(map.values()).map((v) => Math.abs(v)), 1);
 
+    const targetAmount = this.store.selectedGoal()?.targetAmount;
     return periods.map((period) => {
       const value = map.get(period)!;
       return {
         key: period,
         label: this.getLabel(period, range),
         value,
-        percent: Math.round((Math.abs(value) / max) * 100),
+        percent: Math.round(targetAmount ? (Math.abs(value) / targetAmount) * 100 : 0),
+        percentForUi: Math.round((Math.abs(value) / max) * 100),
         isNegative: value < 0,
       };
     });

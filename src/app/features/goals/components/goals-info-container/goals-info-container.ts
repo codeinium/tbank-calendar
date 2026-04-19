@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
 import { TuiButton } from '@taiga-ui/core';
 import { weekDayLabelsShort } from '@/app/models/calendar/types';
 import { GoalsPageStore } from '../../services/goal-page.store';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { GoalsInfoSkeleton } from '../goals-info-skeleton/goals-info-skeleton';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
 import { GoalService } from '../../services/goal.service';
-import { NgClass } from '@angular/common';
+import { GoalsChart } from '../goals-chart/goals-chart';
+import { GoalsHistory } from '../goals-history/goals-history';
 
 @Component({
   selector: 'app-goals-info-container',
-  imports: [TuiButton, GoalsInfoSkeleton, NgClass],
+  imports: [TuiButton, GoalsInfoSkeleton, GoalsChart, GoalsHistory],
   templateUrl: './goals-info-container.html',
   styleUrl: './goals-info-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,35 +18,10 @@ import { NgClass } from '@angular/common';
 export class GoalsInfoContainer {
   private store = inject(GoalsPageStore);
   private goalService = inject(GoalService);
-  readonly chartData = this.goalService.chartData;
-  readonly transactions = this.store.transactions;
-  readonly selectedBucket = this.goalService.selectedBucket;
-
-  readonly filteredTransactions = computed(() => {
-    const bucket = this.goalService.selectedBucket();
-    const transactions = this.store.transactions();
-    const range = this.goalService.range();
-
-    if (!bucket) return transactions;
-
-    return transactions.filter((t) => this.goalService.getPeriodKey(t.date, range) === bucket);
-  });
-
-  readonly periodTitle = computed(() => {
-    const bucket = this.goalService.selectedBucket();
-    const range = this.goalService.range();
-    if (!bucket) return 'Выберите период';
-    const d = dayjs(bucket);
-    if (range === 'days') return d.format('D MMMM YYYY');
-    if (range === 'years') return d.format('YYYY');
-    return d.format('MMMM YYYY');
-  });
-
   readonly listGoals = this.store.goals;
-
-  readonly weekDayLabels = weekDayLabelsShort;
-
   readonly goal = this.store.selectedGoal;
+  readonly range = this.goalService.range;
+  readonly weekDayLabels = weekDayLabelsShort;
 
   readonly loading = this.store.loadingSelectedGoal;
   readonly restDays = computed(() => {
@@ -62,19 +37,9 @@ export class GoalsInfoContainer {
     return Math.max(0, diff);
   });
 
-  setRange(range: string) {
-    this.goalService.setRange(range as any);
-  }
-
-  setBucket(key: string | null) {
-    this.goalService.selectBucket(key);
-  }
-
   readonly progressPercent = computed(() => {
     const goal = this.goal();
-
     if (!goal || goal.targetAmount === 0) return 0;
-
     return Math.round((goal.currentAmount / goal.targetAmount) * 100);
   });
 
