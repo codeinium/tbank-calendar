@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
 import { TuiButton } from '@taiga-ui/core';
-import { weekDayLabelsShort } from '@/app/models/calendar/types';
 import { GoalsPageStore } from '../../services/goal-page.store';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { GoalsInfoSkeleton } from '../goals-info-skeleton/goals-info-skeleton';
 import { GoalService } from '../../services/goal.service';
 import { GoalsChart } from '../goals-chart/goals-chart';
 import { GoalsHistory } from '../goals-history/goals-history';
+import { GoalsProgressBar } from '../goals-progress-bar/goals-progress-bar';
 
 @Component({
   selector: 'app-goals-info-container',
-  imports: [TuiButton, GoalsInfoSkeleton, GoalsChart, GoalsHistory],
+  imports: [TuiButton, GoalsInfoSkeleton, GoalsChart, GoalsHistory, GoalsProgressBar],
   templateUrl: './goals-info-container.html',
   styleUrl: './goals-info-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +21,6 @@ export class GoalsInfoContainer {
   readonly listGoals = this.store.goals;
   readonly goal = this.store.selectedGoal;
   readonly range = this.goalService.range;
-  readonly weekDayLabels = weekDayLabelsShort;
 
   readonly loading = this.store.loadingSelectedGoal;
   readonly restDays = computed(() => {

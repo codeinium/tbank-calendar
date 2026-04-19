@@ -4,6 +4,7 @@ import { GoalsPageStore } from './goal-page.store';
 import { Transaction } from '@/app/models/transaction/model/transaction.model';
 import { ChartRange, GoalDetails } from '@/app/models/goal/model/goal.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
+import { weekDayLabelsShort } from '@/app/models/calendar/types';
 
 @Injectable({ providedIn: 'root' })
 export class GoalService {
@@ -107,5 +108,66 @@ export class GoalService {
     if (range === 'days') return d.format('YYYY-MM-DD');
     if (range === 'years') return d.format('YYYY');
     return d.format('YYYY-MM');
+  }
+
+  readonly weeklyProgress = computed(() => {
+    const transactions = this.store.transactions();
+    const startOfWeek = dayjs().startOf('week').add(0, 'day');
+    const daysData = [];
+
+    if (!transactions || transactions.length === 0) {
+      for (let i = 0; i < 7; i++) {
+        const currentDay = startOfWeek.add(i, 'day');
+        daysData.push({
+          dayName: weekDayLabelsShort[currentDay.day()],
+          isActive: false,
+          isToday: currentDay.isSame(dayjs(), 'day'),
+          dateKey: currentDay.format('YYYY-MM-DD'),
+        });
+      }
+      return { streak: 0, days: daysData };
+    }
+    const activeDates = new Set<string>();
+    transactions.forEach((tx) => {
+      activeDates.add(dayjs(tx.date).format('YYYY-MM-DD'));
+    });
+
+    const streak = this.calculateStreak(activeDates);
+
+    for (let i = 0; i < 7; i++) {
+      const currentDay = startOfWeek.add(i, 'day');
+      const dateKey = currentDay.format('YYYY-MM-DD');
+      const isActive = activeDates.has(dateKey);
+      const isToday = currentDay.isSame(dayjs(), 'day');
+
+      daysData.push({
+        dayName: weekDayLabelsShort[currentDay.day()],
+        isActive,
+        isToday,
+        dateKey,
+      });
+    }
+
+    return { streak, days: daysData };
+  });
+
+  private calculateStreak(activeDates: Set<string>): number {
+    let streak = 0;
+    let currentDate = dayjs().startOf('day');
+
+    if (!activeDates.has(currentDate.format('YYYY-MM-DD'))) {
+      currentDate = currentDate.subtract(1, 'day');
+    }
+
+    while (true) {
+      const key = currentDate.format('YYYY-MM-DD');
+      if (activeDates.has(key)) {
+        streak++;
+        currentDate = currentDate.subtract(1, 'day');
+      } else {
+        break;
+      }
+    }
+    return streak;
   }
 }

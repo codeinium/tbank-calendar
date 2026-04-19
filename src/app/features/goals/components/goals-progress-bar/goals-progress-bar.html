@@ -1,0 +1,31 @@
+<div class="max-w-60 min-h-28.5 py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+  <div class="flex items-center justify-between mb-3">
+    <span class="text-base">
+        Дней без перерыва {{ progressData().streak }} 🔥
+    </span>
+  </div>
+  <div class="flex flex-row justify-between gap-1">
+    @for (day of progressData().days; track day.dateKey) {
+      <div class="flex flex-col items-center gap-1.5 w-8">
+        <span 
+          class="text-xs font-medium uppercase"
+          [class.text-(--progress)]="day.isToday" 
+          [class.opacity-70]="!day.isActive && !day.isToday">
+          {{ day.dayName }}
+        </span>
+        <div 
+          class="w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300"
+          [ngClass]="{
+            'bg-(--progress) text-white': day.isActive,  
+            'bg-gray-100 text-gray-300': !day.isActive, 
+            'ring-2 ring-(--progress) ring-offset-2': day.isToday 
+          }"
+        >
+          @if (day.isActive) {
+            <img src="/assets/icons/icon-check.svg" alt="active day">
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

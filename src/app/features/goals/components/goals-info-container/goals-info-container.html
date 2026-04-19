@@ -36,17 +36,7 @@
           <div class="text-base">{{ progressPercent() }} %</div>
         </div>
       </div>
-      <div class="w-58 py-4 px-5 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-        <span class="text-base">3 дня подряд 🔥</span>
-        <div class="flex flex-row gap-1">
-          @for (item of weekDayLabels; track $index) {
-            <div class="flex flex-col items-center">
-              <span>{{ item }}</span>
-              <div class="w-6 h-6 rounded-2xl bg-white"></div>
-            </div>
-          }
-        </div>
-      </div>
+      <app-goals-progress-bar></app-goals-progress-bar>
       <app-goals-chart></app-goals-chart>
       <app-goals-history></app-goals-history>
     </div>
