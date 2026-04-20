@@ -1,4 +1,6 @@
-<aside class="h-full p-5 rounded-(--tui-radius-l) shadow-(--tui-shadow-s) bg-(--card-4)">
+<aside
+  class="hidden md:block h-full p-5 rounded-(--tui-radius-l) shadow-(--tui-shadow-s) bg-(--card-4)"
+>
   <button tuiButton type="button" class="w-full text-base" (click)="openModal()">
     Создать цель
   </button>
@@ -14,7 +16,7 @@
               ? 'text-(--background) bg-(--foreground)'
               : 'bg-(--background) shadow-(--tui-shadow-m) hover:bg-(--background-hover) focus:bg-(--foreground-hover)'
           "
-          (click)="selectGoal(item.id); setIsSidebarOpen(false)"
+          (click)="selectGoal(item.id); toogleSidebar(false)"
         >
           {{ item.name }}
         </button>
@@ -22,10 +24,55 @@
     }
   </ul>
 </aside>
+<button
+  tuiButton
+  type="md:hidden button"
+  (click)="toogleSidebar(true)"
+  [attr.aria-expanded]="isSidebarOpen()"
+>
+  Открыть список целей
+</button>
+@if (isSidebarOpen()) {
+  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" (click)="toogleSidebar(false)">
+    <aside
+      class="relative w-80 max-w-full h-full px-2 bg-(--background) shadow-(--tui-shadow-m)"
+      [class.translate-x-0]="isSidebarOpen()"
+    >
+      <div class="flex items-center justify-end p-4">
+    <button
+      (click)="toogleSidebar(false)"
+      class="text-base cursor-pointer"
+    >
+      ✖
+    </button>
+  </div>
+      <button tuiButton type="button" class="w-full text-base" (click)="openModal()">
+        Создать цель
+      </button>
+      <h2 class="mt-5 mb-2 text-base">Ваши цели</h2>
+      <ul class="flex flex-col gap-4">
+        @for (item of goals(); track item.id) {
+          <li>
+            <button
+              type="button"
+              class="w-full min-h-8 h-full pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer duration-300 hover:scale-[1.02]"
+              [ngClass]="
+                item.id === selectedGoal()?.id
+                  ? 'text-(--background) bg-(--foreground)'
+                  : 'bg-(--background) shadow-(--tui-shadow-m) hover:bg-(--background-hover) focus:bg-(--foreground-hover)'
+              "
+              (click)="selectGoal(item.id); toogleSidebar(false)"
+            >
+              {{ item.name }}
+            </button>
+          </li>
+        }
+      </ul>
+    </aside>
+  </div>
+}
 @if (isCreateModalOpen()) {
-  <app-modal-dialog
-    title="Создать новую цель"
-    (close)="closeModal()">
+  <app-modal-dialog title="Создать новую цель" (close)="closeModal()">
     <app-create-goal-form (close)="closeModal()" />
   </app-modal-dialog>
 }

@@ -14,9 +14,4 @@ import { GoalService } from '../../services/goal.service';
   providers: [],
 })
 export class GoalsPageComponent {
-  private service = inject(GoalService);
-  readonly isSidebarOpen = this.service.isSidebarOpen;
-  setIsSidebarOpen(value: boolean) {
-    this.service.setIsSidebarOpen(value);
-  }
 }

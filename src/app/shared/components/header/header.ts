@@ -31,7 +31,6 @@ export class HeaderComponent {
     document.body.style.overflow = this.isSidebarOpen ? 'hidden' : '';
   }
 
-  // Закрытие по ESC
   @HostListener('document:keydown.escape')
   onEscPress(): void {
     if (this.isSidebarOpen) this.closeSidebar();
