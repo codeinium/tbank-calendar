@@ -1,17 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  inject,
-  computed,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { Dayjs } from 'dayjs';
 import { CalendarService } from '@/app/features/calendar/services/calendar.service';
-import { TransactionCard } from '@/app/models/transaction/ui/transaction-card/transaction-card';
-import type { Transaction } from '@/app/models/transaction/model/transaction.model';
-import type { CalendarView } from '@/app/models/calendar/types';
+import { TransactionCard } from '@/app/shared/components/transaction-card/transaction-card';
+import type { Transaction } from '@/app/models/transaction/transaction.model';
+import type { CalendarView } from '@/app/features/calendar/models/types';
 
 @Component({
   selector: 'app-day-cell',

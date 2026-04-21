@@ -2,11 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { GoalService } from '../../services/goal.service';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { GoalsPageStore } from '../../services/goal-page.store';
-import { TuiIcon, TuiTextfield} from '@taiga-ui/core';
-import {
-  TuiTooltip,
-} from '@taiga-ui/kit';
-import { TransactionCard } from '@/app/models/transaction/ui/transaction-card/transaction-card';
+import { TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { TuiTooltip } from '@taiga-ui/kit';
+import { TransactionCard } from '@/app/shared/components/transaction-card/transaction-card';
 
 @Component({
   selector: 'app-goals-history',

@@ -1,5 +1,5 @@
 import { ApiTransaction } from './transaction.api';
-import { Transaction } from '../model/transaction.model';
+import { Transaction } from '../../models/transaction/transaction.model';
 
 export function mapTransaction(api: ApiTransaction): Transaction {
   return {

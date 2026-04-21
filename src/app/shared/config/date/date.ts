@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
+import { Transaction } from '@/app/models/transaction/transaction.model';
 
 export function getWeekDays(currentDate: dayjs.Dayjs, firstDayOfWeek: number): dayjs.Dayjs[] {
   const startOfWeekFromCurrentDate = currentDate.startOf('week').day(firstDayOfWeek);

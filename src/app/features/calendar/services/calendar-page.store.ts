@@ -1,7 +1,7 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { TransactionService } from '@/app/models/transaction/api/transaction.service';
+import { TransactionService } from '@/app/services/transaction/transaction.service';
 import { CalendarService } from './calendar.service';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
+import { Transaction } from '@/app/models/transaction/transaction.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 
 @Injectable()

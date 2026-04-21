@@ -5,23 +5,6 @@
          bg-(--card-5) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)
          md:min-h-213"
 >
-  <div class="hidden md:block">
-    <app-goals-sidebar class="h-full"></app-goals-sidebar>
-  </div>
-  <div class="md:hidden">
-    <button tuiButton type="button" (click)="setIsSidebarOpen(true)">Открыть список целей</button>
-  </div>
+  <app-goals-sidebar class="h-full"></app-goals-sidebar>
   <app-goals-info-container class="min-w-0"></app-goals-info-container>
 </div>
-@if (isSidebarOpen()) {
-  <div class="fixed inset-0 z-50 flex">
-    <div
-      class="absolute inset-0 bg-black/40 backdrop-blur-sm"
-      (click)="setIsSidebarOpen(false)"></div>
-
-    <div class="relative w-80 max-w-full h-full pt-15 px-2 bg-(--background) shadow-(--tui-shadow-m)">
-      <app-goals-sidebar class="h-full"></app-goals-sidebar>
-    </div>
-
-  </div>
-}

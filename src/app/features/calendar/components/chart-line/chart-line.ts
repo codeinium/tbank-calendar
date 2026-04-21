@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, computed, signal } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
+import { Transaction } from '@/app/models/transaction/transaction.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { ChartConfiguration } from 'chart.js';
 

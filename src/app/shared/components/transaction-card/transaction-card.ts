@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { Transaction } from '../../model/transaction.model';
+import type { Transaction } from '../../../models/transaction/transaction.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 
 @Component({

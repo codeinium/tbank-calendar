@@ -16,16 +16,17 @@ import { GoalService } from '../../services/goal.service';
 export class GoalsSidebar {
   private store = inject(GoalsPageStore);
   private service = inject(GoalService);
-  
-  isSidebarOpen = this.service.isSidebarOpen;
-  setIsSidebarOpen(value: boolean) {
-    this.service.setIsSidebarOpen(value);
-  }
 
   goals = this.store.goals;
   selectedGoal = this.store.selectedGoal;
-
   isCreateModalOpen = signal(false);
+
+  isSidebarOpen = this.service.isSidebarOpen;
+
+  toogleSidebar(value: boolean) {
+    this.service.setIsSidebarOpen(value);
+  }
+
 
   ngOnInit() {
     this.store.loadGoals();
@@ -33,6 +34,7 @@ export class GoalsSidebar {
 
   selectGoal(id: string) {
     this.store.selectGoal(id);
+    this.toogleSidebar(false);
   }
 
   openModal() {

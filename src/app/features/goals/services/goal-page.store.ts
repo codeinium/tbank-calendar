@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { GoalsService } from '@/app/models/goal/api/goal.service';
+import { GoalsService } from '@/app/services/goal/goal.service';
 import {
   Goal,
   GoalDetails,
@@ -7,10 +7,9 @@ import {
   GoalTransactionRequest,
   UpdateGoalRequest,
   UpdateGoalAutoPayRequest,
-} from '@/app/models/goal/model/goal.model';
+} from '@/app/models/goal/goal.model';
 import { forkJoin, take } from 'rxjs';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
-
+import { Transaction } from '@/app/models/transaction/transaction.model';
 
 @Injectable({ providedIn: 'root' })
 export class GoalsPageStore {

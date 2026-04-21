@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
 import { CommonModule } from '@angular/common';
-import { TransactionCard } from '@/app/models/transaction/ui/transaction-card/transaction-card';
+import { TransactionCard } from '@/app/shared/components/transaction-card/transaction-card';
 import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
 
 @Component({

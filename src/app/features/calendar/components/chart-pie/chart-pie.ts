@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, signal, computed } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
+import { Transaction } from '@/app/models/transaction/transaction.model';
 
 @Component({
   selector: 'app-chart-pie',
