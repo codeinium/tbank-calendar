@@ -4,16 +4,16 @@ import {
   CreateGoalRequest,
   GoalTransactionRequest,
   UpdateGoalRequest,
-  UpdateGoalAutoPayRequest
-} from '../model/goal.model';
+  UpdateGoalAutoPayRequest,
+} from '../../models/goal/goal.model';
 import {
   ApiGoal,
   ApiGoalDetails,
   ApiCreateGoalRequest,
   ApiGoalTransactionRequest,
   ApiUpdateGoalRequest,
-  ApiUpdateGoalAutoPayRequest
-} from '../api/goal.api';
+  ApiUpdateGoalAutoPayRequest,
+} from './goal.api';
 
 export function mapGoal(api: ApiGoal): Goal {
   return {
@@ -59,25 +59,25 @@ export function mapTransactionGoal(model: GoalTransactionRequest): ApiGoalTransa
   return {
     id: model.id,
     amount: model.amount,
-    account_id: model.accountId
-  }
+    account_id: model.accountId,
+  };
 }
 
 export function mapUpdateGoal(model: UpdateGoalRequest): ApiUpdateGoalRequest {
   return {
     id: model.id,
     name: model.name,
-    deadline: model.deadline
-  }
+    deadline: model.deadline,
+  };
 }
 
-export function mapUpdateGoalAutoPay(model: UpdateGoalAutoPayRequest) : ApiUpdateGoalAutoPayRequest {
+export function mapUpdateGoalAutoPay(model: UpdateGoalAutoPayRequest): ApiUpdateGoalAutoPayRequest {
   return {
     id: model.id,
     is_active: model.isActive,
     account_id: model.accountId,
     billing_cycle: model.billingCycle,
     billing_interval: model.billingInterval,
-    amount: model.amount
-  }
+    amount: model.amount,
+  };
 }

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Goal, GoalDetails } from '../model/goal.model';
+import { Goal, GoalDetails } from '../../models/goal/goal.model';
 
 import {
   ApiCreateGoalRequest,
@@ -7,8 +7,8 @@ import {
   ApiUpdateGoalAutoPayRequest,
   ApiUpdateGoalRequest,
 } from './goal.api';
-import { Transaction } from '../../transaction/model/transaction.model';
-import { TRANSACTIONS_MOCK } from '../../transaction/api/transaction.mock';
+import { Transaction } from '../../models/transaction/transaction.model';
+import { TRANSACTIONS_MOCK } from '../transaction/transaction.mock';
 
 export const MOCK_GOALS: Goal[] = [
   {
@@ -75,7 +75,6 @@ export const MOCK_GOAL_DETAILS: Record<string, GoalDetails> = {
     autoPay: false,
   },
 };
-
 
 export function getMockGoalDetails(goalId: string): GoalDetails | null {
   return MOCK_GOAL_DETAILS[goalId] || null;

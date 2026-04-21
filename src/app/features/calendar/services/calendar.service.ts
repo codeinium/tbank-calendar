@@ -1,8 +1,13 @@
 import { Injectable, signal, computed, Signal } from '@angular/core';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { Dayjs } from 'dayjs';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
-import { CalendarView, WeekDay, WEEK_DAY_TO_NUMBER, ChartView } from '@/app/models/calendar/types';
+import { Transaction } from '@/app/models/transaction/transaction.model';
+import {
+  CalendarView,
+  WeekDay,
+  WEEK_DAY_TO_NUMBER,
+  ChartView,
+} from '@/app/features/calendar/models/types';
 
 export interface ModalState {
   date: Dayjs | null;
@@ -39,9 +44,7 @@ export class CalendarService {
   readonly today: Signal<Dayjs> = this._today.asReadonly();
   readonly modalState: Signal<ModalState> = this._modalState.asReadonly();
 
-  constructor() {
-  }
-
+  constructor() {}
 
   setView(view: CalendarView) {
     this._view.set(view);

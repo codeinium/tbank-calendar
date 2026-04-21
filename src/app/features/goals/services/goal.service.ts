@@ -1,10 +1,10 @@
 import { transition } from '@angular/animations';
 import { inject, Injectable, signal, computed, effect } from '@angular/core';
 import { GoalsPageStore } from './goal-page.store';
-import { Transaction } from '@/app/models/transaction/model/transaction.model';
-import { ChartRange, GoalDetails } from '@/app/models/goal/model/goal.model';
+import { Transaction } from '@/app/models/transaction/transaction.model';
+import { ChartRange, GoalDetails } from '@/app/models/goal/goal.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { weekDayLabelsShort } from '@/app/models/calendar/types';
+import { weekDayLabelsShort } from '@/app/features/calendar/models/types';
 
 @Injectable({ providedIn: 'root' })
 export class GoalService {

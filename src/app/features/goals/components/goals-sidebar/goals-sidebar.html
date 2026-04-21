@@ -24,14 +24,16 @@
     }
   </ul>
 </aside>
-<button
-  tuiButton
-  type="md:hidden button"
-  (click)="toogleSidebar(true)"
-  [attr.aria-expanded]="isSidebarOpen()"
->
-  Открыть список целей
-</button>
+<div class="md:hidden">
+  <button
+    tuiButton
+    type="button"
+    (click)="toogleSidebar(true)"
+    [attr.aria-expanded]="isSidebarOpen()"
+  >
+    Открыть список целей
+  </button>
+</div>
 @if (isSidebarOpen()) {
   <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" (click)="toogleSidebar(false)">
     <aside
@@ -39,13 +41,8 @@
       [class.translate-x-0]="isSidebarOpen()"
     >
       <div class="flex items-center justify-end p-4">
-    <button
-      (click)="toogleSidebar(false)"
-      class="text-base cursor-pointer"
-    >
-      ✖
-    </button>
-  </div>
+        <button (click)="toogleSidebar(false)" class="text-base cursor-pointer">✖</button>
+      </div>
       <button tuiButton type="button" class="w-full text-base" (click)="openModal()">
         Создать цель
       </button>

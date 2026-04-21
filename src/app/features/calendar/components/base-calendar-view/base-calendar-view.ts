@@ -2,9 +2,9 @@ import { Component, inject, input, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarService } from '@/app/features/calendar/services/calendar.service';
 import { filterTransactionsByDay } from '@/app/shared/config/date/date';
-import type { Transaction } from '@/app/models/transaction/model/transaction.model';
+import type { Transaction } from '@/app/models/transaction/transaction.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { weekDayLabels, weekDayLabelsShort } from '@/app/models/calendar/types';
+import { weekDayLabels, weekDayLabelsShort } from '@/app/features/calendar/models/types';
 
 export interface CalendarDay {
   date: dayjs.Dayjs;

@@ -9,8 +9,8 @@ import {
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartType, ChartDataset, ChartOptions } from 'chart.js';
 import dayjs from 'dayjs';
-import { TransactionService } from '../../../../models/transaction/api/transaction.service';
-import type { Transaction } from '../../../../models/transaction/model/transaction.model';
+import { TransactionService } from '../../../../services/transaction/transaction.service';
+import type { Transaction } from '../../../../models/transaction/transaction.model';
 
 type PeriodType = 'week' | 'month' | 'year';
 

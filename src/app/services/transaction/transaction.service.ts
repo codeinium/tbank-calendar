@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Transaction } from '../model/transaction.model';
+import { Transaction } from '../../models/transaction/transaction.model';
 import { TRANSACTIONS_MOCK } from './transaction.mock';
 import { mapTransaction } from './transaction.mapper';
 import { ApiTransaction } from './transaction.api';

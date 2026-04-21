@@ -1,4 +1,4 @@
-import { GoalStatus, BillingCycle } from '../model/goal.model';
+import { GoalStatus, BillingCycle } from '../../models/goal/goal.model';
 
 /* для списка */
 export interface ApiGoal {
@@ -46,9 +46,9 @@ export interface ApiGoalTransactionRequest {
 
 /* изменение цели (название, дедлайн) */
 export interface ApiUpdateGoalRequest {
-    id: number;
-    name: string;
-    deadline: string;
+  id: number;
+  name: string;
+  deadline: string;
 }
 
 /* изменение цели (автопополнение) */

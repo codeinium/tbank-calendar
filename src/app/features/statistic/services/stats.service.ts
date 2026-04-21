@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import dayjs from 'dayjs';
-import { Transaction } from '../../../models/transaction/model/transaction.model';
+import { Transaction } from '../../../models/transaction/transaction.model';
 
 export interface DailyStats {
   date: string;

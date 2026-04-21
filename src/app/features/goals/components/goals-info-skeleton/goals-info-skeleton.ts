@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { weekDayLabelsShort } from '@/app/models/calendar/types';
+import { weekDayLabelsShort } from '@/app/features/calendar/models/types';
 import { SkeletonLine } from '@/app/shared/components/skeleton-line/skeleton-line';
 import { SkeletonBlock } from '@/app/shared/components/skeleton-block/skeleton-block';
 

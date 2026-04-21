@@ -1,8 +1,28 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, signal } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Output,
+  signal,
+} from '@angular/core';
+import {
+  FormBuilder,
+  Validators,
+  ReactiveFormsModule,
+  ValidatorFn,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { GoalsPageStore } from '@/app/features/goals/services/goal-page.store';
-import { TuiButton, TuiIcon, tuiItemsHandlersProvider, TuiTextfield, TuiLabel} from '@taiga-ui/core';
-import { BillingCycle, CreateGoalRequest } from '@/app/models/goal/model/goal.model';
+import {
+  TuiButton,
+  TuiIcon,
+  tuiItemsHandlersProvider,
+  TuiTextfield,
+  TuiLabel,
+} from '@taiga-ui/core';
+import { BillingCycle, CreateGoalRequest } from '@/app/models/goal/goal.model';
 import {
   TuiInputDate,
   TuiCheckbox,
@@ -14,7 +34,6 @@ import {
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TuiDay } from '@taiga-ui/cdk';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-
 
 @Component({
   selector: 'app-create-goal-form',

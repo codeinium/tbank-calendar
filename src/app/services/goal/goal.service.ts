@@ -9,7 +9,7 @@ import {
   GoalTransactionRequest,
   UpdateGoalAutoPayRequest,
   UpdateGoalRequest,
-} from '../model/goal.model';
+} from '../../models/goal/goal.model';
 
 import { ApiGoal, ApiGoalDetails, ApiCreateGoalRequest } from './goal.api';
 
@@ -32,8 +32,7 @@ import {
   mockUpdateGoal,
   getMockTransactions,
 } from './goal.mock';
-import { Transaction } from '../../transaction/model/transaction.model';
-
+import { Transaction } from '../../models/transaction/transaction.model';
 
 @Injectable({ providedIn: 'root' })
 export class GoalsService {

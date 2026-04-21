@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarService } from '../../services/calendar.service';
-import { MONTHS, WeekItem } from '@/app/models/calendar/types';
+import { MONTHS, WeekItem } from '@/app/features/calendar/models/types';
 import { formatWeekRange, getMonthWeeksList } from '@/app/shared/config/date/date';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { CommonModule } from '@angular/common';
