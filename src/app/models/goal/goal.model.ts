@@ -42,7 +42,7 @@ export interface GoalTransactionRequest {
 
 /* изменение цели (название, дедлайн) */
 export interface UpdateGoalRequest {
-  id: number;
+  id: string;
   name: string;
   deadline: string;
 }

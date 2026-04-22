@@ -46,7 +46,7 @@ export interface ApiGoalTransactionRequest {
 
 /* изменение цели (название, дедлайн) */
 export interface ApiUpdateGoalRequest {
-  id: number;
+  id: string;
   name: string;
   deadline: string;
 }

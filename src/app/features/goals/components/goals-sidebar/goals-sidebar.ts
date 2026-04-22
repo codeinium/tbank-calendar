@@ -26,8 +26,7 @@ export class GoalsSidebar {
   toogleSidebar(value: boolean) {
     this.service.setIsSidebarOpen(value);
   }
-
-
+  
   ngOnInit() {
     this.store.loadGoals();
   }

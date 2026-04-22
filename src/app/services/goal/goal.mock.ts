@@ -155,7 +155,7 @@ export function mockUpdateGoal(goalId: string, request: ApiUpdateGoalRequest): G
 
   return {
     ...goal,
-    name: request.deadline,
+    name: request.name,
     deadline: request.deadline,
   };
 }

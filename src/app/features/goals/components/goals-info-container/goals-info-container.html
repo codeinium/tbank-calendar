@@ -13,7 +13,9 @@
     <div class="flex flex-col gap-4">
       <div class="flex gap-3 items-center">
         <h1 class="text-[2.25rem]">{{ goal()?.name }}</h1>
-        <img src="assets/icons/icon-edit.svg" alt="edit" class="h-6 cursor-pointer" />
+        <button [hidden]="isHardModeOn()" (click)="openUpdateModal()">
+          <img src="assets/icons/icon-edit.svg" alt="edit" class="h-6 cursor-pointer" />
+        </button>
       </div>
       <span class="text-base">Осталось дней до закрытия цели: {{ restDays() }}</span>
       <div
@@ -41,4 +43,10 @@
       <app-goals-history></app-goals-history>
     </div>
   }
+}
+
+@if (isUpdateModalOpen()) {
+  <app-modal-dialog title="Изменить цель" (close)="closeUpdateModal()">
+    <app-update-goal-form (close)="closeUpdateModal()" />
+  </app-modal-dialog>
 }
