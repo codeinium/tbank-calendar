@@ -11,5 +11,4 @@ import { SkeletonBlock } from '@/app/shared/components/skeleton-block/skeleton-b
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsInfoSkeleton {
-  readonly weekDayLabels = weekDayLabelsShort;
 }

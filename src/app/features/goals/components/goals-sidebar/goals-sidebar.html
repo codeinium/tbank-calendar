@@ -4,49 +4,14 @@
   <button tuiButton type="button" class="w-full text-base" (click)="openModal()">
     Создать цель
   </button>
-  <h2 class="mt-5 mb-2 text-base">Ваши цели</h2>
-  <ul class="flex flex-col gap-4">
-    @for (item of goals(); track item.id) {
-      <li>
-        <button
-          type="button"
-          class="w-full min-h-8 h-full pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer duration-300 hover:scale-[1.02]"
-          [ngClass]="
-            item.id === selectedGoal()?.id
-              ? 'text-(--background) bg-(--foreground)'
-              : 'bg-(--background) shadow-(--tui-shadow-m) hover:bg-(--background-hover) focus:bg-(--foreground-hover)'
-          "
-          (click)="selectGoal(item.id); toogleSidebar(false)"
-        >
-          {{ item.name }}
-        </button>
-      </li>
+  @switch (viewState()) {
+    @case ('loading') {
+      <app-goals-sidebar-skeleton />
     }
-  </ul>
-</aside>
-<div class="md:hidden">
-  <button
-    tuiButton
-    type="button"
-    (click)="toogleSidebar(true)"
-    [attr.aria-expanded]="isSidebarOpen()"
-  >
-    Открыть список целей
-  </button>
-</div>
-@if (isSidebarOpen()) {
-  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" (click)="toogleSidebar(false)">
-    <aside
-      class="relative w-80 max-w-full h-full px-2 bg-(--background) shadow-(--tui-shadow-m)"
-      [class.translate-x-0]="isSidebarOpen()"
-    >
-      <div class="flex items-center justify-end p-4">
-        <button (click)="toogleSidebar(false)" class="text-base cursor-pointer">✖</button>
-      </div>
-      <button tuiButton type="button" class="w-full text-base" (click)="openModal()">
-        Создать цель
-      </button>
+
+    @case ('ready') {
       <h2 class="mt-5 mb-2 text-base">Ваши цели</h2>
+
       <ul class="flex flex-col gap-4">
         @for (item of goals(); track item.id) {
           <li>
@@ -58,13 +23,88 @@
                   ? 'text-(--background) bg-(--foreground)'
                   : 'bg-(--background) shadow-(--tui-shadow-m) hover:bg-(--background-hover) focus:bg-(--foreground-hover)'
               "
-              (click)="selectGoal(item.id); toogleSidebar(false)"
+              (click)="selectGoal(item.id); toggleSidebar(false)"
             >
               {{ item.name }}
             </button>
           </li>
         }
       </ul>
+    }
+
+    @case ('empty') {
+      <p class="mt-5 text-sm opacity-60">У вас пока нет целей</p>
+    }
+  }
+</aside>
+<div class="md:hidden">
+  <button
+    tuiButton
+    type="button"
+    (click)="toggleSidebar(true)"
+    [attr.aria-expanded]="isSidebarOpen()"
+  >
+    Открыть список целей
+  </button>
+
+  <button tuiButton type="button" class="mt-2 w-full" (click)="openModal()">
+    Создать цель
+  </button>
+</div>
+
+@if (isSidebarOpen()) {
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+    (click)="toggleSidebar(false)"
+  >
+    <aside
+      class="relative w-80 max-w-full h-full px-2 bg-(--background) shadow-(--tui-shadow-m)
+             transform transition-transform duration-300 -translate-x-full"
+      [class.translate-x-0]="isSidebarOpen()"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-center justify-end p-4">
+        <button (click)="toggleSidebar(false)" class="text-base cursor-pointer">
+          ✖
+        </button>
+      </div>
+
+      <button tuiButton type="button" class="w-full text-base" (click)="openModal()">
+        Создать цель
+      </button>
+
+      @switch (viewState()) {
+        @case ('loading') {
+          <app-goals-sidebar-skeleton />
+        }
+
+        @case ('ready') {
+          <h2 class="mt-5 mb-2 text-base">Ваши цели</h2>
+
+          <ul class="flex flex-col gap-4">
+            @for (item of goals(); track item.id) {
+              <li>
+                <button
+                  type="button"
+                  class="w-full min-h-8 h-full pl-3 text-base flex items-center rounded-(--tui-radius-m) cursor-pointer duration-300 hover:scale-[1.02]"
+                  [ngClass]="
+                    item.id === selectedGoal()?.id
+                      ? 'text-(--background) bg-(--foreground)'
+                      : 'bg-(--background) shadow-(--tui-shadow-m) hover:bg-(--background-hover) focus:bg-(--foreground-hover)'
+                  "
+                  (click)="selectGoal(item.id); toggleSidebar(false)"
+                >
+                  {{ item.name }}
+                </button>
+              </li>
+            }
+          </ul>
+        }
+
+        @case ('empty') {
+          <p class="mt-5 text-sm opacity-60">У вас пока нет целей</p>
+        }
+      }
     </aside>
   </div>
 }
