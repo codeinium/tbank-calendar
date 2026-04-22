@@ -47,6 +47,10 @@ export const MOCK_GOAL_DETAILS: Record<string, GoalDetails> = {
     hardMode: false,
     status: 'active',
     autoPay: true,
+    autoPayAccount: '1',
+    billingCycle: 'daily',
+    billingInterval: 5,
+    autoPayAmount: 1000,
   },
   'goal-2': {
     id: 'goal-2',

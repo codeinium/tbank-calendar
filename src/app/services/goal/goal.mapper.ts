@@ -38,6 +38,10 @@ export function mapGoalDetails(api: ApiGoalDetails): GoalDetails {
     hardMode: api.hard_mode,
     status: api.status,
     autoPay: api.auto_pay,
+    autoPayAccount: api.auto_pay_account_id,
+    billingCycle: api.billing_cycle,
+    billingInterval: api.billing_interval,
+    autoPayAmount: api.auto_pay_amount,
   };
 }
 

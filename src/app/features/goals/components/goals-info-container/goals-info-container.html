@@ -38,7 +38,10 @@
           <div class="text-base">{{ progressPercent() }} %</div>
         </div>
       </div>
-      <app-goals-progress-bar></app-goals-progress-bar>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <app-goals-progress-bar></app-goals-progress-bar>
+        <app-auto-pay-container></app-auto-pay-container>
+      </div>
       <app-goals-chart></app-goals-chart>
       <app-goals-history></app-goals-history>
     </div>

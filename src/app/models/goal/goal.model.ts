@@ -18,6 +18,10 @@ export interface GoalDetails extends Goal {
   achievedAt: string | null;
   hardMode: boolean;
   autoPay: boolean;
+  autoPayAccount?: string;
+  billingCycle?: BillingCycle;
+  billingInterval?: number;
+  autoPayAmount?: number;
 }
 
 /* создание цели */

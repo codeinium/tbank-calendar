@@ -22,6 +22,10 @@ export interface ApiGoalDetails {
   hard_mode: boolean;
   status: GoalStatus;
   auto_pay: boolean;
+  auto_pay_account_id?: string;
+  billing_cycle?: BillingCycle;
+  billing_interval?: number;
+  auto_pay_amount?: number;
 }
 
 /* создание новой цели */

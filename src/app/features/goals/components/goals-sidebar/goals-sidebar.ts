@@ -1,4 +1,4 @@
-import { CreateGoalForm } from './../create-goal-form/create-goal-form';
+import { CreateGoalForm } from '../../forms/create-goal-form/create-goal-form';
 import { NgClass } from '@angular/common';
 import { GoalsPageStore } from '../../services/goal-page.store';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
