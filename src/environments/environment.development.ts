@@ -5,5 +5,5 @@ export const environment: EnvironmentConfig = {
     apiUrl: '/api/v1',
 
     useMock: true,
-    mockDelay: 1000,
+    mockDelay: 3000,
 };
