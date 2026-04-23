@@ -35,7 +35,7 @@ export interface ApiCreateGoalRequest {
   deadline: string;
   hard_mode: boolean;
   auto_pay: boolean;
-  account_id?: string;
+  auto_pay_account_id?: string;
   billing_cycle?: BillingCycle;
   billing_interval?: number;
   auto_pay_amount?: number;
@@ -59,7 +59,7 @@ export interface ApiUpdateGoalRequest {
 export interface ApiUpdateGoalAutoPayRequest {
   id: string;
   is_active: boolean;
-  account_id?: string;
+  auto_pay_account_id?: string;
   billing_cycle?: BillingCycle;
   billing_interval?: number;
   amount?: number;

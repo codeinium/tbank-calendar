@@ -18,7 +18,7 @@ export interface GoalDetails extends Goal {
   achievedAt: string | null;
   hardMode: boolean;
   autoPay: boolean;
-  autoPayAccount?: string;
+  autoPayAccountId?: string;
   billingCycle?: BillingCycle;
   billingInterval?: number;
   autoPayAmount?: number;
@@ -31,7 +31,7 @@ export interface CreateGoalRequest {
   deadline: string;
   hardMode: boolean;
   autoPay: boolean;
-  accountId?: string;
+  autoPayAccountId?: string;
   billingCycle?: BillingCycle;
   billingInterval?: number;
   autoPayAmount?: number;
@@ -55,7 +55,7 @@ export interface UpdateGoalRequest {
 export interface UpdateGoalAutoPayRequest {
   id: string;
   isActive: boolean;
-  accountId?: string;
+  autoPayAccountId?: string;
   billingCycle?: BillingCycle;
   billingInterval?: number;
   amount?: number;

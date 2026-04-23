@@ -53,7 +53,10 @@ export class UpdateAutoPayForm {
   form = this.fb.group({
     isActive: [false],
 
-    autoPayAccount: [{ value: null as string | null, disabled: true }, Validators.required],
+    autoPayAccountId: [
+      { value: null as string | null, disabled: true },
+      Validators.required,
+    ],
     billingCycle: [{ value: null as any, disabled: true }, Validators.required],
     billingInterval: [
       { value: null as number | null, disabled: true },
@@ -75,7 +78,7 @@ export class UpdateAutoPayForm {
       this.form.patchValue(
         {
           isActive,
-          autoPayAccount: goal.autoPayAccount ?? null,
+          autoPayAccountId: goal.autoPayAccountId ?? null,
           billingCycle: selectedCycle ?? null,
           billingInterval: goal.billingInterval ?? null,
           amount: goal.autoPayAmount ?? null,
@@ -98,12 +101,12 @@ export class UpdateAutoPayForm {
   }
 
   private enableFields() {
-    const fields = ['autoPayAccount', 'billingCycle', 'billingInterval', 'amount'];
+    const fields = ['autoPayAccountId', 'billingCycle', 'billingInterval', 'amount'];
     fields.forEach((key) => this.form.get(key)?.enable({ emitEvent: false }));
   }
 
   private disableFields() {
-    const fields = ['autoPayAccount', 'billingCycle', 'billingInterval', 'amount'];
+    const fields = ['autoPayAccountId', 'billingCycle', 'billingInterval', 'amount'];
     fields.forEach((key) => {
       this.form.get(key)?.reset();
       this.form.get(key)?.disable({ emitEvent: false });
@@ -132,7 +135,7 @@ export class UpdateAutoPayForm {
       request = {
         id: currentGoal.id,
         isActive: true,
-        accountId: raw.autoPayAccount!,
+        autoPayAccountId: raw.autoPayAccountId!,
         billingCycle: raw.billingCycle!.value,
         billingInterval: raw.billingInterval!,
         amount: raw.amount!,

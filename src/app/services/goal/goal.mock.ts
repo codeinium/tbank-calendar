@@ -47,7 +47,7 @@ export const MOCK_GOAL_DETAILS: Record<string, GoalDetails> = {
     hardMode: false,
     status: 'active',
     autoPay: true,
-    autoPayAccount: '1',
+    autoPayAccountId: '1',
     billingCycle: 'daily',
     billingInterval: 5,
     autoPayAmount: 1000,
@@ -94,16 +94,25 @@ export function getMockTransactions(goalId: string): Transaction[] {
 export function createMockGoal(request: ApiCreateGoalRequest): GoalDetails {
   return {
     id: `goal-${Date.now()}`,
-    accountId: request.account_id ?? `acc-${Date.now()}`,
+    accountId: request.auto_pay_account_id ?? 'default',
+
     name: request.name,
     targetAmount: request.target_amount,
     currentAmount: 0,
+
     createdAt: dayjs().toISOString(),
     deadline: request.deadline,
     achievedAt: null,
+
     hardMode: request.hard_mode,
     status: 'active',
+
     autoPay: request.auto_pay,
+
+    autoPayAccountId: request.auto_pay_account_id,
+    billingCycle: request.billing_cycle,
+    billingInterval: request.billing_interval,
+    autoPayAmount: request.auto_pay_amount,
   };
 }
 
@@ -146,10 +155,24 @@ export function mockUpdateGoalAutoPay(
   const goal = getMockGoalDetails(goalId);
   if (!goal) throw new Error(`Goal with id ${goalId} not found`);
 
+  if (!request.is_active) {
+    return {
+      ...goal,
+      autoPay: false,
+      autoPayAccountId: undefined,
+      billingCycle: undefined,
+      billingInterval: undefined,
+      autoPayAmount: undefined,
+    };
+  }
+
   return {
     ...goal,
-    autoPay: request.is_active,
-    accountId: request.account_id ?? goal.accountId,
+    autoPay: true,
+    autoPayAccountId: request.auto_pay_account_id ?? goal.autoPayAccountId,
+    billingCycle: request.billing_cycle ?? goal.billingCycle,
+    billingInterval: request.billing_interval ?? goal.billingInterval,
+    autoPayAmount: request.amount ?? goal.autoPayAmount,
   };
 }
 

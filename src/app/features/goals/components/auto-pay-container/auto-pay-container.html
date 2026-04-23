@@ -2,7 +2,7 @@
   <button tuiButton type="button" (click)="openUpdateAutoPayModal()">Настроить автоплатеж</button>
   @if (goal()?.autoPay) {
     <p>Дата следующего автоплатежа: {{ nextDayAutoPay() }}</p>
-    <p>Сумма: {{amount}}</p>
+    <p>Сумма: {{amount() }}</p>
   } @else {
     <p>Автоплатеж отключён</p>
   }

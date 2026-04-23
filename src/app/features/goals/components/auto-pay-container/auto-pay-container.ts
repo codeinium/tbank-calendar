@@ -37,7 +37,7 @@ export class AutoPayContainer {
     }
   });
 
-  readonly amount = this.goal()?.autoPayAmount;
+  readonly amount = computed(() => this.goal()?.autoPayAmount ?? null);
 
   isUpdateAutoPayModalOpen = signal(false);
 

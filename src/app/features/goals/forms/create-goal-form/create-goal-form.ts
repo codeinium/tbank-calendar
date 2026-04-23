@@ -103,7 +103,7 @@ export class CreateGoalForm {
     hardMode: [false],
     autoPay: [false],
 
-    accountId: [{ value: null as string | null, disabled: true }, Validators.required],
+    autoPayAccountId: [{ value: null as string | null, disabled: true }, Validators.required],
     billingCycle: [{ value: null as BillingCycle | null, disabled: true }, Validators.required],
     billingInterval: [
       { value: null as number | null, disabled: true },
@@ -117,7 +117,7 @@ export class CreateGoalForm {
 
   constructor() {
     this.form.get('autoPay')?.valueChanges.subscribe((enabled) => {
-      const fields = ['accountId', 'billingCycle', 'billingInterval', 'autoPayAmount'];
+      const fields = ['autoPayAccountId', 'billingCycle', 'billingInterval', 'autoPayAmount'];
       fields.forEach((key) => {
         const control = this.form.get(key);
         if (enabled) {
@@ -178,7 +178,7 @@ export class CreateGoalForm {
       hardMode: raw.hardMode ?? false,
       autoPay: raw.autoPay ?? false,
 
-      accountId: raw.autoPay ? (raw.accountId ?? undefined) : undefined,
+      autoPayAccountId: raw.autoPay ? (raw.autoPayAccountId ?? undefined) : undefined,
       billingCycle: raw.autoPay ? (raw.billingCycle ?? undefined) : undefined,
       billingInterval: raw.autoPay ? (raw.billingInterval ?? undefined) : undefined,
       autoPayAmount: raw.autoPay ? (raw.autoPayAmount ?? undefined) : undefined,
