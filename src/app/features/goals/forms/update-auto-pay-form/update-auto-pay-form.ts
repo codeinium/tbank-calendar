@@ -11,21 +11,14 @@ import { GoalsPageStore } from '../../services/goal-page.store';
 import { BillingCycle, UpdateGoalAutoPayRequest } from '@/app/models/goal/goal.model';
 
 import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from '@taiga-ui/core';
-import {
-  TuiInputDate,
-  TuiCheckbox,
-  TuiChevron,
-  TuiDataListWrapper,
-  TuiSelect,
-  TuiSwitch,
-} from '@taiga-ui/kit';
+import { TuiChevron, TuiDataListWrapper, TuiSelect, TuiSwitch } from '@taiga-ui/kit';
+
 @Component({
   selector: 'app-update-auto-pay-form',
   imports: [
     ReactiveFormsModule,
     TuiButton,
     TuiTextfield,
-    TuiInputDate,
     TuiChevron,
     TuiDataListWrapper,
     TuiSelect,
@@ -60,8 +53,8 @@ export class UpdateAutoPayForm {
   form = this.fb.group({
     isActive: [false],
 
-    accountId: [{ value: null as string | null, disabled: true }, Validators.required],
-    billingCycle: [{ value: null as BillingCycle | null, disabled: true }, Validators.required],
+    autoPayAccount: [{ value: null as string | null, disabled: true }, Validators.required],
+    billingCycle: [{ value: null as any, disabled: true }, Validators.required],
     billingInterval: [
       { value: null as number | null, disabled: true },
       [Validators.required, Validators.min(1)],
@@ -71,50 +64,58 @@ export class UpdateAutoPayForm {
       [Validators.required, Validators.min(1)],
     ],
   });
+
   constructor() {
     const goal = this.store.selectedGoal();
 
     if (goal) {
       const isActive = !!goal.autoPay;
 
-      this.form.patchValue({
-        isActive,
-        accountId: goal.accountId ?? null,
-        billingCycle: goal.billingCycle ?? null,
-        billingInterval: goal.billingInterval ?? null,
-        amount: goal.autoPayAmount ?? null,
-      });
+      const selectedCycle = this.billingCycles.find((c) => c.value === goal.billingCycle);
+      this.form.patchValue(
+        {
+          isActive,
+          autoPayAccount: goal.autoPayAccount ?? null,
+          billingCycle: selectedCycle ?? null,
+          billingInterval: goal.billingInterval ?? null,
+          amount: goal.autoPayAmount ?? null,
+        },
+        { emitEvent: false },
+      );
 
       if (isActive) {
-        ['accountId', 'billingCycle', 'billingInterval', 'amount'].forEach((key) => {
-          this.form.get(key)?.enable();
-        });
+        this.enableFields();
       }
     }
 
-    // твоя существующая логика
     this.form.get('isActive')?.valueChanges.subscribe((enabled) => {
-      const fields = ['accountId', 'billingCycle', 'billingInterval', 'amount'];
+      if (enabled) {
+        this.enableFields();
+      } else {
+        this.disableFields();
+      }
+    });
+  }
 
-      fields.forEach((key) => {
-        const control = this.form.get(key);
+  private enableFields() {
+    const fields = ['autoPayAccount', 'billingCycle', 'billingInterval', 'amount'];
+    fields.forEach((key) => this.form.get(key)?.enable({ emitEvent: false }));
+  }
 
-        if (enabled) {
-          control?.enable();
-        } else {
-          control?.reset();
-          control?.disable();
-        }
-      });
+  private disableFields() {
+    const fields = ['autoPayAccount', 'billingCycle', 'billingInterval', 'amount'];
+    fields.forEach((key) => {
+      this.form.get(key)?.reset();
+      this.form.get(key)?.disable({ emitEvent: false });
     });
   }
 
   submit() {
     const raw = this.form.getRawValue();
     const currentGoal = this.store.selectedGoal();
-    if (!currentGoal || !currentGoal.id) {
-      return;
-    }
+
+    if (!currentGoal?.id) return;
+
     let request: UpdateGoalAutoPayRequest;
 
     if (!raw.isActive) {
@@ -131,8 +132,8 @@ export class UpdateAutoPayForm {
       request = {
         id: currentGoal.id,
         isActive: true,
-        accountId: raw.accountId!,
-        billingCycle: raw.billingCycle!,
+        accountId: raw.autoPayAccount!,
+        billingCycle: raw.billingCycle!.value,
         billingInterval: raw.billingInterval!,
         amount: raw.amount!,
       };

@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-goals-sidebar-skeleton',
-  imports: [SkeletonBlock, SkeletonLine],
+  imports: [SkeletonLine],
   templateUrl: './goals-sidebar-skeleton.html',
   styleUrl: './goals-sidebar-skeleton.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
