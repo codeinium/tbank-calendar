@@ -166,4 +166,9 @@ export class GoalsPageStore {
         error: (err) => this._error.set(err.message),
       });
   }
+
+  resetSelection() {
+    this._selectedGoal.set(null);
+    this._transactions.set([]);
+  }
 }

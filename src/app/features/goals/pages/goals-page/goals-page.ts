@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import { GoalsSidebar } from '../../components/goals-sidebar/goals-sidebar';
 import { GoalsInfoContainer } from '../../components/goals-info-container/goals-info-container';
+import { GoalsPageStore } from '../../services/goal-page.store';
 
 
 @Component({
@@ -12,4 +13,7 @@ import { GoalsInfoContainer } from '../../components/goals-info-container/goals-
   providers: [],
 })
 export class GoalsPageComponent {
+  constructor(private store: GoalsPageStore) {
+    this.store.resetSelection();
+  }
 }
