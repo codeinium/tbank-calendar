@@ -1,5 +1,5 @@
-import { GoalStatus, BillingCycle } from '../../models/goal/goal.model';
-
+import { GoalStatus } from '../../models/goal/goal.model';
+import { BillingCycle } from '../../models/types/billing-cycle.type';
 /* для списка */
 export interface ApiGoal {
   id: string;

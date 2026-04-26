@@ -1,5 +1,6 @@
+import { BillingCycle } from "../types/billing-cycle.type";
+
 export type GoalStatus = 'active' | 'achieved' | 'closed' | 'forfeited';
-export type BillingCycle = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
 /* для списка */
 export interface Goal {
