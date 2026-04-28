@@ -1,26 +1,7 @@
-<h2 class="text-3xl mb-3">Платежи</h2>
-<div class="w-full h-157 px-7.5 py-5 flex flex-col gap-2.5 bg-(--card-2) rounded-(--tui-radius-l)">
-    <div class="flex gap-2.5">
-        <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-            <p class="text-2xl">Месячный итог</p>
-            <p class="text-2xl">₽ {{monthlyTotal()}}</p>
-        </div>
-        <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-            <p class="text-2xl">Готовой итог</p>
-            <p class="text-2xl">₽ {{yearlyTotal()}}</p>
-        </div>
-        <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-            <p class="text-2xl">Активные</p>
-            <p class="text-2xl">{{activeCount()}}</p>
-        </div>
-        <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
-            <p class="text-2xl">Скоро списания</p>
-            <p class="text-2xl">{{upcomingCount()}}</p>
-        </div>
-    </div>
-    <div class="flex gap-2.5">
-        	<search tuiSearch>
-                
-            </search>
-    </div>
-</div>
+<app-stats-card
+    [title]="'Платежи'"
+    [monthlyTotal]="monthlyTotal"
+    [yearlyTotal]="yearlyTotal"
+    [activeCount]="activeCount"
+    [upcomingCount]="upcomingCount"
+/>

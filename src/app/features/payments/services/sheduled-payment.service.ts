@@ -5,30 +5,31 @@ import { SortName, SortDirection } from '../types/type';
 // пока этот класс вообще не нужен, но если будет бизнес логика на этой странице, то я пропишу ее сюда
 @Injectable()
 export class SheduledPaymentService {
-  private shedulePaymentStore = inject(SheduledPaymentStore);
+  private store = inject(SheduledPaymentStore);
 
   load() {
-    this.shedulePaymentStore.loadSheduledPayments();
+    this.store.load();
   }
 
-  sheduledPayments = this.shedulePaymentStore.sortedSheduledPayments;
-  loading = this.shedulePaymentStore.loadingSheduledPayments;
+  payments = this.store.sorted;
+  loading = this.store.loading;
 
-  monthlyTotal = this.shedulePaymentStore.monthlyTotal;
-  activeCount = this.shedulePaymentStore.activeCount;
-  yearlyTotal = this.shedulePaymentStore.yearlyTotal;
+  monthlyTotal = this.store.monthlyTotal;
+  yearlyTotal = this.store.yearlyTotal;
+  activeCount = this.store.activeCount;
 
-  upcomingSheduledPayments = this.shedulePaymentStore.upcomingSheduledPayments;
-  upcomingCount = this.shedulePaymentStore.upcomingCount;
-  setSort(type: SortName) {
-    this.shedulePaymentStore.setSortBy(type);
+  upcomingPayments = this.store.upcomingSheduledPayments;
+  upcomingCount = this.store.upcomingCount;
+
+  setSort(type: string) {
+    this.store.setSortBy(type);
   }
 
-  setDir(type: SortDirection) {
-    this.shedulePaymentStore.setSortDir(type);
+  setDir(dir: 'asc' | 'desc') {
+    this.store.setSortDir(dir);
   }
 
   setSearch(value: string) {
-    this.shedulePaymentStore.setSearch(value);
+    this.store.setSearch(value);
   }
 }

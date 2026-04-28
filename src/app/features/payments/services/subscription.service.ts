@@ -4,37 +4,37 @@ import { SortDirection, SortName } from '../types/type';
 
 @Injectable()
 export class SubscriptionService {
-  private subscriptionStore = inject(SubscriptionStore);
+  private store = inject(SubscriptionStore);
 
   load() {
-    this.subscriptionStore.loadSubscriptions();
+    this.store.load();
   }
 
-  subscriptions = this.subscriptionStore.sortedSubscriptions;
-  loading = this.subscriptionStore.loadingSubscriptions();
+  subscriptions = this.store.sorted;
+  loading = this.store.loading;
 
-  monthlyTotal = this.subscriptionStore.monthlyTotal;
-  yearlyTotal = this.subscriptionStore.yearlyTotal;
-  activeCount = this.subscriptionStore.activeCount;
+  monthlyTotal = this.store.monthlyTotal;
+  yearlyTotal = this.store.yearlyTotal;
+  activeCount = this.store.activeCount;
 
-  upcomingSubscriptions = this.subscriptionStore.upcomingSubscriptions;
-  upcomingCount = this.subscriptionStore.upcomingCount;
+  upcomingSubscriptions = this.store.upcomingSubscriptions;
+  upcomingCount = this.store.upcomingCount;
 
-  setSort(type: SortName) {
-    this.subscriptionStore.setSortBy(type);
+  categories = this.store.categories;
+
+  setSort(type: string) {
+    this.store.setSortBy(type);
   }
 
-  setDir(type: SortDirection) {
-    this.subscriptionStore.setSortDir(type);
+  setDir(dir: 'asc' | 'desc') {
+    this.store.setSortDir(dir);
   }
 
   setSearch(value: string) {
-    this.subscriptionStore.setSearch(value);
+    this.store.setSearch(value);
   }
 
-  categories = this.subscriptionStore.categories;
-
   setCategory(category: string | null) {
-    this.subscriptionStore.setCategory(category);
+    this.store.setCategory(category);
   }
 }

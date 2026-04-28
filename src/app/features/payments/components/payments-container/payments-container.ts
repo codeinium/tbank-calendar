@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { SheduledPaymentService } from '../../services/sheduled-payment.service';
+import { StatsCard } from '../stats-card/stats-card';
 
 @Component({
   selector: 'app-payments-container',
-  imports: [],
+  imports: [StatsCard],
   templateUrl: './payments-container.html',
   styleUrl: './payments-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,5 +16,5 @@ export class PaymentsContainer {
   readonly yearlyTotal = this.service.yearlyTotal;
   readonly activeCount = this.service.activeCount;
   readonly upcomingCount = this.service.upcomingCount;
-  readonly upcomingSheduledPayments = this.service.upcomingSheduledPayments;
+  readonly upcomingPayments = this.service.upcomingPayments;
 }
