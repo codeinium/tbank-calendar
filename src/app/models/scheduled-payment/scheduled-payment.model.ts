@@ -1,7 +1,7 @@
 import { BillingCycle, Status } from '../types/billing-cycle.type';
 
 
-export interface SheduledPayments {
+export interface SheduledPayment {
   id: string;
   title: string;
   description: string;

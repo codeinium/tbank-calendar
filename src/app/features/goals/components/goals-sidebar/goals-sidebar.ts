@@ -34,9 +34,6 @@ export class GoalsSidebar {
     if (!this.goals && !loading) return 'empty';
     return 'ready';
   });
-  ngOnInit() {
-    this.store.loadGoals();
-  }
 
   selectGoal(id: string) {
     this.store.selectGoal(id);

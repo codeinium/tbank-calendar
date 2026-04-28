@@ -3,19 +3,19 @@
     <div class="flex gap-2.5">
         <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
             <p class="text-2xl">Месячный итог</p>
-            <p class="text-2xl">₽1 250.00</p>
+            <p class="text-2xl">₽ {{monthlyTotal()}}</p>
         </div>
         <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
             <p class="text-2xl">Готовой итог</p>
-            <p class="text-2xl">₽15 000.00</p>
+            <p class="text-2xl">₽ {{yearlyTotal()}}</p>
         </div>
         <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
             <p class="text-2xl">Активные</p>
-            <p class="text-2xl">12</p>
+            <p class="text-2xl">{{activeCount()}}</p>
         </div>
         <div class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
             <p class="text-2xl">Скоро списания</p>
-            <p class="text-2xl">3</p>
+            <p class="text-2xl">{{upcomingCount()}}</p>
         </div>
     </div>
     <div class="flex gap-2.5">

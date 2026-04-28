@@ -22,7 +22,8 @@ import {
   TuiTextfield,
   TuiLabel,
 } from '@taiga-ui/core';
-import { BillingCycle, CreateGoalRequest } from '@/app/models/goal/goal.model';
+import { BillingCycle } from '@/app/models/types/billing-cycle.type';
+import { CreateGoalRequest } from '@/app/models/goal/goal.model'
 import {
   TuiInputDate,
   TuiCheckbox,

@@ -1,5 +1,5 @@
 import { ApiSheduledPayments, ApiSubsription } from './reminder-payment.api';
-import { SheduledPayments } from '@/app/models/scheduled-payments/scheduled-payments.model';
+import { SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
 import { Subscription } from '@/app/models/subscription/subscription.model';
 import { mapSheduledPayments, mapSubscription } from './reminder-payment.mapper';
 import { Injectable } from '@angular/core';
@@ -18,7 +18,7 @@ export class ReminderPaymentService {
 
   getSubsriptions(): Observable<Subscription[]> {
     if (this.useMock) {
-        return of(MOCK_SUBSCRIPTIONS).pipe(delay(this.mockDelay));
+      return of(MOCK_SUBSCRIPTIONS).pipe(delay(this.mockDelay));
     }
 
     return this.http
@@ -26,9 +26,9 @@ export class ReminderPaymentService {
       .pipe(map((data) => data.map(mapSubscription)));
   }
 
-  getShedulePayments(): Observable<SheduledPayments[]> {
+  getShedulePayments(): Observable<SheduledPayment[]> {
     if (this.useMock) {
-        return of(MOCK_SCHEDULED_PAYMENTS).pipe(delay(this.mockDelay));
+      return of(MOCK_SCHEDULED_PAYMENTS).pipe(delay(this.mockDelay));
     }
 
     return this.http

@@ -1,6 +1,6 @@
-import { SheduledPayments } from "@/app/models/scheduled-payments/scheduled-payments.model";
-import { Subscription } from "@/app/models/subscription/subscription.model";
-import { BillingCycle, Status } from "@/app/models/types/billing-cycle.type";
+import { SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import { Subscription } from '@/app/models/subscription/subscription.model';
+import { BillingCycle, Status } from '@/app/models/types/billing-cycle.type';
 
 export const MOCK_SUBSCRIPTIONS: Subscription[] = [
   {
@@ -12,7 +12,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     categoryColor: '#E50914',
     billingCycle: 'monthly' as BillingCycle,
     billingInterval: 1,
-    nextBillingDate: '2026-05-26T00:00:00.000Z',
+    nextBillingDate: '2026-04-29T00:00:00.000Z',
     endDate: '2027-05-26T00:00:00.000Z',
     logoUrl: 'https://logo.clearbit.com/netflix.com',
     status: 'active' as Status,
@@ -33,7 +33,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
   },
 ];
 
-export const MOCK_SCHEDULED_PAYMENTS: SheduledPayments[] = [
+export const MOCK_SCHEDULED_PAYMENTS: SheduledPayment[] = [
   {
     id: '101',
     title: 'Спортзал',

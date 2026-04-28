@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { GoalsPageStore } from '../../services/goal-page.store';
-import { BillingCycle, UpdateGoalAutoPayRequest } from '@/app/models/goal/goal.model';
+import { BillingCycle } from '@/app/models/types/billing-cycle.type';
+import { UpdateGoalAutoPayRequest } from '@/app/models/goal/goal.model';
 
 import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect, TuiSwitch } from '@taiga-ui/kit';
