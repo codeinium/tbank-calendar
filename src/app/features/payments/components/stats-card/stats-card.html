@@ -49,9 +49,20 @@
         </tui-textfield>
       </label>
     }
+    <label tuiLabel class="min-w-70">
+      <tui-textfield tuiChevron [tuiTextfieldCleaner]="false" [stringify]="stringifySort">
+        <input
+          tuiSelect
+          [ngModel]="sortControl.value"
+          (ngModelChange)="sortControl.setValue($event)"
+        />
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="sortOptions()" />
+      </tui-textfield>
+    </label>
   </div>
   @for (item of items(); track item.id) {
     <p>{{ item.title }}</p>
     <p>{{ item.amount }}</p>
+    <p>{{ item.nextBillingDate}}</p>
   }
 </div>

@@ -21,8 +21,10 @@ export class SheduledPaymentService {
   upcomingPayments = this.store.upcomingSheduledPayments;
   upcomingCount = this.store.upcomingCount;
 
-  setSort(type: string) {
+  setSortOption(value: string) {
+    const [type, dir] = value.split('-') as [string, 'asc' | 'desc'];
     this.store.setSortBy(type);
+    this.store.setSortDir(dir);
   }
 
   setDir(dir: 'asc' | 'desc') {

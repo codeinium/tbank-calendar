@@ -1,13 +1,27 @@
 import { ChangeDetectionStrategy, Component, Input, signal, computed, Signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime } from 'rxjs';
-import { tuiItemsHandlersProvider, TuiTextfield } from '@taiga-ui/core';
+import { debounceTime, skip } from 'rxjs';
+import { TuiTextfield } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from '@taiga-ui/kit';
 
 export interface CategoryOption {
   label: string;
   value: string;
 }
+
+export interface SortOption {
+  label: string;
+  value: string;
+}
+
+const SORT_OPTIONS: SortOption[] = [
+  { value: 'date-asc', label: 'По дате (сначала ближайшие)' },
+  { value: 'date-desc', label: 'По дате (сначала дальние)' },
+  { value: 'name-asc', label: 'По названию а-я' },
+  { value: 'name-desc', label: 'По названию я-а' },
+  { value: 'price-asc', label: 'По цене ↑' },
+  { value: 'price-desc', label: 'По цене ↓' },
+];
 
 @Component({
   selector: 'app-stats-card',
@@ -22,16 +36,9 @@ export interface CategoryOption {
   templateUrl: './stats-card.html',
   styleUrl: './stats-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    tuiItemsHandlersProvider({
-      stringify: signal((item: CategoryOption) => item?.label ?? ''),
-      identityMatcher: signal((a: CategoryOption, b: CategoryOption) => a?.value === b?.value),
-    }),
-  ],
 })
 export class StatsCard {
   @Input() items!: Signal<any[]>;
-
   @Input() title!: string;
   @Input() monthlyTotal!: Signal<number>;
   @Input() yearlyTotal!: Signal<number>;
@@ -40,33 +47,30 @@ export class StatsCard {
 
   @Input() categories?: Signal<CategoryOption[]>;
   @Input() onCategorySelect?: (value: string | null) => void;
-
   @Input() onSearch?: (value: string) => void;
-
-  readonly allCategoriesOption: CategoryOption = {
-    label: 'Все категории',
-    value: '',
-  };
+  @Input() onSortChange?: (value: string) => void;
 
   searchControl = new FormControl('');
-  categoryControl = new FormControl<CategoryOption>(this.allCategoriesOption);
+  categoryControl = new FormControl<CategoryOption>({ label: 'Все категории', value: '' });
+  sortControl = new FormControl<SortOption>(SORT_OPTIONS[0]);
 
+  readonly sortOptions = signal(SORT_OPTIONS);
   readonly categoryOptions = computed(() => {
     const cats = this.categories?.() ?? [];
-    return [this.allCategoriesOption, ...cats];
+    return [{ label: 'Все категории', value: '' }, ...cats];
   });
 
   constructor() {
     this.searchControl.valueChanges
       .pipe(debounceTime(300))
-      .subscribe((value) => this.onSearch?.(value ?? ''));
-    this.categoryControl.valueChanges.subscribe((value) => {
-      const categoryValue = value?.value === '' ? null : (value?.value ?? null);
-      this.onCategorySelect?.(categoryValue);
+      .subscribe((v) => this.onSearch?.(v ?? ''));
+    this.categoryControl.valueChanges.subscribe((v) => {
+      this.onCategorySelect?.(v?.value === '' ? null : (v?.value ?? null));
+    });
+    this.sortControl.valueChanges.subscribe((v) => {
+      if (v) this.onSortChange?.(v.value);
     });
   }
-
-  stringifyCategory = (item: CategoryOption | null) => {
-    return item?.label ?? 'Все категории';
-  };
+  stringifyCategory = (item: CategoryOption | null) => item?.label ?? 'Все категории';
+  stringifySort = (item: SortOption | null) => item?.label ?? SORT_OPTIONS[0].label;
 }
