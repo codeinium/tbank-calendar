@@ -10,7 +10,7 @@
     <div
       class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
     >
-      <p class="text-2xl">Готовой итог</p>
+      <p class="text-2xl">Годовой итог</p>
       <p class="text-2xl">₽ {{ yearlyTotal() }}</p>
     </div>
     <div
@@ -33,6 +33,22 @@
         <input tuiTextfield [formControl]="searchControl" />
       </tui-textfield>
     </search>
+    @if (categories) {
+      <label tuiLabel class="min-w-48">
+        <tui-textfield tuiChevron [tuiTextfieldCleaner]="false" [stringify]="stringifyCategory">
+          <input
+            tuiSelect
+            [ngModel]="categoryControl.value"
+            (ngModelChange)="categoryControl.setValue($event)"
+          />
+          <tui-data-list-wrapper 
+            *tuiTextfieldDropdown 
+            new 
+            [items]="categoryOptions()"
+          />
+        </tui-textfield>
+      </label>
+    }
   </div>
   @for (item of items(); track item.id) {
     <p>{{ item.title }}</p>
