@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
 import { WeekDay } from '@/app/features/calendar/models/types';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { tuiItemsHandlersProvider, TuiTextfield, TuiButton, TuiIcon } from '@taiga-ui/core';
+import { FormsModule } from '@angular/forms';
+import { tuiItemsHandlersProvider, TuiTextfield, TuiButton} from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect, TuiCheckbox } from '@taiga-ui/kit';
 
 interface LimitOption {
@@ -20,8 +20,6 @@ interface LimitOption {
     TuiTextfield,
     TuiButton,
     TuiCheckbox,
-    FormsModule,
-    ReactiveFormsModule,
   ],
   templateUrl: './calendar-settings.html',
   styleUrl: './calendar-settings.scss',

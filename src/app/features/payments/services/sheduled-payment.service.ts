@@ -1,5 +1,5 @@
-import { inject, Injectable } from "@angular/core";
-import { SheduledPaymentStore } from "./sheduled-payment.store";
+import { inject, Injectable } from '@angular/core';
+import { SheduledPaymentStore } from '../stores/sheduled-payment.store';
 import { SortName, SortDirection } from '../types/type';
 
 // пока этот класс вообще не нужен, но если будет бизнес логика на этой странице, то я пропишу ее сюда

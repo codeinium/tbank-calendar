@@ -39,7 +39,6 @@ export class SheduledPaymentStore extends BaseListStore<SheduledPayment> {
       });
   }
 
-
   readonly monthlyTotal = computed(() => this.items().reduce((sum, s) => sum + s.amount, 0));
 
   readonly yearlyTotal = computed(() =>

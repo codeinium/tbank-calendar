@@ -1,7 +1,9 @@
 <app-stats-card
     [title]="'Платежи'"
-    [monthlyTotal]="monthlyTotal"
-    [yearlyTotal]="yearlyTotal"
-    [activeCount]="activeCount"
-    [upcomingCount]="upcomingCount"
+    [monthlyTotal]="service.monthlyTotal"
+    [yearlyTotal]="service.yearlyTotal"
+    [activeCount]="service.activeCount"
+    [upcomingCount]="service.upcomingCount"
+    [onSearch]="service.setSearch.bind(service)"
+    [items]="service.payments"
 />

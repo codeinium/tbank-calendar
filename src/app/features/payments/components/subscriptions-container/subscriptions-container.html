@@ -1,7 +1,11 @@
 <app-stats-card
-    [title]="'Подписки'"
-    [monthlyTotal]="monthlyTotal"
-    [yearlyTotal]="yearlyTotal"
-    [activeCount]="activeCount"
-    [upcomingCount]="upcomingCount"
+  [title]="'Подписки'"
+  [monthlyTotal]="service.monthlyTotal"
+  [yearlyTotal]="service.yearlyTotal"
+  [activeCount]="service.activeCount"
+  [upcomingCount]="service.upcomingCount"
+  [categories]="service.categories"
+  [onCategorySelect]="service.setCategory.bind(service)"
+  [onSearch]="service.setSearch.bind(service)"
+  [items]="service.subscriptions"
 />

@@ -14,10 +14,4 @@ import { StatsCard } from "../stats-card/stats-card";
 })
 export class SubscriptionsContainer {
   service = inject(SubscriptionService);
-
-  readonly monthlyTotal = this.service.monthlyTotal;
-  readonly yearlyTotal = this.service.yearlyTotal;
-  readonly activeCount = this.service.activeCount;
-  readonly upcomingCount = this.service.upcomingCount;
-  readonly upcomingSubscriptions = this.service.upcomingSubscriptions;
 }

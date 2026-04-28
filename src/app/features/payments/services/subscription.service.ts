@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { SubscriptionStore } from './subscription.store';
-import { SortDirection, SortName } from '../types/type';
+import { SubscriptionStore } from '../stores/subscription.store';
 
 @Injectable()
 export class SubscriptionService {
