@@ -11,6 +11,6 @@ export interface Subscription {
   billingInterval: number;
   nextBillingDate: string;
   endDate: string;
-  logoUrl: string;
+  logoUrl?: string;
   status: Status;
 }

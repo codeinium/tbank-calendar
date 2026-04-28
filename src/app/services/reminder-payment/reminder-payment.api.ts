@@ -12,7 +12,7 @@ export interface ApiSubsription {
   billing_interval: number;
   next_billing_date: string;
   end_date: string;
-  logo_url: string;
+  logo_url?: string;
   status: Status;
 }
 
@@ -27,7 +27,7 @@ export interface ApiSheduledPayments {
   interval: number;
   next_payment_at: string;
   end_date: string;
-  logo_url: string;
+  logo_url?: string;
   status: Status;
 }
 
