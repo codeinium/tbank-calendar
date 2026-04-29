@@ -6,7 +6,7 @@ import { take } from 'rxjs';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 
 @Injectable()
-export class SheduledPaymentStore extends BaseListStore<SheduledPayment> {
+export class ScheduledPaymentStore extends BaseListStore<SheduledPayment> {
   private api = inject(ReminderPaymentService);
 
   protected filterFn(p: SheduledPayment, search: string) {

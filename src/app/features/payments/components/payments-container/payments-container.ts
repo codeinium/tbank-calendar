@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { SheduledPaymentService } from '../../services/sheduled-payment.service';
+import { ScheduledPaymentService } from '../../services/scheduled-payment.service';
 import { StatsCard } from '../stats-card/stats-card';
 
 @Component({
@@ -10,5 +10,5 @@ import { StatsCard } from '../stats-card/stats-card';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentsContainer {
-  service = inject(SheduledPaymentService);
+  service = inject(ScheduledPaymentService);
 }

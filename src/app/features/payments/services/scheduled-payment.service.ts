@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { SheduledPaymentStore } from '../stores/sheduled-payment.store';
+import { ScheduledPaymentStore } from '../stores/scheduled-payment.store';
 import { SortName, SortDirection } from '../types/type';
 
 // пока этот класс вообще не нужен, но если будет бизнес логика на этой странице, то я пропишу ее сюда
 @Injectable()
-export class SheduledPaymentService {
-  private store = inject(SheduledPaymentStore);
+export class ScheduledPaymentService {
+  private store = inject(ScheduledPaymentStore);
 
   load() {
     this.store.load();
