@@ -84,6 +84,8 @@
 
               <span class="text-base"> {{ item.amount }} ₽ </span>
             </div>
+          } @empty {
+            <p class="text-center py-6 text-base">Список пуст</p>
           }
         </div>
       </div>
@@ -116,6 +118,8 @@
 
               <span class="text-base"> {{ item.amount }} ₽ </span>
             </div>
+          } @empty {
+            <p class="text-center text-base py-6">Список пуст</p>
           }
         </div>
       </div>

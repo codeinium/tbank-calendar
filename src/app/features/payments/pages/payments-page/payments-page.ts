@@ -5,10 +5,11 @@ import { SubscriptionStore } from '../../stores/subscription.store';
 import { SheduledPaymentStore } from '../../stores/sheduled-payment.store';
 import { SubscriptionService } from '../../services/subscription.service';
 import { SheduledPaymentService } from '../../services/sheduled-payment.service';
+import { TuiButton } from "@taiga-ui/core";
 
 @Component({
   selector: 'app-payments-page',
-  imports: [PaymentsContainer, SubscriptionsContainer],
+  imports: [PaymentsContainer, SubscriptionsContainer, TuiButton],
   templateUrl: './payments-page.html',
   styleUrl: './payments-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

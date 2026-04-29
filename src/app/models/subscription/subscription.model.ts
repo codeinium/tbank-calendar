@@ -14,3 +14,13 @@ export interface Subscription {
   logoUrl?: string;
   status: Status;
 }
+
+export interface CreateSubscriptionRequest {
+  title: string;
+  description: string;
+  amount: number;
+  categoryName: string;
+  billingCycle: BillingCycle;
+  billingInterval: number;
+  endDate: string;
+}

@@ -1,6 +1,15 @@
-import { ApiSheduledPayments, ApiSubsription } from './reminder-payment.api';
-import { SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
-import { Subscription } from '@/app/models/subscription/subscription.model';
+
+import {
+  ApiCreateScheduledPaymentRequest,
+  ApiCreateSubscriptionRequest,
+  ApiScheduledPayments,
+  ApiSubsription,
+} from './reminder-payment.api';
+import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import {
+  CreateSubscriptionRequest,
+  Subscription,
+} from '@/app/models/subscription/subscription.model';
 
 export function mapSubscription(api: ApiSubsription): Subscription {
   return {
@@ -19,7 +28,7 @@ export function mapSubscription(api: ApiSubsription): Subscription {
   };
 }
 
-export function mapSheduledPayments(api: ApiSheduledPayments): SheduledPayment {
+export function mapScheduledPayments(api: ApiScheduledPayments): SheduledPayment {
   return {
     id: api.id,
     title: api.title,
@@ -33,5 +42,32 @@ export function mapSheduledPayments(api: ApiSheduledPayments): SheduledPayment {
     endDate: api.end_date,
     logoUrl: api.logo_url,
     status: api.status,
+  };
+}
+
+export function mapCreateSubscriptionRequest(
+  request: CreateSubscriptionRequest,
+): ApiCreateSubscriptionRequest {
+  return {
+    name: request.title,
+    description: request.description,
+    amount: request.amount,
+    category_name: request.categoryName,
+    billing_cycle: request.billingCycle,
+    billing_interval: request.billingInterval,
+    end_date: request.endDate,
+  };
+} 
+export function mapCreateScheduledPaymentRequest(
+  request: CreateScheduledPaymentRequest,
+): ApiCreateScheduledPaymentRequest {
+  return {
+    title: request.title,
+    description: request.description,
+    amount: request.amount,
+    category_name: request.categoryName,
+    frequency: request.billingCycle,
+    interval: request.billingInterval,
+    end_date: request.endDate,
   };
 }

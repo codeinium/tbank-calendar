@@ -1,12 +1,12 @@
-import { ApiSheduledPayments, ApiSubsription } from './reminder-payment.api';
-import { SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
-import { Subscription } from '@/app/models/subscription/subscription.model';
-import { mapSheduledPayments, mapSubscription } from './reminder-payment.mapper';
+import { ApiCreateScheduledPaymentRequest, ApiCreateSubscriptionRequest, ApiScheduledPayments, ApiSubsription } from './reminder-payment.api';
+import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import { CreateSubscriptionRequest, Subscription } from '@/app/models/subscription/subscription.model';
+import { mapCreateScheduledPaymentRequest, mapCreateSubscriptionRequest, mapScheduledPayments, mapSubscription } from './reminder-payment.mapper';
 import { Injectable } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
-import { MOCK_SUBSCRIPTIONS, MOCK_SCHEDULED_PAYMENTS } from './reminder-payment.mock';
+import { MOCK_SUBSCRIPTIONS, MOCK_SCHEDULED_PAYMENTS, createMockSubscription, createMockScheduledPayment } from './reminder-payment.mock';
 
 @Injectable({ providedIn: 'root' })
 export class ReminderPaymentService {
@@ -32,7 +32,33 @@ export class ReminderPaymentService {
     }
 
     return this.http
-      .get<ApiSheduledPayments[]>(`${this.apiUrl}/payments`)
-      .pipe(map((data) => data.map(mapSheduledPayments)));
+      .get<ApiScheduledPayments[]>(`${this.apiUrl}/payments`)
+      .pipe(map((data) => data.map(mapScheduledPayments)));
+  }
+
+  createSubscription(request: CreateSubscriptionRequest): Observable<Subscription> {
+    const apiRequest: ApiCreateSubscriptionRequest = mapCreateSubscriptionRequest(request);
+
+    if (this.useMock) {
+      const created = createMockSubscription(request);
+      return of(created).pipe(delay(this.mockDelay));
+    }
+
+    return this.http
+      .post<ApiSubsription>(`${this.apiUrl}/subscriptions`, apiRequest)
+      .pipe(map(mapSubscription));
+  }
+
+  createScheduledPayment(request: CreateScheduledPaymentRequest): Observable<SheduledPayment> {
+    const apiRequest: ApiCreateScheduledPaymentRequest = mapCreateScheduledPaymentRequest(request);
+
+    if (this.useMock) {
+      const created = createMockScheduledPayment(request);
+      return of(created).pipe(delay(this.mockDelay));
+    }
+
+    return this.http
+      .post<ApiScheduledPayments>(`${this.apiUrl}/payments`, apiRequest)
+      .pipe(map(mapScheduledPayments));
   }
 }

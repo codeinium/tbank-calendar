@@ -1,5 +1,8 @@
-import { SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
-import { Subscription } from '@/app/models/subscription/subscription.model';
+import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import {
+  CreateSubscriptionRequest,
+  Subscription,
+} from '@/app/models/subscription/subscription.model';
 import { BillingCycle, Status } from '@/app/models/types/billing-cycle.type';
 
 export const MOCK_SUBSCRIPTIONS: Subscription[] = [
@@ -33,7 +36,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     status: 'active' as Status,
   },
   {
-    id: '2',
+    id: '3',
     title: 'Yandex music',
     description: 'Музыка',
     amount: 199,
@@ -47,7 +50,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     status: 'active' as Status,
   },
   {
-    id: '2',
+    id: '4',
     title: 'Yandex music',
     description: 'Музыка',
     amount: 199,
@@ -61,7 +64,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     status: 'active' as Status,
   },
   {
-    id: '2',
+    id: '5',
     title: 'Yandex music',
     description: 'Музыка',
     amount: 199,
@@ -75,7 +78,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     status: 'active' as Status,
   },
   {
-    id: '2',
+    id: '6',
     title: 'Yandex music',
     description: 'Музыка',
     amount: 199,
@@ -89,7 +92,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     status: 'active' as Status,
   },
   {
-    id: '2',
+    id: '7',
     title: 'Yandex music',
     description: 'Музыка',
     amount: 199,
@@ -103,7 +106,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     status: 'active' as Status,
   },
   {
-    id: '2',
+    id: '8',
     title: 'Yandex music',
     description: 'Музыка',
     amount: 199,
@@ -117,7 +120,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     status: 'active' as Status,
   },
   {
-    id: '2',
+    id: '9',
     title: 'Yandex music',
     description: 'Музыка',
     amount: 199,
@@ -132,35 +135,40 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
   },
 ];
 
-export const MOCK_SCHEDULED_PAYMENTS: SheduledPayment[] = [
-  {
-    id: '101',
-    title: 'Спортзал',
-    description: 'Ежемесячная платаза за посещение зала',
-    amount: 800,
-    categoryName: 'Здоровье & Фитнесс',
-    categoryColor: '#FF6B6B',
-    billingCycle: 'monthly' as BillingCycle,
-    billingInterval: 1,
-    nextBillingDate: '2026-06-01T00:00:00.000Z',
-    endDate: '2026-12-01T00:00:00.000Z',
-    logoUrl:
-      'https://img.freepik.com/premium-vector/fitness-center-logo-sport-fitness-logo-design-gym-logo-icon-design-vector-stock_279597-366.jpg',
+export const MOCK_SCHEDULED_PAYMENTS: SheduledPayment[] = [];
+
+const generateId = () => Math.random().toString(36).substr(2, 9);
+
+export function createMockSubscription(request: CreateSubscriptionRequest): Subscription {
+  return {
+    id: generateId(),
+    title: request.title,
+    description: request.description,
+    amount: request.amount,
+    categoryName: request.categoryName,
+    categoryColor: '#CCCCCC',
+    billingCycle: request.billingCycle,
+    billingInterval: request.billingInterval,
+    nextBillingDate: new Date().toISOString(),
+    endDate: request.endDate,
+    logoUrl: '',
     status: 'active' as Status,
-  },
-  {
-    id: '102',
-    title: 'ЖКХ',
-    description: 'Жилищно-коммунальное хозяйство',
-    amount: 4500,
-    categoryName: 'Коммунальные платежи',
-    categoryColor: '#4A90E2',
-    billingCycle: 'yearly' as BillingCycle,
-    billingInterval: 1,
-    nextBillingDate: '2027-01-01T00:00:00.000Z',
-    endDate: '2028-01-01T00:00:00.000Z',
-    logoUrl:
-      'https://st4.depositphotos.com/6723736/39513/v/450/depositphotos_395138718-stock-illustration-image-icon-utility-costs-electricity.jpg',
-    status: 'active' as Status,
-  },
-];
+  };
+}
+
+export function createMockScheduledPayment(request: CreateScheduledPaymentRequest): SheduledPayment {
+  return {
+    id: generateId(),
+    title: request.title,
+    description: request.description,
+    amount: request.amount,
+    categoryName: request.categoryName,
+    categoryColor: '#CCCCCC',
+    billingCycle: request.billingCycle,
+    billingInterval: request.billingInterval,
+    nextBillingDate: new Date().toISOString(),
+    endDate: request.endDate,
+    logoUrl: '',
+    status: 'pending' as Status,
+  };
+}

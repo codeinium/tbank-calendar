@@ -15,3 +15,13 @@ export interface SheduledPayment {
   logoUrl?: string;
   status: Status;
 }
+
+export interface CreateScheduledPaymentRequest {
+  title: string;
+  description: string;
+  amount: number;
+  categoryName: string;
+  billingCycle: BillingCycle;
+  billingInterval: number;
+  endDate: string;
+}

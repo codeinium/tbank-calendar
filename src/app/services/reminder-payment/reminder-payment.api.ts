@@ -16,7 +16,7 @@ export interface ApiSubsription {
   status: Status;
 }
 
-export interface ApiSheduledPayments {
+export interface ApiScheduledPayments {
   id: string;
   title: string;
   description: string;
@@ -31,5 +31,22 @@ export interface ApiSheduledPayments {
   status: Status;
 }
 
+export interface ApiCreateScheduledPaymentRequest {
+  title: string;
+  description: string;
+  amount: number;
+  category_name: string;
+  frequency: BillingCycle;
+  interval: number;
+  end_date: string;
+}
 
-
+export interface ApiCreateSubscriptionRequest {
+  name: string;
+  description: string;
+  amount: number;
+  category_name: string;
+  billing_cycle: BillingCycle;
+  billing_interval: number;
+  end_date: string;
+}
