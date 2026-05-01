@@ -1,6 +1,6 @@
 import { Injectable, inject, computed, signal } from '@angular/core';
 import { BaseListStore } from './base-list.store';
-import { Subscription } from '@/app/models/subscription/subscription.model';
+import { CreateSubscriptionRequest, Subscription } from '@/app/models/subscription/subscription.model';
 import { ReminderPaymentService } from '@/app/services/reminder-payment/reminder-payment.service';
 import { take } from 'rxjs';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
@@ -47,6 +47,19 @@ export class SubscriptionStore extends BaseListStore<Subscription> {
           this._error.set(err.message);
           this._loading.set(false);
         },
+      });
+  }
+
+  create(request: CreateSubscriptionRequest) {
+    this.api
+      .createSubscription(request)
+      .pipe(take(1))
+      .subscribe({
+        next: (newSubscription) => {
+          this._items.update((items) => [newSubscription, ...items]);
+          this._loading.set(false);
+        },
+        error: (err) => this._error.set(err.message),
       });
   }
 

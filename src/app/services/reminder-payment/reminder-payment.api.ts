@@ -1,5 +1,5 @@
-import { BillingCycle, Status } from '../../models/types/billing-cycle.type';
-
+import { BillingCycle } from '../../models/types/billing-cycle.type';
+import { Status } from '@/app/models/types/status.type';
 
 export interface ApiSubsription {
   id: string;

@@ -1,5 +1,5 @@
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, output, Output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -24,10 +24,12 @@ export class UpdateGoalForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
 
-  @Output() close = new EventEmitter<void>();
+  close = output<void>();
 
   placeholderName = 'Прошлое название: ' + (this.store.selectedGoal()?.name ?? '');
-  placeholderData = 'Прошлая дата окончания: ' + (dayjs(this.store.selectedGoal()?.deadline).format('YYYY-MM-DD') ?? '');
+  placeholderData =
+    'Прошлая дата окончания: ' +
+    (dayjs(this.store.selectedGoal()?.deadline).format('YYYY-MM-DD') ?? '');
 
   form = this.fb.group(
     {

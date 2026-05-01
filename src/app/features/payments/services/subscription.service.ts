@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { SubscriptionStore } from '../stores/subscription.store';
+import { CreateSubscriptionRequest } from '@/app/models/subscription/subscription.model';
 
 @Injectable()
 export class SubscriptionService {
@@ -7,6 +8,10 @@ export class SubscriptionService {
 
   load() {
     this.store.load();
+  }
+
+  create(request: CreateSubscriptionRequest) {
+    this.store.create(request);
   }
 
   subscriptions = this.store.sorted;

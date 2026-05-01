@@ -1,6 +1,6 @@
 import { Injectable, inject, computed } from '@angular/core';
 import { BaseListStore } from './base-list.store';
-import { SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
 import { ReminderPaymentService } from '@/app/services/reminder-payment/reminder-payment.service';
 import { take } from 'rxjs';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
@@ -38,6 +38,19 @@ export class ScheduledPaymentStore extends BaseListStore<SheduledPayment> {
         },
       });
   }
+
+  create(request: CreateScheduledPaymentRequest) {
+      this.api
+        .createSubscription(request)
+        .pipe(take(1))
+        .subscribe({
+          next: (newSubscription) => {
+            this._items.update((items) => [newSubscription, ...items]);
+            this._loading.set(false);
+          },
+          error: (err) => this._error.set(err.message),
+        });
+    }
 
   readonly monthlyTotal = computed(() => this.items().reduce((sum, s) => sum + s.amount, 0));
 

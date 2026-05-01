@@ -2,12 +2,24 @@
   <div class="flex flex-col gap-3">
     <app-subscriptions-container></app-subscriptions-container>
     <div class="flex gap-3">
-      <button tuiButton>Создать подписку</button>
+      <button tuiButton (click)="openCreateSubscribeModal()">Создать подписку</button>
       <button tuiButton>Предложить подписку</button>
     </div>
   </div>
   <div class="flex flex-col gap-3">
     <app-payments-container></app-payments-container>
-    <button tuiButton class="w-40">Создать платёж</button>
+    <button tuiButton class="w-40" (click)="openCreateScheduledPaymentModal()">Создать платёж</button>
   </div>
 </div>
+
+@if (isCreateSubscribeModalOpen()) {
+  <app-modal-dialog title="Создать подписку" (close)="closeCreateSubscribeModal()">
+    <app-create-subscription-form (close)="closeCreateSubscribeModal()"></app-create-subscription-form>
+  </app-modal-dialog>
+}
+
+@if (isCreateScheduledPaymentModalOpen()) {
+  <app-modal-dialog title="Создать платёж" (close)="closeCreateScheduledPaymentModal()">
+    <app-create-scheduled-payment-form (close)="closeCreateScheduledPaymentModal()"></app-create-scheduled-payment-form>
+  </app-modal-dialog>
+}

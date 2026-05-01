@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ScheduledPaymentStore } from '../stores/scheduled-payment.store';
-import { SortName, SortDirection } from '../types/type';
+import { CreateScheduledPaymentRequest } from '@/app/models/scheduled-payment/scheduled-payment.model';
 
 // пока этот класс вообще не нужен, но если будет бизнес логика на этой странице, то я пропишу ее сюда
 @Injectable()
@@ -9,6 +9,10 @@ export class ScheduledPaymentService {
 
   load() {
     this.store.load();
+  }
+
+  create(request: CreateScheduledPaymentRequest) {
+    this.store.create(request);
   }
 
   payments = this.store.sorted;

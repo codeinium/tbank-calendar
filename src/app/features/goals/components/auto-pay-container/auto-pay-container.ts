@@ -1,4 +1,4 @@
-import { BillingCycle } from '@/app/models/types/billing-cycle.type'
+import { BillingCycle } from '@/app/models/types/billing-cycle.type';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
 import { UpdateAutoPayForm } from '../../forms/update-auto-pay-form/update-auto-pay-form';

@@ -1,9 +1,13 @@
-import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import {
+  CreateScheduledPaymentRequest,
+  SheduledPayment,
+} from '@/app/models/scheduled-payment/scheduled-payment.model';
 import {
   CreateSubscriptionRequest,
   Subscription,
 } from '@/app/models/subscription/subscription.model';
-import { BillingCycle, Status } from '@/app/models/types/billing-cycle.type';
+import { BillingCycle } from '@/app/models/types/billing-cycle.type';
+import { Status } from '@/app/models/types/status.type';
 
 export const MOCK_SUBSCRIPTIONS: Subscription[] = [
   {
@@ -156,7 +160,9 @@ export function createMockSubscription(request: CreateSubscriptionRequest): Subs
   };
 }
 
-export function createMockScheduledPayment(request: CreateScheduledPaymentRequest): SheduledPayment {
+export function createMockScheduledPayment(
+  request: CreateScheduledPaymentRequest,
+): SheduledPayment {
   return {
     id: generateId(),
     title: request.title,

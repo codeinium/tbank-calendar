@@ -1,4 +1,4 @@
-import { BillingCycle } from "../types/billing-cycle.type";
+import { BillingCycle } from '../types/billing-cycle.type';
 
 export type GoalStatus = 'active' | 'achieved' | 'closed' | 'forfeited';
 

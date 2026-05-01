@@ -1,31 +1,20 @@
 import { ChangeDetectionStrategy, Component, Input, signal, computed, Signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, skip } from 'rxjs';
+import { debounceTime } from 'rxjs';
+
 import { TuiTextfield } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from '@taiga-ui/kit';
+
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
+
 import { BillingCycle } from '@/app/models/types/billing-cycle.type';
+import { CategorySelectValue } from '@/app/shared/constants/categories-option';
 
-export interface CategoryOption {
-  label: string;
-  value: string;
-}
-
-export interface SortOption {
-  label: string;
-  value: string;
-}
+import { SelectOption } from '@/app/shared/types/select-option.type';
+import { SortValue } from '@/app/shared/types/sort.type';
+import { SORT_OPTIONS } from '@/app/shared/constants/sort-options';
 
 export type ListType = 'subscription' | 'payment';
-
-const SORT_OPTIONS: SortOption[] = [
-  { value: 'date-asc', label: 'По дате (сначала ближайшие)' },
-  { value: 'date-desc', label: 'По дате (сначала дальние)' },
-  { value: 'name-asc', label: 'По названию а-я' },
-  { value: 'name-desc', label: 'По названию я-а' },
-  { value: 'price-asc', label: 'По цене ↑' },
-  { value: 'price-desc', label: 'По цене ↓' },
-];
 
 @Component({
   selector: 'app-stats-card',
@@ -43,27 +32,54 @@ const SORT_OPTIONS: SortOption[] = [
 })
 export class StatsCard {
   @Input() items!: Signal<any[]>;
+
   @Input() title!: string;
+
   @Input() monthlyTotal!: Signal<number>;
   @Input() yearlyTotal!: Signal<number>;
   @Input() activeCount!: Signal<number>;
   @Input() upcomingCount!: Signal<number>;
 
-  @Input() categories?: Signal<CategoryOption[]>;
-  @Input() onCategorySelect?: (value: string | null) => void;
+  @Input() categories?: Signal<SelectOption<CategorySelectValue>[]>;
+
+  @Input() onCategorySelect?: (value: CategorySelectValue | null) => void;
   @Input() onSearch?: (value: string) => void;
-  @Input() onSortChange?: (value: string) => void;
+  @Input() onSortChange?: (value: SortValue) => void;
+
   @Input() listType!: ListType;
 
-  searchControl = new FormControl('');
-  categoryControl = new FormControl<CategoryOption>({ label: 'Все категории', value: '' });
-  sortControl = new FormControl<SortOption>(SORT_OPTIONS[0]);
+  searchControl = new FormControl<string>('');
 
-  readonly sortOptions = signal(SORT_OPTIONS);
-  readonly categoryOptions = computed(() => {
+  categoryControl = new FormControl<SelectOption<CategorySelectValue>>({
+    value: '',
+    label: 'Все категории',
+  } as any);
+
+  sortControl = new FormControl<SelectOption<SortValue>>(SORT_OPTIONS[0]);
+
+  readonly sortOptions = signal<SelectOption<SortValue>[]>(SORT_OPTIONS);
+
+  readonly categoryOptions = computed<SelectOption<CategorySelectValue>[]>(() => {
     const cats = this.categories?.() ?? [];
-    return [{ label: 'Все категории', value: '' }, ...cats];
+    return [{ value: '' as CategorySelectValue, label: 'Все категории' }, ...cats];
   });
+
+  constructor() {
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((v) => this.onSearch?.(v ?? ''));
+
+    this.categoryControl.valueChanges.subscribe((v) => {
+      const value = v?.value === '' ? null : (v?.value ?? null);
+      this.onCategorySelect?.(value);
+    });
+
+    this.sortControl.valueChanges.subscribe((v) => {
+      if (v) {
+        this.onSortChange?.(v.value);
+      }
+    });
+  }
 
   formatDate(date: string | Date): string {
     return dayjs(date).format('DD.MM.YYYY');
@@ -92,27 +108,21 @@ export class StatsCard {
           return 'Ежегодно';
       }
     }
+
     const labels: Record<BillingCycle, string[]> = {
       daily: ['день', 'дня', 'дней'],
       weekly: ['неделю', 'недели', 'недель'],
       monthly: ['месяц', 'месяца', 'месяцев'],
       yearly: ['год', 'года', 'лет'],
     };
+
     const form = this.declensionNum(interval, labels[cycle]);
     return `Каждые ${interval} ${form}`;
   }
 
-  constructor() {
-    this.searchControl.valueChanges
-      .pipe(debounceTime(300))
-      .subscribe((v) => this.onSearch?.(v ?? ''));
-    this.categoryControl.valueChanges.subscribe((v) => {
-      this.onCategorySelect?.(v?.value === '' ? null : (v?.value ?? null));
-    });
-    this.sortControl.valueChanges.subscribe((v) => {
-      if (v) this.onSortChange?.(v.value);
-    });
-  }
-  stringifyCategory = (item: CategoryOption | null) => item?.label ?? 'Все категории';
-  stringifySort = (item: SortOption | null) => item?.label ?? SORT_OPTIONS[0].label;
+  
+  stringifyCategory = (item: SelectOption<CategorySelectValue> | null) =>
+    item?.label ?? 'Все категории';
+
+  stringifySort = (item: SelectOption<SortValue> | null) => item?.label ?? SORT_OPTIONS[0].label;
 }

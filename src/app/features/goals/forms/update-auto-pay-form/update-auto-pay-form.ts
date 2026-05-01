@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   inject,
+  output,
   Output,
   signal,
 } from '@angular/core';
@@ -13,6 +14,7 @@ import { UpdateGoalAutoPayRequest } from '@/app/models/goal/goal.model';
 
 import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect, TuiSwitch } from '@taiga-ui/kit';
+import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 
 @Component({
   selector: 'app-update-auto-pay-form',
@@ -42,22 +44,14 @@ export class UpdateAutoPayForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
 
-  @Output() close = new EventEmitter<void>();
+  close = output<void>();
 
-  readonly billingCycles: { value: BillingCycle; label: string }[] = [
-    { value: 'daily', label: 'Ежедневно' },
-    { value: 'weekly', label: 'Еженедельно' },
-    { value: 'monthly', label: 'Ежемесячно' },
-    { value: 'yearly', label: 'Ежегодно' },
-  ];
+  readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
   form = this.fb.group({
     isActive: [false],
 
-    autoPayAccountId: [
-      { value: null as string | null, disabled: true },
-      Validators.required,
-    ],
+    autoPayAccountId: [{ value: null as string | null, disabled: true }, Validators.required],
     billingCycle: [{ value: null as any, disabled: true }, Validators.required],
     billingInterval: [
       { value: null as number | null, disabled: true },
