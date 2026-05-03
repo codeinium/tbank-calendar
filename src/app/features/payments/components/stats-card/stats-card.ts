@@ -120,7 +120,25 @@ export class StatsCard {
     return `Каждые ${interval} ${form}`;
   }
 
-  
+  readonly summaryCards = computed(() => [
+    {
+      title: 'Месячный итог',
+      value: `₽ ${this.monthlyTotal()}`,
+    },
+    {
+      title: 'Годовой итог',
+      value: `₽ ${this.yearlyTotal()}`,
+    },
+    {
+      title: 'Активные',
+      value: this.activeCount(),
+    },
+    {
+      title: 'Скоро списания',
+      value: this.upcomingCount(),
+    },
+  ]);
+
   stringifyCategory = (item: SelectOption<CategorySelectValue> | null) =>
     item?.label ?? 'Все категории';
 

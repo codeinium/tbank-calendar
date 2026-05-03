@@ -35,6 +35,10 @@ export class GoalsSidebar {
     return 'ready';
   });
 
+  ngOnInit() {
+    this.store.loadGoals();
+  }
+
   selectGoal(id: string) {
     this.store.selectGoal(id);
     this.toggleSidebar(false);

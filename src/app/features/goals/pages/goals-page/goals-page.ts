@@ -10,12 +10,10 @@ import { GoalsPageStore } from '../../services/goal-page.store';
   templateUrl: './goals-page.html',
   styleUrl: './goals-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [GoalsPageStore],
+  providers: [],
 })
 export class GoalsPageComponent {
-  private store = inject(GoalsPageStore);
-
-  ngOnInit() {
-    this.store.loadGoals();
+  constructor(private store: GoalsPageStore) {
+    this.store.resetSelection();
   }
 }

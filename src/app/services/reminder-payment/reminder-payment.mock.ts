@@ -139,7 +139,22 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
   },
 ];
 
-export const MOCK_SCHEDULED_PAYMENTS: SheduledPayment[] = [];
+export const MOCK_SCHEDULED_PAYMENTS: SheduledPayment[] = [
+  {
+    id: '9',
+    title: 'Yandex music',
+    description: 'Музыка',
+    amount: 199,
+    categoryName: 'Развлечения',
+    categoryColor: '#1DB954',
+    billingCycle: 'monthly' as BillingCycle,
+    billingInterval: 1,
+    nextBillingDate: '2026-06-15T00:00:00.000Z',
+    endDate: '2026-12-31T00:00:00.000Z',
+    logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
+    status: 'active' as Status,
+  },
+];
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
