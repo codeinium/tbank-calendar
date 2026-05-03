@@ -3,15 +3,22 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-skeleton-line',
-  template: `
-    <div
-      class="bg-(--loading-2) rounded-(--tui-radius-l) animate-pulse [animation-duration:1s]"
-      [ngClass]="height + ' ' + width"
-    ></div>
-  `,
-  imports: [NgClass]
+  template: ` <div class="rounded-(--tui-radius-l) animate-pulse" [ngClass]="classes"></div> `,
+  imports: [NgClass],
+  host: {
+    class: 'block',
+  },
 })
 export class SkeletonLine {
   @Input() width = '';
   @Input() height = '';
+  @Input() color: 'light' | 'dark' = 'light';
+
+  get classes() {
+    return [
+      this.width,
+      this.height,
+      this.color === 'light' ? 'bg-(--loading-2)' : 'bg-(--loading-1)',
+    ].join(' ');
+  }
 }

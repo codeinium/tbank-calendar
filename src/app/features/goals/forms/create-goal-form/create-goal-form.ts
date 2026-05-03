@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  inject,
-  Output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
 import {
   FormBuilder,
   Validators,
@@ -22,7 +15,8 @@ import {
   TuiTextfield,
   TuiLabel,
 } from '@taiga-ui/core';
-import { BillingCycle, CreateGoalRequest } from '@/app/models/goal/goal.model';
+import { BillingCycle } from '@/app/models/types/billing-cycle.type';
+import { CreateGoalRequest } from '@/app/models/goal/goal.model';
 import {
   TuiInputDate,
   TuiCheckbox,
@@ -34,6 +28,7 @@ import {
 import { trigger, transition, style, animate } from '@angular/animations';
 import { TuiDay } from '@taiga-ui/cdk';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
+import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 
 @Component({
   selector: 'app-create-goal-form',
@@ -87,14 +82,9 @@ export class CreateGoalForm {
 
   readonly monthlyPayment = signal<number | null>(null);
 
-  readonly billingCycles: { value: BillingCycle; label: string }[] = [
-    { value: 'daily', label: 'Ежедневно' },
-    { value: 'weekly', label: 'Еженедельно' },
-    { value: 'monthly', label: 'Ежемесячно' },
-    { value: 'yearly', label: 'Ежегодно' },
-  ];
+  readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
-  @Output() close = new EventEmitter<void>();
+  close = output<void>();
 
   form = this.fb.group({
     name: ['', [Validators.required, this.notEmptyStringValidator()]],
@@ -103,8 +93,11 @@ export class CreateGoalForm {
     hardMode: [false],
     autoPay: [false],
 
-    accountId: [{ value: null as string | null, disabled: true }, Validators.required],
-    billingCycle: [{ value: null as BillingCycle | null, disabled: true }, Validators.required],
+    autoPayAccountId: [{ value: null as string | null, disabled: true }, Validators.required],
+    billingCycle: [
+      { value: null as { value: BillingCycle; label: string } | null, disabled: true },
+      Validators.required,
+    ],
     billingInterval: [
       { value: null as number | null, disabled: true },
       [Validators.required, Validators.min(1)],
@@ -117,7 +110,7 @@ export class CreateGoalForm {
 
   constructor() {
     this.form.get('autoPay')?.valueChanges.subscribe((enabled) => {
-      const fields = ['accountId', 'billingCycle', 'billingInterval', 'autoPayAmount'];
+      const fields = ['autoPayAccountId', 'billingCycle', 'billingInterval', 'autoPayAmount'];
       fields.forEach((key) => {
         const control = this.form.get(key);
         if (enabled) {
@@ -178,8 +171,8 @@ export class CreateGoalForm {
       hardMode: raw.hardMode ?? false,
       autoPay: raw.autoPay ?? false,
 
-      accountId: raw.autoPay ? (raw.accountId ?? undefined) : undefined,
-      billingCycle: raw.autoPay ? (raw.billingCycle ?? undefined) : undefined,
+      autoPayAccountId: raw.autoPay ? (raw.autoPayAccountId ?? undefined) : undefined,
+      billingCycle: raw.autoPay ? raw.billingCycle?.value : undefined,
       billingInterval: raw.autoPay ? (raw.billingInterval ?? undefined) : undefined,
       autoPayAmount: raw.autoPay ? (raw.autoPayAmount ?? undefined) : undefined,
     };
@@ -188,5 +181,4 @@ export class CreateGoalForm {
     this.close.emit();
   }
 
-  stringifyBillingCycle = (item: { value: BillingCycle; label: string }) => item.label;
 }

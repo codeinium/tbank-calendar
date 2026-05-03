@@ -38,6 +38,10 @@ export function mapGoalDetails(api: ApiGoalDetails): GoalDetails {
     hardMode: api.hard_mode,
     status: api.status,
     autoPay: api.auto_pay,
+    autoPayAccountId: api.auto_pay_account_id,
+    billingCycle: api.billing_cycle,
+    billingInterval: api.billing_interval,
+    autoPayAmount: api.auto_pay_amount,
   };
 }
 
@@ -48,7 +52,7 @@ export function mapCreateGoal(model: CreateGoalRequest): ApiCreateGoalRequest {
     deadline: model.deadline,
     hard_mode: model.hardMode,
     auto_pay: model.autoPay,
-    account_id: model.accountId,
+    auto_pay_account_id: model.autoPayAccountId,
     billing_cycle: model.billingCycle,
     billing_interval: model.billingInterval,
     auto_pay_amount: model.autoPayAmount,
@@ -75,7 +79,7 @@ export function mapUpdateGoalAutoPay(model: UpdateGoalAutoPayRequest): ApiUpdate
   return {
     id: model.id,
     is_active: model.isActive,
-    account_id: model.accountId,
+    auto_pay_account_id: model.autoPayAccountId,
     billing_cycle: model.billingCycle,
     billing_interval: model.billingInterval,
     amount: model.amount,

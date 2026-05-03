@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { TuiButton } from '@taiga-ui/core';
 import { GoalsPageStore } from '../../services/goal-page.store';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
@@ -7,10 +7,22 @@ import { GoalService } from '../../services/goal.service';
 import { GoalsChart } from '../goals-chart/goals-chart';
 import { GoalsHistory } from '../goals-history/goals-history';
 import { GoalsProgressBar } from '../goals-progress-bar/goals-progress-bar';
+import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
+import { UpdateGoalForm } from '../../forms/update-goal-form/update-goal-form';
+import { AutoPayContainer } from '../auto-pay-container/auto-pay-container';
 
 @Component({
   selector: 'app-goals-info-container',
-  imports: [TuiButton, GoalsInfoSkeleton, GoalsChart, GoalsHistory, GoalsProgressBar],
+  imports: [
+    TuiButton,
+    GoalsInfoSkeleton,
+    GoalsChart,
+    GoalsHistory,
+    GoalsProgressBar,
+    ModalDialog,
+    UpdateGoalForm,
+    AutoPayContainer
+  ],
   templateUrl: './goals-info-container.html',
   styleUrl: './goals-info-container.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +33,17 @@ export class GoalsInfoContainer {
   readonly listGoals = this.store.goals;
   readonly goal = this.store.selectedGoal;
   readonly range = this.goalService.range;
+  readonly isHardModeOn = computed(() => this.goal()?.hardMode ?? false);
+
+  isUpdateModalOpen = signal(false);
+
+  openUpdateModal() {
+    this.isUpdateModalOpen.set(true);
+  }
+
+  closeUpdateModal() {
+    this.isUpdateModalOpen.set(false);
+  }
 
   readonly loading = this.store.loadingSelectedGoal;
   readonly restDays = computed(() => {

@@ -1,0 +1,73 @@
+
+import {
+  ApiCreateScheduledPaymentRequest,
+  ApiCreateSubscriptionRequest,
+  ApiScheduledPayments,
+  ApiSubsription,
+} from './reminder-payment.api';
+import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import {
+  CreateSubscriptionRequest,
+  Subscription,
+} from '@/app/models/subscription/subscription.model';
+
+export function mapSubscription(api: ApiSubsription): Subscription {
+  return {
+    id: api.id,
+    title: api.name,
+    description: api.description,
+    amount: api.amount,
+    categoryName: api.category_name,
+    categoryColor: api.category_color,
+    billingCycle: api.billing_cycle,
+    billingInterval: api.billing_interval,
+    nextBillingDate: api.next_billing_date,
+    endDate: api.end_date,
+    logoUrl: api.logo_url,
+    status: api.status,
+  };
+}
+
+export function mapScheduledPayments(api: ApiScheduledPayments): SheduledPayment {
+  return {
+    id: api.id,
+    title: api.title,
+    description: api.description,
+    amount: api.amount,
+    categoryName: api.category_name,
+    categoryColor: api.category_color,
+    billingCycle: api.frequency,
+    billingInterval: api.interval,
+    nextBillingDate: api.next_payment_at,
+    endDate: api.end_date,
+    logoUrl: api.logo_url,
+    status: api.status,
+  };
+}
+
+export function mapCreateSubscriptionRequest(
+  request: CreateSubscriptionRequest,
+): ApiCreateSubscriptionRequest {
+  return {
+    name: request.title,
+    description: request.description,
+    amount: request.amount,
+    category_name: request.categoryName,
+    billing_cycle: request.billingCycle,
+    billing_interval: request.billingInterval,
+    end_date: request.endDate,
+  };
+} 
+export function mapCreateScheduledPaymentRequest(
+  request: CreateScheduledPaymentRequest,
+): ApiCreateScheduledPaymentRequest {
+  return {
+    title: request.title,
+    description: request.description,
+    amount: request.amount,
+    category_name: request.categoryName,
+    frequency: request.billingCycle,
+    interval: request.billingInterval,
+    end_date: request.endDate,
+  };
+}

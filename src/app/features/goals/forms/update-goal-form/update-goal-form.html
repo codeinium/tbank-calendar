@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+    <label class="text-base mt-5">
+        Название
+        <tui-textfield>
+            <input tuiTextfield type="text" placeholder={{placeholderName}} formControlName="name">
+        </tui-textfield>
+    </label>
+    <label class="text-base">
+        Дата окончания
+        <tui-textfield>
+            <input tuiInputDate placeholder={{placeholderData}} formControlName="deadline">
+            <tui-calendar *tuiTextfieldDropdown />
+        </tui-textfield>
+    </label>
+  <div class="flex justify-center gap-10">
+    <button tuiButton type="button" (click)="close.emit()">Отмена</button>
+    <button tuiButton type="submit" [disabled]="form.invalid">Сохранить</button>
+  </div>
+</form>

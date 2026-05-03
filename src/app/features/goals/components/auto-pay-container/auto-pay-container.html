@@ -1,0 +1,14 @@
+<div class="max-w-75 min-h-28.5 py-4 px-5 flex flex-col bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+  <button tuiButton type="button" (click)="openUpdateAutoPayModal()">Настроить автоплатеж</button>
+  @if (goal()?.autoPay) {
+    <p>Дата следующего автоплатежа: {{ nextDayAutoPay() }}</p>
+    <p>Сумма: {{amount() }}</p>
+  } @else {
+    <p>Автоплатеж отключён</p>
+  }
+  </div>
+@if (isUpdateAutoPayModalOpen()) {
+  <app-modal-dialog title="Настроить автоплатёж" (close)="closeUpdateAutoPayModal()">
+    <app-update-auto-pay-form (close)="closeUpdateAutoPayModal()" />
+  </app-modal-dialog>
+}

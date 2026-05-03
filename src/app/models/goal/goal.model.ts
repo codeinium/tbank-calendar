@@ -1,5 +1,6 @@
+import { BillingCycle } from '../types/billing-cycle.type';
+
 export type GoalStatus = 'active' | 'achieved' | 'closed' | 'forfeited';
-export type BillingCycle = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
 /* для списка */
 export interface Goal {
@@ -18,6 +19,10 @@ export interface GoalDetails extends Goal {
   achievedAt: string | null;
   hardMode: boolean;
   autoPay: boolean;
+  autoPayAccountId?: string;
+  billingCycle?: BillingCycle;
+  billingInterval?: number;
+  autoPayAmount?: number;
 }
 
 /* создание цели */
@@ -27,7 +32,7 @@ export interface CreateGoalRequest {
   deadline: string;
   hardMode: boolean;
   autoPay: boolean;
-  accountId?: string;
+  autoPayAccountId?: string;
   billingCycle?: BillingCycle;
   billingInterval?: number;
   autoPayAmount?: number;
@@ -42,7 +47,7 @@ export interface GoalTransactionRequest {
 
 /* изменение цели (название, дедлайн) */
 export interface UpdateGoalRequest {
-  id: number;
+  id: string;
   name: string;
   deadline: string;
 }
@@ -51,7 +56,7 @@ export interface UpdateGoalRequest {
 export interface UpdateGoalAutoPayRequest {
   id: string;
   isActive: boolean;
-  accountId?: string;
+  autoPayAccountId?: string;
   billingCycle?: BillingCycle;
   billingInterval?: number;
   amount?: number;

@@ -1,5 +1,5 @@
-import { GoalStatus, BillingCycle } from '../../models/goal/goal.model';
-
+import { GoalStatus } from '../../models/goal/goal.model';
+import { BillingCycle } from '../../models/types/billing-cycle.type';
 /* для списка */
 export interface ApiGoal {
   id: string;
@@ -22,6 +22,10 @@ export interface ApiGoalDetails {
   hard_mode: boolean;
   status: GoalStatus;
   auto_pay: boolean;
+  auto_pay_account_id?: string;
+  billing_cycle?: BillingCycle;
+  billing_interval?: number;
+  auto_pay_amount?: number;
 }
 
 /* создание новой цели */
@@ -31,7 +35,7 @@ export interface ApiCreateGoalRequest {
   deadline: string;
   hard_mode: boolean;
   auto_pay: boolean;
-  account_id?: string;
+  auto_pay_account_id?: string;
   billing_cycle?: BillingCycle;
   billing_interval?: number;
   auto_pay_amount?: number;
@@ -46,7 +50,7 @@ export interface ApiGoalTransactionRequest {
 
 /* изменение цели (название, дедлайн) */
 export interface ApiUpdateGoalRequest {
-  id: number;
+  id: string;
   name: string;
   deadline: string;
 }
@@ -55,7 +59,7 @@ export interface ApiUpdateGoalRequest {
 export interface ApiUpdateGoalAutoPayRequest {
   id: string;
   is_active: boolean;
-  account_id?: string;
+  auto_pay_account_id?: string;
   billing_cycle?: BillingCycle;
   billing_interval?: number;
   amount?: number;
