@@ -1,7 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
   <label class="flex gap-2 items-center text-base">
-    <input tuiSwitch
-    type="checkbox" formControlName="isActive" />
+    <input tuiSwitch type="checkbox" formControlName="isActive" />
     Автоплатёж
   </label>
 
@@ -9,7 +8,12 @@
     <label class="text-base">
       Account ID
       <tui-textfield>
-        <input tuiTextfield type="text" placeholder="Введите ID" formControlName="autoPayAccountId" />
+        <input
+          tuiTextfield
+          type="text"
+          placeholder="Введите ID"
+          formControlName="autoPayAccountId"
+        />
       </tui-textfield>
     </label>
     <label tuiLabel>
@@ -29,6 +33,11 @@
           formControlName="billingInterval"
         />
       </tui-textfield>
+      @if (labelInterval()) {
+        <p class="text-sm text-(--text-faded)">
+          {{ labelInterval() }}
+        </p>
+      }
     </label>
     <label class="text-base">
       Сумма автоплатежа

@@ -56,6 +56,7 @@ export function mapCreateSubscriptionRequest(
     billing_cycle: request.billingCycle,
     billing_interval: request.billingInterval,
     end_date: request.endDate,
+    next_billing_date: request.nextBillingDate,
   };
 } 
 export function mapCreateScheduledPaymentRequest(
@@ -69,5 +70,6 @@ export function mapCreateScheduledPaymentRequest(
     frequency: request.billingCycle,
     interval: request.billingInterval,
     end_date: request.endDate,
+    next_billing_date: request.nextBillingDate,
   };
 }

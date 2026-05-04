@@ -2,7 +2,12 @@
   <label class="text-base mt-5">
     Название
     <tui-textfield>
-      <input tuiTextfield type="text" placeholder="Например: новый ноутбук" formControlName="name" />
+      <input
+        tuiTextfield
+        type="text"
+        placeholder="Например: новый ноутбук"
+        formControlName="name"
+      />
     </tui-textfield>
   </label>
 
@@ -27,7 +32,10 @@
   <label class="flex gap-2 items-center text-base">
     <input tuiCheckbox type="checkbox" formControlName="hardMode" />
     Сложный режим
-    <tui-icon tuiHintDirection="right" tuiTooltip="Внимание! В сложном режиме невозможно снять деньги с цели, если вы не успеете закрыть цель до дедлайна, ваши деньги сгорят!" />
+    <tui-icon
+      tuiHintDirection="right"
+      tuiTooltip="Внимание! В сложном режиме невозможно снять деньги с цели, если вы не успеете закрыть цель до дедлайна, ваши деньги сгорят!"
+    />
   </label>
 
   <label class="flex gap-2 items-center text-base">
@@ -40,7 +48,12 @@
       <label class="text-base">
         Account ID
         <tui-textfield>
-          <input tuiTextfield type="text" placeholder="Введите ID" formControlName="autoPayAccountId" />
+          <input
+            tuiTextfield
+            type="text"
+            placeholder="Введите ID"
+            formControlName="autoPayAccountId"
+          />
         </tui-textfield>
       </label>
       <label tuiLabel>
@@ -53,8 +66,18 @@
       <label class="text-base">
         Интервал
         <tui-textfield>
-          <input tuiTextfield type="number" placeholder="Например: 1" formControlName="billingInterval" />
+          <input
+            tuiTextfield
+            type="number"
+            placeholder="Например: 1"
+            formControlName="billingInterval"
+          />
         </tui-textfield>
+        @if (labelInterval()) {
+          <p class="text-sm text-(--text-faded)">
+            {{ labelInterval() }}
+          </p>
+        }
       </label>
 
       <label class="text-base">
@@ -71,4 +94,3 @@
     <button tuiButton type="submit" [disabled]="form.invalid">Создать</button>
   </div>
 </form>
-

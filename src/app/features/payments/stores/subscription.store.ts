@@ -4,6 +4,8 @@ import { CreateSubscriptionRequest, Subscription } from '@/app/models/subscripti
 import { ReminderPaymentService } from '@/app/services/reminder-payment/reminder-payment.service';
 import { take } from 'rxjs';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
+import { CategoryType } from '@/app/models/types/category.type';
+import { SelectOption } from '@/app/shared/types/select-option.type';
 
 @Injectable()
 export class SubscriptionStore extends BaseListStore<Subscription> {
@@ -84,13 +86,16 @@ export class SubscriptionStore extends BaseListStore<Subscription> {
 
   readonly upcomingCount = computed(() => this.upcomingSubscriptions().length);
 
-  readonly categories = computed(() => {
+  readonly categories = computed<SelectOption<CategoryType>[]>(() => {
     return [
       ...new Set(
         this.items()
-          .map((s) => s.categoryName)
+          .map((s) => s.categoryName as CategoryType)
           .filter(Boolean),
       ),
-    ].map((c) => ({ label: c, value: c }));
+    ].map((c) => ({
+      label: c,
+      value: c,
+    }));
   });
 }

@@ -28,6 +28,14 @@
     </tui-textfield>
   </label>
 
+  <label class="text-base">
+    Дата первого списания
+    <tui-textfield>
+      <input tuiInputDate formControlName="nextBillingDate" />
+      <tui-calendar *tuiTextfieldDropdown />
+    </tui-textfield>
+  </label>
+
   <label tuiLabel>
     <label class="text-base">Выберите промежуток времени</label>
     <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
@@ -46,6 +54,11 @@
         formControlName="billingInterval"
       />
     </tui-textfield>
+    @if (labelInterval()) {
+      <p class="text-sm text-(--text-faded)">
+        {{ labelInterval() }}
+      </p>
+    }
   </label>
   <label class="text-base">
     Дата окончания

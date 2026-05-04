@@ -39,6 +39,7 @@ export interface ApiCreateScheduledPaymentRequest {
   frequency: BillingCycle;
   interval: number;
   end_date: string;
+  next_billing_date: string;
 }
 
 export interface ApiCreateSubscriptionRequest {
@@ -49,4 +50,5 @@ export interface ApiCreateSubscriptionRequest {
   billing_cycle: BillingCycle;
   billing_interval: number;
   end_date: string;
+  next_billing_date: string;
 }

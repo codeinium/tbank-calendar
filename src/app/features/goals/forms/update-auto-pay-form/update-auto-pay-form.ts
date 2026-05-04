@@ -15,6 +15,7 @@ import { UpdateGoalAutoPayRequest } from '@/app/models/goal/goal.model';
 import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect, TuiSwitch } from '@taiga-ui/kit';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
+import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 
 @Component({
   selector: 'app-update-auto-pay-form',
@@ -47,6 +48,8 @@ export class UpdateAutoPayForm {
   close = output<void>();
 
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
+
+    readonly labelInterval = signal<string | null>(null);
 
   form = this.fb.group({
     isActive: [false],
@@ -92,6 +95,16 @@ export class UpdateAutoPayForm {
       } else {
         this.disableFields();
       }
+    });
+    this.form.valueChanges.subscribe(() => {
+      const { billingCycle, billingInterval } = this.form.getRawValue();
+
+      if (!billingCycle || !billingInterval) {
+        this.labelInterval.set(null);
+        return;
+      }
+
+      this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
     });
   }
 

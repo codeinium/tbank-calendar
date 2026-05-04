@@ -11,12 +11,12 @@ import { TuiButton, tuiItemsHandlersProvider, TuiTextfield, TuiLabel } from '@ta
 import { BillingCycle } from '@/app/models/types/billing-cycle.type';
 import { TuiInputDate, TuiChevron, TuiDataListWrapper, TuiSelect } from '@taiga-ui/kit';
 import { TuiDay } from '@taiga-ui/cdk';
-import { SubscriptionService } from '../../services/subscription.service';
 import { CategoryType } from '@/app/models/types/category.type';
 import { CATEGORY_OPTIONS } from '@/app/shared/constants/categories-option';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 import { CreateScheduledPaymentRequest } from '@/app/models/scheduled-payment/scheduled-payment.model';
 import { ScheduledPaymentService } from '../../services/scheduled-payment.service';
+import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 
 @Component({
   selector: 'app-create-scheduled-payment-form',
@@ -52,6 +52,8 @@ export class CreateScheduledPaymentForm {
   readonly categories = CATEGORY_OPTIONS;
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
+  readonly labelInterval = signal<string | null>(null);
+
   form = this.fb.group({
     title: ['', [Validators.required, this.notEmptyStringValidator()]],
     description: ['', [Validators.required, this.notEmptyStringValidator()]],
@@ -67,7 +69,22 @@ export class CreateScheduledPaymentForm {
     ],
     billingInterval: [null as number | null, [Validators.required, Validators.min(1)]],
     endDate: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
+    nextBillingDate: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
   });
+
+  constructor() {
+    this.form.valueChanges.subscribe(() => {
+      const { billingCycle, billingInterval } = this.form.getRawValue();
+
+      if (!billingCycle || !billingInterval) {
+        this.labelInterval.set(null);
+        return;
+      }
+
+      this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
+    });
+  }
+
 
   submit() {
     if (this.form.invalid) {
@@ -84,7 +101,7 @@ export class CreateScheduledPaymentForm {
 
       categoryName: raw.categoryName!.value,
       billingCycle: raw.billingCycle!.value,
-
+      nextBillingDate: raw.nextBillingDate!.toLocalNativeDate().toISOString(),
       billingInterval: raw.billingInterval!,
       endDate: raw.endDate!.toLocalNativeDate().toISOString(),
     };

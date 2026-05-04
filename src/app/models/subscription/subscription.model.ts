@@ -24,4 +24,5 @@ export interface CreateSubscriptionRequest {
   billingCycle: BillingCycle;
   billingInterval: number;
   endDate: string;
+  nextBillingDate: string;
 }

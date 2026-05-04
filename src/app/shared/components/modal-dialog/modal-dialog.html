@@ -1,13 +1,17 @@
 <div
   class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-  (click)="onBackdropClick()">
+  (click)="onBackdropClick()"
+>
   <div
-    [class]="'z-51 max-h-[90vh] py-3 px-6 bg-(--background) relative rounded-(--tui-radius-l) overflow-hidden flex flex-col ' + widthClass"
-    (click)="$event.stopPropagation()">
-    <div class="flex justify-between items-center mb-4">
+    [class]="'z-51 bg-(--background) relative rounded-(--tui-radius-l) flex flex-col ' + widthClass"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="flex justify-between items-center mb-4 px-6 pt-3">
       <h1 class="text-xl">{{ title }}</h1>
-      <button class="text-base cursor-pointer" (click)="close.emit()">✖</button>
+      <button class="text-base cursor-pointer" (click)="close.emit()">✖️</button>
     </div>
-    <ng-content></ng-content>
+    <div class="px-6 pb-4 overflow-y-auto max-h-[80vh]">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>

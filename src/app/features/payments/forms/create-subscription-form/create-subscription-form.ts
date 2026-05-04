@@ -16,6 +16,7 @@ import { CreateSubscriptionRequest } from '@/app/models/subscription/subscriptio
 import { CategoryType } from '@/app/models/types/category.type';
 import { CATEGORY_OPTIONS } from '@/app/shared/constants/categories-option';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
+import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 
 @Component({
   selector: 'app-create-subscription-form',
@@ -51,6 +52,8 @@ export class CreateSubscriptionForm {
   readonly categories = CATEGORY_OPTIONS;
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
+  readonly labelInterval = signal<string | null>(null);
+
   form = this.fb.group({
     title: ['', [Validators.required, this.notEmptyStringValidator()]],
     description: ['', [Validators.required, this.notEmptyStringValidator()]],
@@ -66,7 +69,23 @@ export class CreateSubscriptionForm {
     ],
     billingInterval: [null as number | null, [Validators.required, Validators.min(1)]],
     endDate: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
+    nextBillingDate: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
   });
+
+  constructor() {
+    this.form.valueChanges.subscribe(() => {
+      const { billingCycle, billingInterval } = this.form.getRawValue();
+
+      if (!billingCycle || !billingInterval) {
+        this.labelInterval.set(null);
+        return;
+      }
+
+      this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
+    });
+  }
+
+  
 
   submit() {
     if (this.form.invalid) {
@@ -83,6 +102,7 @@ export class CreateSubscriptionForm {
 
       categoryName: raw.categoryName!.value,
       billingCycle: raw.billingCycle!.value,
+      nextBillingDate: raw.nextBillingDate!.toLocalNativeDate().toISOString(),
 
       billingInterval: raw.billingInterval!,
       endDate: raw.endDate!.toLocalNativeDate().toISOString(),
