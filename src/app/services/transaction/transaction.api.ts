@@ -1,3 +1,5 @@
+import { TransactionType } from "@/app/shared/types/transaction.type";
+
 export interface ApiTransaction {
   id: string;
   from_account_name: string;
@@ -5,7 +7,7 @@ export interface ApiTransaction {
   counterparty_name?: string | null;
   category_name: string;
   amount: number;
-  type: 'income' | 'expense';
+  type: TransactionType;
   transaction_date: string;
   description: string;
   category_color: string;

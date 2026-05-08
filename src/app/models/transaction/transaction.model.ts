@@ -1,3 +1,5 @@
+import { TransactionType } from "@/app/shared/types/transaction.type";
+
 export interface Transaction {
   id: string;
   fromAccountName: string;
@@ -5,10 +7,9 @@ export interface Transaction {
   counterpartyName?: string | null;
   categoryName: string;
   amount: number;
-  type: 'income' | 'expense';
+  type: TransactionType;
   date: string;
   description: string;
   categoryColor: string;
 }
 
-export type transactionType = 'income' | 'expense';
