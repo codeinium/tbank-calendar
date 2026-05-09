@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TuiButton } from '@taiga-ui/core';
 import { StatisticsPageService } from '../../services/statistics.service';
 import { StatsHeader } from '../../components/stats-header/stats-header';
 import { StatisticsPageStore } from '../../services/statistics.store';
+import { BalanceCard } from '../../components/1-row/balance-card/balance-card';
+import { IncomeCard } from "../../components/1-row/income-card/income-card";
+import { ExpenseCard } from "../../components/1-row/expense-card/expense-card";
 
 @Component({
   selector: 'app-statistics-page',
-  imports: [StatsHeader],
+  imports: [StatsHeader, BalanceCard, IncomeCard, ExpenseCard],
   templateUrl: './statistics-page.html',
   styleUrl: './statistics-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

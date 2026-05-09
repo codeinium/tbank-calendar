@@ -1,4 +1,4 @@
-import { TransactionType } from './../../../shared/types/transaction.type';
+import { TransactionType } from '../../../models/types/transaction.type';
 import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { StatisticsService } from '@/app/services/statistic/statistics.service';

@@ -1,0 +1,11 @@
+@if (summary(); as balance) {
+  <app-summary-card
+    title="Баланс"
+    bgColor="var(--card-2)"
+    [amount]="balance.amount"
+    [differenceFromPreviousPeriod]="balance.differenceFromPreviousPeriod"
+    [percentChange]="balance.percentChange"
+    [transactionCount]="balance.transactionCount"
+    [categoryCount]="balance.categoryCount"
+  />
+}

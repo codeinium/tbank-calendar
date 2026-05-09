@@ -1,4 +1,4 @@
-import { TransactionType } from "@/app/shared/types/transaction.type";
+import { TransactionType } from '@/app/models/types/transaction.type';
 
 export interface Transaction {
   id: string;
@@ -12,4 +12,3 @@ export interface Transaction {
   description: string;
   categoryColor: string;
 }
-

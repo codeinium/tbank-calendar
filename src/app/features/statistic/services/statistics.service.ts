@@ -8,7 +8,7 @@ import { ReminderPaymentService } from '@/app/services/reminder-payment/reminder
 import { GoalsService } from '@/app/services/goal/goal.service';
 
 import { StatisticsPeriod } from '@/app/shared/types/statistics-period.type';
-import { TransactionType } from '@/app/shared/types/transaction.type';
+import { TransactionType } from '@/app/models/types/transaction.type';
 
 @Injectable()
 export class StatisticsPageService {
@@ -88,5 +88,4 @@ export class StatisticsPageService {
   error = this.statisticsStore.error;
   categoryDistribution = this.statisticsStore.currentCategoryDistribution;
   period = this.statisticsStore.selectedPeriod;
-  date = this.statisticsStore.selectedDate;
 }

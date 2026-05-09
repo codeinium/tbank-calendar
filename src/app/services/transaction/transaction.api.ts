@@ -1,4 +1,4 @@
-import { TransactionType } from "@/app/shared/types/transaction.type";
+import { TransactionType } from '@/app/models/types/transaction.type';
 
 export interface ApiTransaction {
   id: string;

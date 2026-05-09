@@ -1,0 +1,11 @@
+@if (summary(); as expense) {
+  <app-summary-card
+    title="Траты"
+    bgColor="var(--card-4)"
+    [amount]="expense.amount"
+    [differenceFromPreviousPeriod]="expense.differenceFromPreviousPeriod"
+    [percentChange]="expense.percentChange"
+    [transactionCount]="expense.transactionCount"
+    [categoryCount]="expense.categoryCount"
+  />
+}

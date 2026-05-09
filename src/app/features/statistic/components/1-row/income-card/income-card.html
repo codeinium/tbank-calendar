@@ -1,0 +1,11 @@
+@if (summary(); as income) {
+  <app-summary-card
+    title="Доходы"
+    bgColor="var(--card-3)"
+    [amount]="income.amount"
+    [differenceFromPreviousPeriod]="income.differenceFromPreviousPeriod"
+    [percentChange]="income.percentChange"
+    [transactionCount]="income.transactionCount"
+    [categoryCount]="income.categoryCount"
+  />
+}
