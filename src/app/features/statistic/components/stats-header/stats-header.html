@@ -1,0 +1,76 @@
+<div class="flex flex-wrap gap-3 items-center">
+  <div class="flex gap-2">
+    <button
+      tuiButton
+      type="button"
+      [appearance]="period() === 'month' ? 'primary' : 'secondary'"
+      (click)="setPeriod('month')">
+      Месяц
+    </button>
+
+    <button
+      tuiButton
+      type="button"
+      [appearance]="period() === 'year' ? 'primary' : 'secondary'"
+      (click)="setPeriod('year')">
+      Год
+    </button>
+  </div>
+
+  <div class="flex gap-2 items-center">
+    <button
+      tuiButton
+      type="button"
+      (click)="navigatePrev()">
+      <tui-icon icon="@tui.arrow-left"/>
+    </button>
+
+    <button
+      tuiButton
+      type="button"
+      (click)="goToday()">
+      Сегодня
+    </button>
+
+    <button
+      tuiButton
+      type="button"
+      (click)="navigateNext()">
+      <tui-icon icon="@tui.arrow-right"/>
+    </button>
+  </div>
+
+  <tui-textfield
+    tuiChevron
+    class="w-25"
+    [tuiTextfieldCleaner]="false"
+    [stringify]="stringifyYear">
+    <input
+      tuiSelect
+      [ngModel]="currentYear()"
+      (ngModelChange)="goToYear($event)"/>
+
+    <tui-data-list-wrapper
+      *tuiTextfieldDropdown
+      new
+      [items]="years()"/>
+  </tui-textfield>
+  @if (period() === 'month') {
+    <tui-textfield
+      tuiChevron
+      class="w-35"
+      [tuiTextfieldCleaner]="false"
+      [stringify]="stringifyMonth">
+      <input
+        tuiSelect
+        [ngModel]="currentMonth()"
+        (ngModelChange)="goToMonth($event)"/>
+
+      <tui-data-list-wrapper
+        *tuiTextfieldDropdown
+        new
+        [items]="months"/>
+    </tui-textfield>
+  }
+
+</div>

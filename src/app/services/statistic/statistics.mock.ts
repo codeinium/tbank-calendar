@@ -73,6 +73,22 @@ export const MOCK_STATISTICS_DASHBOARD: StatisticsDashboard = {
         date: '2026-04-01',
         amount: 42000,
       },
+      {
+        date: '2026-04-02',
+        amount: 43500,
+      },
+      {
+        date: '2026-04-03',
+        amount: 37900,
+      },
+      {
+        date: '2026-04-09',
+        amount: 34600,
+      },
+      {
+        date: '2026-04-11',
+        amount: 29050,
+      },
     ],
   },
 

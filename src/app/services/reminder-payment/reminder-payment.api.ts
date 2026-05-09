@@ -52,3 +52,17 @@ export interface ApiCreateSubscriptionRequest {
   end_date: string;
   next_billing_date: string;
 }
+
+export interface ApiStatisticSubscriptions {
+  total_amount: number;
+  average_amount: number;
+  items: ApiStatisticSubscriptionsItem[];
+}
+
+export interface ApiStatisticSubscriptionsItem {
+  id: string;
+  name: string;
+  next_payment_date: string;
+  amount: number;
+  icon_url?: string;
+}

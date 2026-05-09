@@ -26,3 +26,17 @@ export interface CreateSubscriptionRequest {
   endDate: string;
   nextBillingDate: string;
 }
+
+export interface StatisticSubscriptions {
+  totalAmount: number;
+  averageAmount: number;
+  items: StatisticSubscriptionsItem[];
+}
+
+export interface StatisticSubscriptionsItem {
+  id: string;
+  name: string;
+  nextPaymentDate: string;
+  amount: number;
+  iconUrl?: string;
+}
