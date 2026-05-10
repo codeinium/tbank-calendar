@@ -22,7 +22,7 @@ export class StatisticsService {
 
   constructor(private http: HttpClient) {}
 
-  getDashboard(period: StatisticsPeriod, date: string): Observable<StatisticsDashboard> {
+  getDashboard(dateFrom: string, dateTo: string): Observable<StatisticsDashboard> {
     if (this.useMock) {
       return of(MOCK_STATISTICS_DASHBOARD).pipe(delay(this.mockDelay));
     }
@@ -30,8 +30,8 @@ export class StatisticsService {
     return this.http
       .get<ApiStatisticsDashboard>(`${this.apiUrl}/statistics/dashboard`, {
         params: {
-          period,
-          date,
+          dateFrom,
+          dateTo,
         },
       })
       .pipe(map(mapStatisticsDashboard));

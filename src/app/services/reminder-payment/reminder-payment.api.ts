@@ -55,7 +55,7 @@ export interface ApiCreateSubscriptionRequest {
 
 export interface ApiStatisticSubscriptions {
   total_amount: number;
-  average_amount: number;
+  average_cost: number;
   items: ApiStatisticSubscriptionsItem[];
 }
 

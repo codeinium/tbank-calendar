@@ -11,7 +11,6 @@ import { Goal } from '@/app/models/goal/goal.model';
 
 @Injectable()
 export class StatisticsPageStore {
-  private api = inject(StatisticsService);
 
   private readonly _dashboard = signal<StatisticsDashboard | null>(null);
   private readonly _loading = signal(false);
@@ -43,26 +42,9 @@ export class StatisticsPageStore {
       : dashboard.categoryDistribution.income;
   });
 
-  load() {
-    this._loading.set(true);
-
-    this.api.getDashboard(this._period(), this._date()).subscribe({
-      next: (response) => {
-        this._loading.set(false);
-        this._dashboard.set(response);
-      },
-      error: () => {
-        this._loading.set(false);
-        this._error.set('Failed to load statistics');
-      },
-    });
-  }
-
   changePeriod(period: StatisticsPeriod, date: string) {
     this._period.set(period);
     this._date.set(date);
-
-    this.load();
   }
 
   changeType(type: TransactionType) {
@@ -97,4 +79,20 @@ export class StatisticsPageStore {
   setGoals(goals: Goal[]) {
     this._goals.set(goals);
   }
+
+  readonly range = computed(() => {
+    const period = this._period();
+    const date = this._date();
+
+    if (period === 'month') {
+      return {
+        from: dayjs(date).startOf('month').toISOString(),
+        to: dayjs(date).endOf('month').toISOString(),
+      };
+    }
+    return {
+      from: dayjs(date).startOf('year').toISOString(),
+      to: dayjs(date).endOf('year').toISOString(),
+    };
+  });
 }

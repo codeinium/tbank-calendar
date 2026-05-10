@@ -83,7 +83,7 @@ export function mapCreateScheduledPaymentRequest(
 export function mapStatisticsSubscriptions(api: ApiStatisticSubscriptions): StatisticSubscriptions {
   return {
     totalAmount: api.total_amount,
-    averageAmount: api.average_amount,
+    averageAmount: api.average_cost,
 
     items: api.items.map((item) => ({
       id: item.id,

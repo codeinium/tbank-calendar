@@ -19,33 +19,27 @@ export class StatisticsPageService {
   private subscriptionApi = inject(ReminderPaymentService);
 
   loadPage() {
-    const period = this.statisticsStore.selectedPeriod();
-    const date = this.statisticsStore.selectedDate();
+    const { from, to } = this.statisticsStore.range();
 
     this.statisticsStore.startLoading();
 
     forkJoin({
-      dashboard: this.statisticsApi.getDashboard(period, date),
+      dashboard: this.statisticsApi.getDashboard(from, to),
 
       goals: this.goalsApi.getGoals(),
 
-      subscriptions: this.subscriptionApi.getStatisticSubscriptions(period, date),
+      subscriptions: this.subscriptionApi.getStatisticSubscriptions(from, to),
     })
       .pipe(take(1))
       .subscribe({
         next: ({ dashboard, goals, subscriptions }) => {
           this.statisticsStore.setDashboard(dashboard);
-
           this.statisticsStore.setGoals(goals);
-
           this.statisticsStore.setStatisticSubscriptions(subscriptions);
-
           this.statisticsStore.stopLoading();
         },
-
         error: (err) => {
           this.statisticsStore.setError(err.message);
-
           this.statisticsStore.stopLoading();
         },
       });
@@ -54,26 +48,24 @@ export class StatisticsPageService {
   changePeriod(period: StatisticsPeriod, date: string) {
     this.statisticsStore.changePeriod(period, date);
 
+    const { from, to } = this.statisticsStore.range();
+
     this.statisticsStore.startLoading();
 
     forkJoin({
-      dashboard: this.statisticsApi.getDashboard(period, date),
+      dashboard: this.statisticsApi.getDashboard(from, to),
 
-      subscriptions: this.subscriptionApi.getStatisticSubscriptions(period, date),
+      subscriptions: this.subscriptionApi.getStatisticSubscriptions(from, to),
     })
       .pipe(take(1))
       .subscribe({
         next: ({ dashboard, subscriptions }) => {
           this.statisticsStore.setDashboard(dashboard);
-
           this.statisticsStore.setStatisticSubscriptions(subscriptions);
-
           this.statisticsStore.stopLoading();
         },
-
         error: (err) => {
           this.statisticsStore.setError(err.message);
-
           this.statisticsStore.stopLoading();
         },
       });

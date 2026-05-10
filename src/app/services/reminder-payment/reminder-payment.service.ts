@@ -63,19 +63,16 @@ export class ReminderPaymentService {
       .pipe(map(mapScheduledPayments));
   }
 
-  getStatisticSubscriptions(
-    period: StatisticsPeriod,
-    date: string,
-  ): Observable<StatisticSubscriptions> {
+  getStatisticSubscriptions(dateFrom: string, dateTo: string): Observable<StatisticSubscriptions> {
     if (this.useMock) {
       return of(MOCK_UPCOMING_SUBSCRIPTIONS).pipe(delay(this.mockDelay));
     }
 
     return this.http
-      .get<ApiStatisticSubscriptions>(`${this.apiUrl}/subscriptions/upcoming`, {
+      .get<ApiStatisticSubscriptions>(`${this.apiUrl}/subscriptions`, {
         params: {
-          period,
-          date,
+          dateFrom,
+          dateTo,
         },
       })
       .pipe(map(mapStatisticsSubscriptions));
