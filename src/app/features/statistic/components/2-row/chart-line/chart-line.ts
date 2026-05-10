@@ -20,56 +20,82 @@ export class ChartLine {
     return this.dashboard()?.balanceHistory;
   });
 
+  // генерирует полный набор дат для периода (day: все дни месяца (1–30/31), month: все месяцы года (янв–дек))
+  private generateFullPeriodLabels(granularity: 'day' | 'month', referenceDate?: string): string[] {
+    if (!referenceDate) return [];
+
+    const ref = dayjs(referenceDate);
+    const labels: string[] = [];
+
+    if (granularity === 'day') {
+      // YYYY-MM-DD
+      const daysInMonth = ref.daysInMonth();
+      for (let day = 1; day <= daysInMonth; day++) {
+        labels.push(ref.date(day).format('YYYY-MM-DD'));
+      }
+    } else if (granularity === 'month') {
+      // YYYY-MM
+      for (let month = 0; month < 12; month++) {
+        labels.push(ref.month(month).format('YYYY-MM'));
+      }
+    }
+    return labels;
+  }
+
   readonly lineChartData = computed<ChartConfiguration['data']>(() => {
     const history = this.balanceHistory();
 
     if (!history) {
-      return {
-        labels: [],
-        datasets: [],
-      };
+      return { labels: [], datasets: [] };
     }
 
-    const current = history.currentPeriod;
-    const previous = history.previousPeriod;
+    const { currentPeriod, previousPeriod, granularity } = history;
+
+    // генерируем полные метки для текущего периода
+    const labels = this.generateFullPeriodLabels(granularity, currentPeriod[0]?.date);
+    const formattedLabels = labels.map((date) => this.formatLabel(date, granularity));
+
+    // текущий период: сопоставляем по дате
+    const currentData = labels.map((label) => {
+      const item = currentPeriod.find((i) => i.date === label);
+      return item?.amount ?? null;
+    });
+
+    // прошлый период: сопоставляем по индексу
+    const previousData = labels.map((_, index) => {
+      return previousPeriod[index]?.amount ?? null;
+    });
 
     return {
-      labels: current.map((item) => this.formatLabel(item.date, history.granularity)),
-
+      labels: formattedLabels,
       datasets: [
         {
           label: 'Текущий период',
-          data: current.map((item) => item.amount),
-
+          data: currentData,
           borderColor: '#D4B85C',
           backgroundColor: 'rgba(212, 184, 92, 0.1)',
-
           fill: false,
           tension: 0.4,
-
           pointRadius: 0,
           pointHoverRadius: 6,
           pointHoverBackgroundColor: '#FFD54F',
           pointHoverBorderColor: '#fff',
           pointHoverBorderWidth: 3,
-
           borderWidth: 2.5,
+          spanGaps: true,
         },
-
         {
           label: 'Прошлый период',
-          data: previous.map((item) => item.amount),
-
+          data: previousData,
           borderColor: '#FFDE57',
           borderDash: [6, 4],
-
           backgroundColor: 'transparent',
           fill: false,
           tension: 0.4,
-
           pointRadius: 0,
           pointHoverRadius: 6,
           borderWidth: 2,
+          spanGaps: true,
         },
       ],
     };
