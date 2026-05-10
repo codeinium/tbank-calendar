@@ -89,4 +89,5 @@ export class StatisticsPageService {
   categoryDistribution = this.statisticsStore.currentCategoryDistribution;
   period = this.statisticsStore.selectedPeriod;
   selectedDate = this.statisticsStore.selectedDate;
+  statisticSubscriptions = this.statisticsStore.statisticSubscriptions;
 }

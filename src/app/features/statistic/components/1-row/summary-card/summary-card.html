@@ -5,9 +5,7 @@
   <div class="mt-2 flex justify-between">
     <p class="text-5xl">
       ₽{{ integerPart }}
-      @if (decimalPart) {
-        <span class="text-(--text-faded)">.{{ decimalPart }} </span>
-      }
+      <span class="text-(--text-faded)">.{{ decimalPart }} </span>
     </p>
     <div
       class="p-2 flex items-center gap-1 rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
