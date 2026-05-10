@@ -1,32 +1,21 @@
-<h2 class="md:text-2xl xl:text-3xl mb-3">{{ title }}</h2>
+<h2 class="mb-3 text-xl md:text-2xl lg:text-3xl">{{ title }}</h2>
 <div class="w-full h-157 px-7.5 py-5 flex flex-col gap-2.5 bg-(--card-2) rounded-(--tui-radius-l)">
-  <div class="flex gap-2.5">
-    <div
-      class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
-    >
-      <p class="text-2xl">Месячный итог</p>
-      <p class="text-2xl">₽ {{ monthlyTotal() }}</p>
-    </div>
-    <div
-      class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
-    >
-      <p class="text-2xl">Годовой итог</p>
-      <p class="text-2xl">₽ {{ yearlyTotal() }}</p>
-    </div>
-    <div
-      class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
-    >
-      <p class="text-2xl">Активные</p>
-      <p class="text-2xl">{{ activeCount() }}</p>
-    </div>
-    <div
-      class="h-17 flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
-    >
-      <p class="text-2xl">Скоро списания</p>
-      <p class="text-2xl">{{ upcomingCount() }}</p>
-    </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+    @for (card of summaryCards(); track card.title) {
+      <div
+        class="min-h-17 h-auto flex flex-col flex-1 items-center justify-center bg-(--card) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
+      >
+        <p class="text-center text-xl lg:text-2xl">
+          {{ card.title }}
+        </p>
+
+        <p class="text-xl lg:text-2xl">
+          {{ card.value }}
+        </p>
+      </div>
+    }
   </div>
-  <div class="flex gap-2.5">
+  <div class="flex flex-wrap gap-2.5">
     <search tuiSearch class="w-60">
       <tui-textfield>
         <label tuiLabel>Поиск</label>
@@ -59,7 +48,7 @@
 
   @switch (listType) {
     @case ('subscription') {
-      <div class="grid grid-cols-[160px_104px_160px_1fr] gap-4 text-sm text-(--text-faded)">
+      <div class="grid grid-cols-[2fr_1.5fr_2fr_1fr] gap-4 text-sm text-(--text-faded)">
         <span>Название</span>
         <span>Дата списания</span>
         <span>Категория</span>
@@ -68,27 +57,20 @@
       <div class="overflow-x-auto -mx-7.5 px-7.5 pb-2">
         <div class="flex flex-col gap-3">
           @for (item of items(); track item.id) {
-            <div class="grid grid-cols-[160px_104px_160px_1fr] gap-4 items-center">
-              <div class="flex gap-3 items-center">
-                @if (item.logoUrl) {
-                  <img
-                    [src]="item.logoUrl"
-                    alt="logo"
-                    class="w-11.25 h-11.25 object-cover object-center rounded-lg"
-                  />
-                } @else {
-                  <div class="w-11.25 h-11.25 bg-gray-500 rounded-lg flex items-center justify-center">
-                    <span class="text-xl text-white">
-                      {{ firstLetter(item.title) }}
-                    </span>
-                  </div>
-                }
-                <span class="text-base">{{ item.title }}</span>
+            <div class="grid grid-cols-[2fr_1.5fr_2fr_1fr] gap-4 items-center">
+              <div class="flex gap-3 items-center min-w-0">
+                <img
+                  [src]="item.logoUrl"
+                  alt="logo"
+                  class="w-11.25 h-11.25 object-cover object-center rounded-lg shrink-0"
+                />
+                <span class="text-base truncate">{{ item.title }}</span>
               </div>
 
               <span class="text-base">{{ formatDate(item.nextBillingDate) }}</span>
 
-              <span class="text-base">{{ item.categoryName }}</span>
+              <span class="text-base truncate">{{ item.categoryName }}</span>
+
               <span class="text-base"> {{ item.amount }} ₽ </span>
             </div>
           } @empty {
@@ -98,7 +80,7 @@
       </div>
     }
     @case ('payment') {
-      <div class="grid grid-cols-[160px_104px_160px_1fr] gap-4 text-sm text-(--text-faded)">
+      <div class="grid grid-cols-[2fr_1.5fr_2fr_1fr] gap-4 text-sm text-(--text-faded)">
         <span>Название</span>
         <span>Оплатить до</span>
         <span>Переодичность</span>
@@ -107,31 +89,23 @@
       <div class="overflow-x-auto -mx-7.5 px-7.5 pb-2">
         <div class="flex flex-col gap-3">
           @for (item of items(); track item.id) {
-            <div class="grid grid-cols-[160px_104px_160px_1fr] gap-4 items-center">
-              <div class="flex gap-3 items-center">
-                @if (item.logoUrl) {
-                  <img
-                    [src]="item.logoUrl"
-                    alt="logo"
-                    class="w-11.25 h-11.25 object-cover object-center rounded-lg"
-                  />
-                } @else {
-                  <div class="w-11.25 h-11.25 bg-gray-500 rounded-lg flex items-center justify-center">
-                    <span class="text-xl text-white">
-                      {{ firstLetter(item.title) }}
-                    </span>
-                  </div>
-                }
-                <span class="text-base">{{ item.title }}</span>
+            <div class="grid grid-cols-[2fr_1.5fr_2fr_1fr] gap-4 items-center">
+              <div class="flex gap-3 items-center min-w-0">
+                <img
+                  [src]="item.logoUrl"
+                  alt="logo"
+                  class="w-11.25 h-11.25 object-cover object-center rounded-lg shrink-0"
+                />
+                <span class="text-base truncate">{{ item.title }}</span>
               </div>
 
               <span class="text-base">{{ formatDate(item.nextBillingDate) }}</span>
 
-              <span class="text-base">{{
+              <span class="text-base truncate">{{
                 getPeriodLabel(item.billingCycle, item.billingInterval)
               }}</span>
 
-              <span class="text-base"> {{ item.amount }} ₽ </span>
+              <span class="text-base truncate"> {{ item.amount }} ₽ </span>
             </div>
           } @empty {
             <p class="text-center text-base py-6">Список пуст</p>

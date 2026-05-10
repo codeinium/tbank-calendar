@@ -88,4 +88,5 @@ export class StatisticsPageService {
   error = this.statisticsStore.error;
   categoryDistribution = this.statisticsStore.currentCategoryDistribution;
   period = this.statisticsStore.selectedPeriod;
+  selectedDate = this.statisticsStore.selectedDate;
 }

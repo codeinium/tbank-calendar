@@ -1,0 +1,76 @@
+<div class="min-h-99.75 rounded-(--tui-radius-l) bg-(--card-2) p-5 shadow-(--tui-shadow-m)">
+  <div class="flex justify-between items-center">
+    <div class="flex gap-2">
+      <button
+        tuiButton
+        (click)="changeType('expense')"
+        class="px-4 py-2 rounded-xl"
+        [appearance]="selectedType() === 'expense' ? 'primary' : 'secondary'"
+      >
+        Расходы
+      </button>
+
+      <button
+        tuiButton
+        (click)="changeType('income')"
+        class="px-4 py-2 rounded-xl"
+        [appearance]="selectedType() === 'income' ? 'primary' : 'secondary'"
+      >
+        Доходы
+      </button>
+    </div>
+  </div>
+
+  @if (chartData().labels.length > 0) {
+    <div class="flex flex-col items-center mt-6 relative">
+      <canvas
+        baseChart
+        [data]="chartData()"
+        [options]="chartOptions"
+        [type]="'doughnut'"
+        class="w-56.25! h-56.25!"
+      >
+      </canvas>
+
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+        <p class="text-sm text-(--text-faded)">
+          {{ selectedType() === 'expense' ? 'Траты' : 'Доходы' }} за {{ selectedDate() }}
+        </p>
+        <p class="text-2xl">₽{{ distribution()?.totalAmount }}</p>
+      </div>
+    </div>
+
+    @let vm = view();
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      @for (item of vm.visible; track item.categoryId) {
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full" [style.background]="item.color"></div>
+          <span>
+            {{ item.categoryName }}
+          </span>
+        </div>
+      }
+
+      @if (vm.hasMore && !vm.expanded) {
+        <button
+          (click)="toggleExpand()"
+          class="text-base font-medium cursor-pointer border-none text-(--primary) hover:text-(--tui-background-accent-1-hover)"
+        >
+          ... ({{ vm.remaining }})
+        </button>
+      }
+
+      @if (vm.expanded) {
+        <button
+          (click)="toggleExpand()"
+          class="text-base font-medium cursor-pointer border-none text-(--primary) hover:text-(--tui-background-accent-1-hover)"
+        >
+          Скрыть
+        </button>
+      }
+    </div>
+  } @else {
+    <p class="mt-5 text-(--text-faded)">Нет данных</p>
+  }
+</div>
