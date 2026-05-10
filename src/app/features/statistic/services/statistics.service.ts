@@ -90,4 +90,5 @@ export class StatisticsPageService {
   period = this.statisticsStore.selectedPeriod;
   selectedDate = this.statisticsStore.selectedDate;
   statisticSubscriptions = this.statisticsStore.statisticSubscriptions;
+  goals = this.statisticsStore.goals;
 }

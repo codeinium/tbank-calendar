@@ -3,7 +3,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { StatisticsService } from '@/app/services/statistic/statistics.service';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { StatisticsDashboard } from '@/app/models/statistic/statistics.model';
+import { ImpulseIndex, StatisticsDashboard } from '@/app/models/statistic/statistics.model';
 
 import { StatisticsPeriod } from '@/app/shared/types/statistics-period.type';
 import { StatisticSubscriptions } from '@/app/models/subscription/subscription.model';
@@ -21,6 +21,7 @@ export class StatisticsPageStore {
   private readonly _selectedType = signal<TransactionType>('expense');
   private readonly _statisticSubscriptions = signal<StatisticSubscriptions | null>(null);
   private readonly _goals = signal<Goal[]>([]);
+  private readonly _impulseIndex = signal<ImpulseIndex | null>(null);
 
   readonly selectedDate = this._date.asReadonly();
   readonly selectedPeriod = this._period.asReadonly();
@@ -30,6 +31,7 @@ export class StatisticsPageStore {
   readonly selectedType = this._selectedType.asReadonly();
   readonly statisticSubscriptions = this._statisticSubscriptions.asReadonly();
   readonly goals = this._goals.asReadonly();
+  readonly impulseIndex = this._impulseIndex.asReadonly();
 
   readonly currentCategoryDistribution = computed(() => {
     const dashboard = this._dashboard();
