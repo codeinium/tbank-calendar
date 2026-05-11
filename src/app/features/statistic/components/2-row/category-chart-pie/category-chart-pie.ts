@@ -3,22 +3,24 @@ import { StatisticsPageService } from '../../../services/statistics.service';
 import { TransactionType } from '@/app/models/types/transaction.type';
 import { BaseChartDirective } from 'ng2-charts';
 import { TuiButton } from '@taiga-ui/core';
+import { SkeletonLine } from "@/app/shared/components/skeleton-line/skeleton-line";
 
 @Component({
   selector: 'app-category-chart-pie',
-  imports: [BaseChartDirective, TuiButton],
+  imports: [BaseChartDirective, TuiButton, SkeletonLine],
   templateUrl: './category-chart-pie.html',
   styleUrl: './category-chart-pie.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryChartPie {
-  private statisticsService = inject(StatisticsPageService);
+  private service = inject(StatisticsPageService);
 
-  readonly selectedDate = computed(this.statisticsService.selectedDate);
+  readonly loading = computed(() => this.service.loadingDashboard());
+  readonly selectedDate = computed(this.service.selectedDate);
   readonly selectedType = signal<TransactionType>('expense');
 
   readonly distribution = computed(() => {
-    const dashboard = this.statisticsService.dashboard();
+    const dashboard = this.service.dashboard();
 
     if (!dashboard) return null;
 

@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { StatisticsPageService } from '../../../services/statistics.service';
+import { SkeletonLine } from "@/app/shared/components/skeleton-line/skeleton-line";
 
 @Component({
   selector: 'app-impulse-index-card',
-  imports: [],
+  imports: [SkeletonLine],
   templateUrl: './impulse-index-card.html',
   styleUrl: './impulse-index-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,4 +12,5 @@ import { StatisticsPageService } from '../../../services/statistics.service';
 export class ImpulseIndexCard {
   private service = inject(StatisticsPageService);
   readonly index = computed(() => this.service.dashboard()?.impulseIndex);
+  readonly loading = computed(() => this.service.loadingDashboard());
 }

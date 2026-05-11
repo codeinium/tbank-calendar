@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { StatisticsPageService } from '../../../services/statistics.service';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config'
+import { SkeletonLine } from "@/app/shared/components/skeleton-line/skeleton-line";
 
 @Component({
   selector: 'app-sub-stat-card',
-  imports: [],
+  imports: [SkeletonLine],
   templateUrl: './sub-stat-card.html',
   styleUrl: './sub-stat-card.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,6 +13,7 @@ import dayjs from '@/app/shared/config/dayjs/dayjs-config'
 export class SubStatCard {
   private service = inject(StatisticsPageService);
   readonly sub = computed(() => this.service.statisticSubscriptions());
+  readonly loading = computed(() => this.service.loadingSubscriptions());
 
   formatDate(date: string) {
     return dayjs(date).format('DD MMM');
@@ -27,5 +29,5 @@ export class SubStatCard {
 
   readonly items = computed(() => {
     return this.sub()?.items ?? [];
-  })
+  });
 }

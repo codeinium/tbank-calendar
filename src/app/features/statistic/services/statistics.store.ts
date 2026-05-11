@@ -1,19 +1,21 @@
 import { TransactionType } from '../../../models/types/transaction.type';
-import { Injectable, computed, inject, signal } from '@angular/core';
-
-import { StatisticsService } from '@/app/services/statistic/statistics.service';
+import { Injectable, computed, signal } from '@angular/core';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { ImpulseIndex, StatisticsDashboard } from '@/app/models/statistic/statistics.model';
-
 import { StatisticsPeriod } from '@/app/shared/types/statistics-period.type';
 import { StatisticSubscriptions } from '@/app/models/subscription/subscription.model';
 import { Goal } from '@/app/models/goal/goal.model';
 
+export type LoadingType = 'dashboard' | 'goals' | 'subscriptions';
+
 @Injectable()
 export class StatisticsPageStore {
-
   private readonly _dashboard = signal<StatisticsDashboard | null>(null);
-  private readonly _loading = signal(false);
+
+  private readonly _loadingDashboard = signal(false);
+  private readonly _loadingGoals = signal(false);
+  private readonly _loadingSubscriptions = signal(false);
+
   private readonly _error = signal<string | null>(null);
   private readonly _period = signal<StatisticsPeriod>('month');
   private readonly _date = signal(this.getCurrentMonth());
@@ -25,7 +27,11 @@ export class StatisticsPageStore {
   readonly selectedDate = this._date.asReadonly();
   readonly selectedPeriod = this._period.asReadonly();
   readonly dashboard = this._dashboard.asReadonly();
-  readonly loading = this._loading.asReadonly();
+
+  readonly loadingDashboard = this._loadingDashboard.asReadonly();
+  readonly loadingGoals = this._loadingGoals.asReadonly();
+  readonly loadingSubscriptions = this._loadingSubscriptions.asReadonly();
+
   readonly error = this._error.asReadonly();
   readonly selectedType = this._selectedType.asReadonly();
   readonly statisticSubscriptions = this._statisticSubscriptions.asReadonly();
@@ -34,7 +40,6 @@ export class StatisticsPageStore {
 
   readonly currentCategoryDistribution = computed(() => {
     const dashboard = this._dashboard();
-
     if (!dashboard) return null;
 
     return this._selectedType() === 'expense'
@@ -60,12 +65,16 @@ export class StatisticsPageStore {
     this._dashboard.set(dashboard);
   }
 
-  startLoading() {
-    this._loading.set(true);
+  startLoading(type: LoadingType) {
+    if (type === 'dashboard') this._loadingDashboard.set(true);
+    if (type === 'goals') this._loadingGoals.set(true);
+    if (type === 'subscriptions') this._loadingSubscriptions.set(true);
   }
 
-  stopLoading() {
-    this._loading.set(false);
+  stopLoading(type: LoadingType) {
+    if (type === 'dashboard') this._loadingDashboard.set(false);
+    if (type === 'goals') this._loadingGoals.set(false);
+    if (type === 'subscriptions') this._loadingSubscriptions.set(false);
   }
 
   setError(message: string) {

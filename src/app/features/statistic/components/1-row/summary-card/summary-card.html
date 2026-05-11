@@ -1,11 +1,9 @@
-<div class="px-7 py-3 rounded-(--tui-radius-l) shadow-(--tui-shadow-m)" [style.background-color]="bgColor">
   <h2 class="text-3xl">
     {{ title }}
   </h2>
   <div class="mt-2 flex justify-between">
     <p class="text-5xl">
-      ₽{{ integerPart }}
-      <span class="text-(--text-faded)">.{{ decimalPart }} </span>
+      ₽{{ integerPart }}<span class="text-(--text-faded)">.{{ decimalPart }} </span>
     </p>
     <div
       class="p-2 flex items-center gap-1 rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
@@ -33,4 +31,3 @@
     </div>
   </div>
   <p class="mt-7 text-lg text-(--text-faded)">Это {{labelIspositive}} на {{absDifferenceFromPreviousPeriod}} в сравнении с предыдущим периодом</p>
-</div>

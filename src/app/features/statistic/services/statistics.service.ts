@@ -1,72 +1,70 @@
 import { inject, Injectable } from '@angular/core';
 import { forkJoin, take } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
-import { StatisticsPageStore } from './statistics.store';
-
+import { StatisticsPageStore, LoadingType } from './statistics.store';
 import { StatisticsService } from '@/app/services/statistic/statistics.service';
 import { ReminderPaymentService } from '@/app/services/reminder-payment/reminder-payment.service';
 import { GoalsService } from '@/app/services/goal/goal.service';
-
 import { StatisticsPeriod } from '@/app/shared/types/statistics-period.type';
 import { TransactionType } from '@/app/models/types/transaction.type';
 
 @Injectable()
 export class StatisticsPageService {
   private statisticsStore = inject(StatisticsPageStore);
-
   private statisticsApi = inject(StatisticsService);
   private goalsApi = inject(GoalsService);
   private subscriptionApi = inject(ReminderPaymentService);
 
   loadPage() {
     const { from, to } = this.statisticsStore.range();
+    const loaders: LoadingType[] = ['dashboard', 'goals', 'subscriptions'];
 
-    this.statisticsStore.startLoading();
+    loaders.forEach((type) => this.statisticsStore.startLoading(type));
 
     forkJoin({
       dashboard: this.statisticsApi.getDashboard(from, to),
-
       goals: this.goalsApi.getGoals(),
-
       subscriptions: this.subscriptionApi.getStatisticSubscriptions(from, to),
     })
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => loaders.forEach((type) => this.statisticsStore.stopLoading(type))),
+      )
       .subscribe({
         next: ({ dashboard, goals, subscriptions }) => {
           this.statisticsStore.setDashboard(dashboard);
           this.statisticsStore.setGoals(goals);
           this.statisticsStore.setStatisticSubscriptions(subscriptions);
-          this.statisticsStore.stopLoading();
         },
         error: (err) => {
           this.statisticsStore.setError(err.message);
-          this.statisticsStore.stopLoading();
         },
       });
   }
 
   changePeriod(period: StatisticsPeriod, date: string) {
     this.statisticsStore.changePeriod(period, date);
-
     const { from, to } = this.statisticsStore.range();
 
-    this.statisticsStore.startLoading();
+    const loaders: LoadingType[] = ['dashboard', 'subscriptions'];
+    loaders.forEach((type) => this.statisticsStore.startLoading(type));
 
     forkJoin({
       dashboard: this.statisticsApi.getDashboard(from, to),
-
       subscriptions: this.subscriptionApi.getStatisticSubscriptions(from, to),
     })
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        finalize(() => loaders.forEach((type) => this.statisticsStore.stopLoading(type))),
+      )
       .subscribe({
         next: ({ dashboard, subscriptions }) => {
           this.statisticsStore.setDashboard(dashboard);
           this.statisticsStore.setStatisticSubscriptions(subscriptions);
-          this.statisticsStore.stopLoading();
         },
         error: (err) => {
           this.statisticsStore.setError(err.message);
-          this.statisticsStore.stopLoading();
         },
       });
   }
@@ -75,12 +73,15 @@ export class StatisticsPageService {
     this.statisticsStore.changeType(type);
   }
 
-  dashboard = this.statisticsStore.dashboard;
-  loading = this.statisticsStore.loading;
-  error = this.statisticsStore.error;
-  categoryDistribution = this.statisticsStore.currentCategoryDistribution;
-  period = this.statisticsStore.selectedPeriod;
-  selectedDate = this.statisticsStore.selectedDate;
-  statisticSubscriptions = this.statisticsStore.statisticSubscriptions;
-  goals = this.statisticsStore.goals;
+  readonly loadingDashboard = this.statisticsStore.loadingDashboard;
+  readonly loadingGoals = this.statisticsStore.loadingGoals;
+  readonly loadingSubscriptions = this.statisticsStore.loadingSubscriptions;
+
+  readonly dashboard = this.statisticsStore.dashboard;
+  readonly error = this.statisticsStore.error;
+  readonly categoryDistribution = this.statisticsStore.currentCategoryDistribution;
+  readonly period = this.statisticsStore.selectedPeriod;
+  readonly selectedDate = this.statisticsStore.selectedDate;
+  readonly statisticSubscriptions = this.statisticsStore.statisticSubscriptions;
+  readonly goals = this.statisticsStore.goals;
 }

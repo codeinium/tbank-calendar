@@ -9,7 +9,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SummaryCard {
-  @Input({ required: true }) bgColor!: string;
   @Input({ required: true }) title!: string;
   @Input({ required: true }) amount!: number;
   @Input({ required: true }) differenceFromPreviousPeriod!: number;

@@ -3,18 +3,20 @@ import { StatisticsPageService } from '../../../services/statistics.service';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { SkeletonLine } from "@/app/shared/components/skeleton-line/skeleton-line";
 
 @Component({
   selector: 'app-chart-line',
-  imports: [BaseChartDirective],
+  imports: [BaseChartDirective, SkeletonLine],
   templateUrl: './chart-line.html',
   styleUrl: './chart-line.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartLine {
-  private statsService = inject(StatisticsPageService);
+  private service = inject(StatisticsPageService);
 
-  readonly dashboard = this.statsService.dashboard;
+  readonly loading = computed(() => this.service.loadingDashboard());
+  readonly dashboard = this.service.dashboard;
 
   private readonly balanceHistory = computed(() => {
     return this.dashboard()?.balanceHistory;
