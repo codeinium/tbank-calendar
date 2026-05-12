@@ -4,6 +4,5 @@ export const routes = {
   stats: '/stats',
   goals: '/goals',
   payments: '/payments',
-  groups: '/groups',
   profile: '/profile',
 } as const;

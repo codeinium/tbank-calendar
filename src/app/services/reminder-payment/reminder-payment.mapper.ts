@@ -1,13 +1,19 @@
-
 import {
   ApiCreateScheduledPaymentRequest,
   ApiCreateSubscriptionRequest,
   ApiScheduledPayments,
+  ApiStatisticSubscriptions,
+  ApiStatisticSubscriptionsItem,
   ApiSubsription,
 } from './reminder-payment.api';
-import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
+import {
+  CreateScheduledPaymentRequest,
+  SheduledPayment,
+} from '@/app/models/scheduled-payment/scheduled-payment.model';
 import {
   CreateSubscriptionRequest,
+  StatisticSubscriptions,
+  StatisticSubscriptionsItem,
   Subscription,
 } from '@/app/models/subscription/subscription.model';
 
@@ -56,8 +62,9 @@ export function mapCreateSubscriptionRequest(
     billing_cycle: request.billingCycle,
     billing_interval: request.billingInterval,
     end_date: request.endDate,
+    next_billing_date: request.nextBillingDate,
   };
-} 
+}
 export function mapCreateScheduledPaymentRequest(
   request: CreateScheduledPaymentRequest,
 ): ApiCreateScheduledPaymentRequest {
@@ -69,5 +76,21 @@ export function mapCreateScheduledPaymentRequest(
     frequency: request.billingCycle,
     interval: request.billingInterval,
     end_date: request.endDate,
+    next_billing_date: request.nextBillingDate,
+  };
+}
+
+export function mapStatisticsSubscriptions(api: ApiStatisticSubscriptions): StatisticSubscriptions {
+  return {
+    totalAmount: api.total_amount,
+    averageAmount: api.average_cost,
+
+    items: api.items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      nextPaymentDate: item.next_payment_date,
+      amount: item.amount,
+      iconUrl: item.icon_url,
+    })),
   };
 }

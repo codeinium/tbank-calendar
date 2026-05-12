@@ -29,6 +29,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { TuiDay } from '@taiga-ui/cdk';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
+import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 
 @Component({
   selector: 'app-create-goal-form',
@@ -86,6 +87,8 @@ export class CreateGoalForm {
 
   close = output<void>();
 
+  readonly labelInterval = signal<string | null>(null);
+
   form = this.fb.group({
     name: ['', [Validators.required, this.notEmptyStringValidator()]],
     targetAmount: [null as number | null, [Validators.required, Validators.min(1)]],
@@ -137,6 +140,16 @@ export class CreateGoalForm {
       const perMonth = targetAmount / months;
       this.monthlyPayment.set(Number(Math.round(perMonth)));
     });
+    this.form.valueChanges.subscribe(() => {
+      const { billingCycle, billingInterval } = this.form.getRawValue();
+
+      if (!billingCycle || !billingInterval) {
+        this.labelInterval.set(null);
+        return;
+      }
+
+      this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
+    });
   }
 
   private minDateValidator(): ValidatorFn {
@@ -180,5 +193,4 @@ export class CreateGoalForm {
     this.store.createGoal(request);
     this.close.emit();
   }
-
 }

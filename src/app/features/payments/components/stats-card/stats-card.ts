@@ -139,6 +139,10 @@ export class StatsCard {
     },
   ]);
 
+  firstLetter = ((value: string) => {
+    return value.charAt(0);
+  })
+
   stringifyCategory = (item: SelectOption<CategorySelectValue> | null) =>
     item?.label ?? 'Все категории';
 

@@ -1,0 +1,203 @@
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { StatisticsPageService } from '../../../services/statistics.service';
+import dayjs from '@/app/shared/config/dayjs/dayjs-config';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { SkeletonLine } from "@/app/shared/components/skeleton-line/skeleton-line";
+
+@Component({
+  selector: 'app-chart-line',
+  imports: [BaseChartDirective, SkeletonLine],
+  templateUrl: './chart-line.html',
+  styleUrl: './chart-line.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ChartLine {
+  private service = inject(StatisticsPageService);
+
+  readonly loading = computed(() => this.service.loadingDashboard());
+  readonly dashboard = this.service.dashboard;
+
+  private readonly balanceHistory = computed(() => {
+    return this.dashboard()?.balanceHistory;
+  });
+
+  // генерирует полный набор дат для периода (day: все дни месяца (1–30/31), month: все месяцы года (янв–дек))
+  private generateFullPeriodLabels(granularity: 'day' | 'month', referenceDate?: string): string[] {
+    if (!referenceDate) return [];
+
+    const ref = dayjs(referenceDate);
+    const labels: string[] = [];
+
+    if (granularity === 'day') {
+      // YYYY-MM-DD
+      const daysInMonth = ref.daysInMonth();
+      for (let day = 1; day <= daysInMonth; day++) {
+        labels.push(ref.date(day).format('YYYY-MM-DD'));
+      }
+    } else if (granularity === 'month') {
+      // YYYY-MM
+      for (let month = 0; month < 12; month++) {
+        labels.push(ref.month(month).format('YYYY-MM'));
+      }
+    }
+    return labels;
+  }
+
+  readonly lineChartData = computed<ChartConfiguration['data']>(() => {
+    const history = this.balanceHistory();
+
+    if (!history) {
+      return { labels: [], datasets: [] };
+    }
+
+    const { currentPeriod, previousPeriod, granularity } = history;
+
+    // генерируем полные метки для текущего периода
+    const labels = this.generateFullPeriodLabels(granularity, currentPeriod[0]?.date);
+    const formattedLabels = labels.map((date) => this.formatLabel(date, granularity));
+
+    // текущий период: сопоставляем по дате
+    const currentData = labels.map((label) => {
+      const item = currentPeriod.find((i) => i.date === label);
+      return item?.amount ?? null;
+    });
+
+    // прошлый период: сопоставляем по индексу
+    const previousData = labels.map((_, index) => {
+      return previousPeriod[index]?.amount ?? null;
+    });
+
+    return {
+      labels: formattedLabels,
+      datasets: [
+        {
+          label: 'Текущий период',
+          data: currentData,
+          borderColor: '#D4B85C',
+          backgroundColor: 'rgba(212, 184, 92, 0.1)',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#FFD54F',
+          pointHoverBorderColor: '#fff',
+          pointHoverBorderWidth: 3,
+          borderWidth: 2.5,
+          spanGaps: true,
+        },
+        {
+          label: 'Прошлый период',
+          data: previousData,
+          borderColor: '#FFDE57',
+          borderDash: [6, 4],
+          backgroundColor: 'transparent',
+          fill: false,
+          tension: 0.4,
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          borderWidth: 2,
+          spanGaps: true,
+        },
+      ],
+    };
+  });
+
+  readonly lineChartOptions = computed<ChartOptions>(() => {
+    const history = this.balanceHistory();
+
+    const allValues = [
+      ...(history?.currentPeriod.map((i) => i.amount) ?? []),
+      ...(history?.previousPeriod.map((i) => i.amount) ?? []),
+    ];
+
+    const min = Math.min(...allValues, 0);
+    const max = Math.max(...allValues, 1000);
+
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#FFD54F',
+          titleColor: '#1a1a1a',
+          bodyColor: '#1a1a1a',
+          displayColors: false,
+
+          callbacks: {
+            label: (context) => `₽${Number(context.parsed.y ?? 0).toLocaleString('ru-RU')}`,
+          },
+        },
+      },
+
+      scales: {
+        y: {
+          beginAtZero: false,
+          min,
+          max,
+
+          ticks: {
+            callback: (value) => `₽${Number(value).toLocaleString('ru-RU')}`,
+            color: '#9B9260',
+            padding: 12,
+          },
+
+          grid: {
+            color: 'rgba(155,146,96,0.2)',
+            drawBorder: false,
+          },
+
+          border: {
+            display: false,
+          },
+        },
+
+        x: {
+          ticks: {
+            color: '#9B9260',
+            padding: 8,
+          },
+
+          grid: {
+            display: false,
+          },
+
+          border: {
+            display: false,
+          },
+        },
+      },
+
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+
+      elements: {
+        point: {
+          radius: 0,
+        },
+      },
+    };
+  });
+
+  private formatLabel(date: string, granularity: string): string {
+    const parsed = dayjs(date);
+
+    if (granularity === 'month') {
+      return parsed.format('D MMM');
+    }
+
+    if (granularity === 'year') {
+      return parsed.format('MMM');
+    }
+
+    return parsed.format('DD.MM');
+  }
+}

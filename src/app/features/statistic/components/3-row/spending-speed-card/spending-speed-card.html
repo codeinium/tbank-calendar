@@ -1,0 +1,24 @@
+<div class="min-h-51 px-5 py-3 bg-(--card-4) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+  @if (!loading()) {
+    <p class="text-3xl">Скорость расходов</p>
+    @if (spendingSpeed()?.isReached) {
+      <p class="text-3xl">{{ spendingSpeed()?.halfSalaryReachedDate }}</p>
+      <p class="text-(--text-faded)">Вы потратили 50% своей зарплаты</p>
+    } @else {
+      <p class="text-3xl">{{ spendingSpeed()?.spentPercent }}%</p>
+      <p class="text-(--text-faded)">
+        На данный момент вы потратили {{ spendingSpeed()?.spentPercent }}% своей зарплаты
+      </p>
+    }
+    <p class="mt-10">Сравнение с прошлым:</p>
+    @for (comparison of spendingSpeed()?.comparison; track comparison.period) {
+      <p>{{ comparison.period }}: {{ comparison.day }} день</p>
+    }
+  } @else {
+    <app-skeleton-line width="w-60" height="h-9" />
+    <app-skeleton-line class="mt-1" width="w-40" height="h-8" />
+    <app-skeleton-line class="mt-1" width="w-40" height="h-4" />
+    <app-skeleton-line class="mt-10" width="w-40" height="h-4" />
+    <app-skeleton-line class="mt-1" width="w-30" height="h-3" />
+  }
+</div>

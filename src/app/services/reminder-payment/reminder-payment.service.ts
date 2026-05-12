@@ -1,12 +1,13 @@
-import { ApiCreateScheduledPaymentRequest, ApiCreateSubscriptionRequest, ApiScheduledPayments, ApiSubsription } from './reminder-payment.api';
+import { ApiCreateScheduledPaymentRequest, ApiCreateSubscriptionRequest, ApiScheduledPayments, ApiStatisticSubscriptions, ApiSubsription } from './reminder-payment.api';
 import { CreateScheduledPaymentRequest, SheduledPayment } from '@/app/models/scheduled-payment/scheduled-payment.model';
-import { CreateSubscriptionRequest, Subscription } from '@/app/models/subscription/subscription.model';
-import { mapCreateScheduledPaymentRequest, mapCreateSubscriptionRequest, mapScheduledPayments, mapSubscription } from './reminder-payment.mapper';
+import { CreateSubscriptionRequest, StatisticSubscriptions, Subscription } from '@/app/models/subscription/subscription.model';
+import { mapCreateScheduledPaymentRequest, mapCreateSubscriptionRequest, mapScheduledPayments, mapStatisticsSubscriptions, mapSubscription } from './reminder-payment.mapper';
 import { Injectable } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { delay, map, Observable, of } from 'rxjs';
-import { MOCK_SUBSCRIPTIONS, MOCK_SCHEDULED_PAYMENTS, createMockSubscription, createMockScheduledPayment } from './reminder-payment.mock';
+import { MOCK_SUBSCRIPTIONS, MOCK_SCHEDULED_PAYMENTS, createMockSubscription, createMockScheduledPayment, MOCK_UPCOMING_SUBSCRIPTIONS } from './reminder-payment.mock';
+import { StatisticsPeriod } from '@/app/shared/types/statistics-period.type';
 
 @Injectable({ providedIn: 'root' })
 export class ReminderPaymentService {
@@ -60,5 +61,20 @@ export class ReminderPaymentService {
     return this.http
       .post<ApiScheduledPayments>(`${this.apiUrl}/payments`, apiRequest)
       .pipe(map(mapScheduledPayments));
+  }
+
+  getStatisticSubscriptions(dateFrom: string, dateTo: string): Observable<StatisticSubscriptions> {
+    if (this.useMock) {
+      return of(MOCK_UPCOMING_SUBSCRIPTIONS).pipe(delay(this.mockDelay));
+    }
+
+    return this.http
+      .get<ApiStatisticSubscriptions>(`${this.apiUrl}/subscriptions`, {
+        params: {
+          dateFrom,
+          dateTo,
+        },
+      })
+      .pipe(map(mapStatisticsSubscriptions));
   }
 }

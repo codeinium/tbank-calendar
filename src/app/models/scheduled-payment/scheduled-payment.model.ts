@@ -24,4 +24,5 @@ export interface CreateScheduledPaymentRequest {
   billingCycle: BillingCycle;
   billingInterval: number;
   endDate: string;
+  nextBillingDate: string;
 }

@@ -1,0 +1,24 @@
+<div class="w-full max-w-425.5 mx-auto flex flex-col gap-3">
+  <div class="stats-header flex flex-col">
+    <h1 class="text-4xl">Статистика</h1>
+    <p class="text-base">Детальная информация о вашей финансовой ситуации</p>
+  </div>
+  <div class="period-nav flex gap-3">
+    <app-stats-header />
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <app-balance-card />
+    <app-income-card />
+    <app-expense-card />
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-[1fr_3fr_1fr] gap-3">
+    <app-category-chart-pie />
+    <app-chart-line />
+    <app-sub-stat-card />
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <app-goals-stat-card/>
+    <app-impulse-index-card />
+    <app-spending-speed-card />
+  </div>
+</div>

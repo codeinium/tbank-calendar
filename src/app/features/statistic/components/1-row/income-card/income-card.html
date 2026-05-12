@@ -1,0 +1,18 @@
+<div class="px-7 py-3 rounded-(--tui-radius-l) shadow-(--tui-shadow-m) bg-(--card-3)">
+  @if (!loading()) {
+    @if (summary(); as income) {
+      <app-summary-card
+        title="Доходы"
+        [amount]="income.amount"
+        [differenceFromPreviousPeriod]="income.differenceFromPreviousPeriod"
+        [percentChange]="income.percentChange"
+        [transactionCount]="income.transactionCount"
+        [categoryCount]="income.categoryCount"
+      />
+    } @else {
+      <p class="text-(--text-faded)">Нет данных для отображения</p>
+    }
+  } @else {
+    <app-summary-card-skeleton />
+  }
+</div>

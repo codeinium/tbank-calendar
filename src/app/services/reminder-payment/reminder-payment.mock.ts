@@ -4,6 +4,7 @@ import {
 } from '@/app/models/scheduled-payment/scheduled-payment.model';
 import {
   CreateSubscriptionRequest,
+  StatisticSubscriptions,
   Subscription,
 } from '@/app/models/subscription/subscription.model';
 import { BillingCycle } from '@/app/models/types/billing-cycle.type';
@@ -168,7 +169,7 @@ export function createMockSubscription(request: CreateSubscriptionRequest): Subs
     categoryColor: '#CCCCCC',
     billingCycle: request.billingCycle,
     billingInterval: request.billingInterval,
-    nextBillingDate: new Date().toISOString(),
+    nextBillingDate: request.nextBillingDate,
     endDate: request.endDate,
     logoUrl: '',
     status: 'active' as Status,
@@ -187,9 +188,31 @@ export function createMockScheduledPayment(
     categoryColor: '#CCCCCC',
     billingCycle: request.billingCycle,
     billingInterval: request.billingInterval,
-    nextBillingDate: new Date().toISOString(),
+    nextBillingDate: request.nextBillingDate,
     endDate: request.endDate,
     logoUrl: '',
     status: 'pending' as Status,
   };
 }
+
+export const MOCK_UPCOMING_SUBSCRIPTIONS: StatisticSubscriptions = {
+  totalAmount: 2400,
+  averageAmount: 600,
+
+  items: [
+    {
+      id: '1',
+      name: 'Netflix',
+      nextPaymentDate: '2026-05-15',
+      amount: 999,
+      iconUrl: '',
+    },
+    {
+      id: '2',
+      name: 'Spotify',
+      nextPaymentDate: '2026-05-18',
+      amount: 499,
+      iconUrl: '',
+    },
+  ],
+};

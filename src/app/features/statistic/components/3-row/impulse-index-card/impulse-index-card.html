@@ -1,0 +1,17 @@
+<div
+  class="min-h-51 px-5 py-3 flex flex-col justify-between bg-(--card-3) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)"
+>
+  @if (!loading()) {
+    <p class="text-3xl">Индекс импульсивности</p>
+    <p class="text-base">Ночные покупки🌙</p>
+    <p class="mt-10 text-4xl">{{ index()?.percent }}%</p>
+    <p class="text-base">
+      {{ index()?.amount }} было потрачено с {{ index()?.timeFrom }} до {{ index()?.timeTo }}
+    </p>
+  } @else {
+    <app-skeleton-line width="w-70" height="h-9" />
+    <app-skeleton-line width="w-30" height="h-6" />
+    <app-skeleton-line class="mt-10" width="w-15" height="h-10" />
+    <app-skeleton-line width="w-67" height="h-6" />
+  }
+</div>

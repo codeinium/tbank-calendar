@@ -23,8 +23,8 @@ export const routes: Routes = [
       {
         path: 'stats',
         loadComponent: () =>
-          import('./features/statistic/pages/statistic-page/statistic-page').then(
-            (m) => m.StatisticPageComponent,
+          import('./features/statistic/pages/statistics-page/statistics-page').then(
+            (m) => m.StatisticsPageComponent,
           ),
       },
       {

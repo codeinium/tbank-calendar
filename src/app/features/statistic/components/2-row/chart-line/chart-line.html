@@ -1,0 +1,25 @@
+<div class="min-h-99.75 px-5 py-3 bg-(--card-3) rounded-(--tui-radius-l) shadow-(--tui-shadow-m)">
+  @if (!loading()){
+    <div class="w-full flex items-center gap-5">
+      <h3 class="text-3xl">Обзор общего баланса</h3>
+      <span class="text-base flex items-center gap-2">
+        <span class="w-4 h-4 bg-[#D4B85C] rounded-(--tui-radius-l)"> </span>
+        Текущий период
+      </span>
+      <span class="text-base flex items-center gap-2">
+        <span class="w-4 h-4 border-(--primary) border-2 rounded-(--tui-radius-l)"></span>
+        Предыдущий период
+      </span>
+    </div>
+    <div class="h-85">
+      @if (lineChartData().labels?.length) {
+        <canvas baseChart [data]="lineChartData()" [options]="lineChartOptions()" [type]="'line'">
+        </canvas>
+      } @else {
+        <p class="text-(--text-faded)">Нет данных для отображения</p>
+      }
+    </div>
+  } @else {
+    <app-skeleton-line width="w-73" height="h-9" />
+  }
+</div>

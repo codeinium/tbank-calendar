@@ -11,5 +11,4 @@ export const navigation = [
   { label: 'Статистика', to: routes.stats },
   { label: 'Цели', to: routes.goals },
   { label: 'Платежи', to: routes.payments },
-  { label: 'Группы', to: routes.groups },
 ];

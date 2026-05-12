@@ -1,0 +1,18 @@
+<div class="px-7 py-3 rounded-(--tui-radius-l) shadow-(--tui-shadow-m) bg-(--card-2)">
+  @if (!loading()) {
+    @if (summary(); as balance) {
+      <app-summary-card
+        title="Баланс"
+        [amount]="balance.amount"
+        [differenceFromPreviousPeriod]="balance.differenceFromPreviousPeriod"
+        [percentChange]="balance.percentChange"
+        [transactionCount]="balance.transactionCount"
+        [categoryCount]="balance.categoryCount"
+      />
+    } @else {
+      <p class="text-(--text-faded)">Нет данных для отображения</p>
+    }
+  } @else {
+    <app-summary-card-skeleton />
+  }
+</div>
