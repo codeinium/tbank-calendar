@@ -1,5 +1,5 @@
 import { BillingCycle } from '../../models/types/billing-cycle.type';
-import { Status } from '@/app/models/types/status.type';
+import { ReminderPaymentStatus } from '@/app/models/types/status.type';
 
 export interface ApiSubsription {
   id: string;
@@ -13,7 +13,7 @@ export interface ApiSubsription {
   next_billing_date: string;
   end_date: string;
   logo_url?: string;
-  status: Status;
+  status: ReminderPaymentStatus;
 }
 
 export interface ApiScheduledPayments {
@@ -28,7 +28,7 @@ export interface ApiScheduledPayments {
   next_payment_at: string;
   end_date: string;
   logo_url?: string;
-  status: Status;
+  status: ReminderPaymentStatus;
 }
 
 export interface ApiCreateScheduledPaymentRequest {

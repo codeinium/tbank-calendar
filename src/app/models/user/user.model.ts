@@ -28,3 +28,13 @@ export interface UpdateNameRequest {
   firstName: string;
   lastName: string;
 }
+
+export interface Account {
+  accountId: string;
+  customerId: string;
+  accountNumber: string;
+  status: string;
+  balance: number;
+  createdAt: string;
+  updateAt: string;
+}

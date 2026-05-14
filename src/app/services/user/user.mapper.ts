@@ -1,6 +1,20 @@
-import { ApiUserEmailConfirmRequest, ApiUserEmailRequest, ApiUserMeResponse, ApiUserPasswordChangeRequest, ApiUserUpdateNameRequest } from './user.api';
+import {
+  ApiAccountMeResponse,
+  ApiUserEmailConfirmRequest,
+  ApiUserEmailRequest,
+  ApiUserMeResponse,
+  ApiUserPasswordChangeRequest,
+  ApiUserUpdateNameRequest,
+} from './user.api';
 
-import { User, ChangePasswordRequest, UserEmail, EmailConfirmRequest, UpdateNameRequest } from '@/app/models/user/user.model';
+import {
+  User,
+  ChangePasswordRequest,
+  UserEmail,
+  EmailConfirmRequest,
+  UpdateNameRequest,
+  Account,
+} from '@/app/models/user/user.model';
 
 export function mapUser(api: ApiUserMeResponse): User {
   return {
@@ -21,20 +35,28 @@ export function mapChangePasswordRequest(
   };
 }
 
-export function mapEmailConfirmRequest(
-    request: EmailConfirmRequest
-): ApiUserEmailConfirmRequest {
-    return {
-        email: request.email,
-        code: request.code
-    }
+export function mapEmailConfirmRequest(request: EmailConfirmRequest): ApiUserEmailConfirmRequest {
+  return {
+    email: request.email,
+    code: request.code,
+  };
 }
 
-export function mapUpdateNameRequest(
-    request: UpdateNameRequest
-): ApiUserUpdateNameRequest {
-    return {
-        firstName: request.firstName,
-        lastName: request.lastName
-    }
+export function mapUpdateNameRequest(request: UpdateNameRequest): ApiUserUpdateNameRequest {
+  return {
+    firstName: request.firstName,
+    lastName: request.lastName,
+  };
+}
+
+export function mapAccount(api: ApiAccountMeResponse): Account {
+  return {
+    accountId: api.accountId,
+    customerId: api.customerId,
+    accountNumber: api.accountNumber,
+    status: api.status,
+    balance: api.balance,
+    createdAt: api.createdAt,
+    updateAt: api.updateAt,
+  };
 }

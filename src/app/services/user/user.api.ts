@@ -28,3 +28,13 @@ export interface ApiUserUpdateNameRequest {
   firstName: string;
   lastName: string;
 }
+
+export interface ApiAccountMeResponse {
+  accountId: string;
+  customerId: string;
+  accountNumber: string;
+  status: string;
+  balance: number;
+  createdAt: string;
+  updateAt: string;
+}

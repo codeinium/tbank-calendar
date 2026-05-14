@@ -87,22 +87,14 @@ export class AuthService {
       );
   }
 
-  logout(userId: string): Observable<void> {
+  logout(): Observable<void> {
     if (this.useMock) {
       this.clearTokens();
       return of(void 0).pipe(delay(this.mockDelay));
     }
 
     return this.http
-      .post<void>(
-        `${this.apiUrl}/auth/logout`,
-        {},
-        {
-          headers: {
-            'x-user-id': userId,
-          },
-        },
-      )
+      .post<void>(`${this.apiUrl}/auth/logout`, {})
       .pipe(tap(() => this.clearTokens()));
   }
 
@@ -134,7 +126,7 @@ export class AuthService {
       );
   }
 
-  switchAccount(userId: string, request: SwitchAccountRequest): Observable<AuthTokens> {
+  switchAccount(request: SwitchAccountRequest): Observable<AuthTokens> {
     const apiRequest: ApiSwitchAccountRequest = mapSwitchAccountRequest(request)
 
     if (this.useMock) {
@@ -142,11 +134,7 @@ export class AuthService {
     }
 
     return this.http
-      .post<ApiAuthTokensResponse>(`${this.apiUrl}/auth/switch-account`, apiRequest, {
-        headers: {
-          'x-user-id': userId,
-        },
-      })
+      .post<ApiAuthTokensResponse>(`${this.apiUrl}/auth/switch-account`, apiRequest)
       .pipe(
         map(mapAuthTokens),
         tap((tokens) => this.saveTokens(tokens)),

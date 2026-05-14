@@ -8,6 +8,7 @@ import {
   ApiUserEmailVerificationRequest,
   ApiUserUpdateNameRequest,
   ApiUserPasswordChangeRequest,
+  ApiAccountMeResponse,
 } from './user.api';
 
 import {
@@ -17,15 +18,22 @@ import {
   EmailConfirmRequest,
   ChangePasswordRequest,
   UpdateNameRequest,
+  Account,
 } from '@/app/models/user/user.model';
 
-import { mapUser, mapChangePasswordRequest, mapEmailConfirmRequest, mapUpdateNameRequest } from './user.mapper';
+import {
+  mapUser,
+  mapChangePasswordRequest,
+  mapEmailConfirmRequest,
+  mapUpdateNameRequest,
+  mapAccount,
+} from './user.mapper';
 
 import { mapAuthTokens } from '../auth/auth.mapper';
 import { ApiAuthTokensResponse } from '../auth/auth.api';
 import { AuthTokens } from '@/app/models/auth/auth.model';
 
-import { MOCK_USER } from './user.mock';
+import { MOCK_ACCOUNTS, MOCK_USER } from './user.mock';
 import { MOCK_AUTH_TOKENS } from '../auth/auth.mock';
 
 @Injectable({
@@ -38,18 +46,12 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getMe(userId: string): Observable<User> {
+  getMe(): Observable<User> {
     if (this.useMock) {
       return of(MOCK_USER).pipe(delay(this.mockDelay));
     }
 
-    return this.http
-      .get<ApiUserMeResponse>(`${this.apiUrl}/users/me`, {
-        headers: {
-          'x-user-id': userId,
-        },
-      })
-      .pipe(map(mapUser));
+    return this.http.get<ApiUserMeResponse>(`${this.apiUrl}/users/me`).pipe(map(mapUser));
   }
 
   getUserEmail(id: string): Observable<UserEmail> {
@@ -60,7 +62,7 @@ export class UserService {
     return this.http.get<UserEmail>(`${this.apiUrl}/users/${id}/email`);
   }
 
-  sendEmailVerificationCode(userId: string, request: EmailVerificationRequest): Observable<void> {
+  sendEmailVerificationCode(request: EmailVerificationRequest): Observable<void> {
     const apiRequest: ApiUserEmailVerificationRequest = {
       email: request.email,
     };
@@ -69,44 +71,28 @@ export class UserService {
       return of(void 0).pipe(delay(this.mockDelay));
     }
 
-    return this.http.post<void>(
-      `${this.apiUrl}/users/me/email/verification-code`,
-      apiRequest,
-      {
-        headers: {
-          'x-user-id': userId,
-        },
-      },
-    );
+    return this.http.post<void>(`${this.apiUrl}/users/me/email/verification-code`, apiRequest);
   }
 
-  confirmEmail(userId: string, request: EmailConfirmRequest): Observable<User> {
+  confirmEmail(request: EmailConfirmRequest): Observable<User> {
     if (this.useMock) {
       return of(MOCK_USER).pipe(delay(this.mockDelay));
     }
 
     return this.http
-      .put<ApiUserMeResponse>(`${this.apiUrl}/users/me/email`, mapEmailConfirmRequest(request), {
-        headers: {
-          'x-user-id': userId,
-        },
-      })
+      .put<ApiUserMeResponse>(`${this.apiUrl}/users/me/email`, mapEmailConfirmRequest(request))
       .pipe(map(mapUser));
   }
 
-  deleteEmail(userId: string): Observable<void> {
+  deleteEmail(): Observable<void> {
     if (this.useMock) {
       return of(void 0).pipe(delay(this.mockDelay));
     }
 
-    return this.http.delete<void>(`${this.apiUrl}/users/me/email`, {
-      headers: {
-        'x-user-id': userId,
-      },
-    });
+    return this.http.delete<void>(`${this.apiUrl}/users/me/email`);
   }
 
-  changePassword(userId: string, request: ChangePasswordRequest): Observable<AuthTokens> {
+  changePassword(request: ChangePasswordRequest): Observable<AuthTokens> {
     const apiRequest: ApiUserPasswordChangeRequest = mapChangePasswordRequest(request);
 
     if (this.useMock) {
@@ -114,11 +100,7 @@ export class UserService {
     }
 
     return this.http
-      .put<ApiAuthTokensResponse>(`${this.apiUrl}/users/me/password`, apiRequest, {
-        headers: {
-          'x-user-id': userId,
-        },
-      })
+      .put<ApiAuthTokensResponse>(`${this.apiUrl}/users/me/password`, apiRequest)
       .pipe(
         map(mapAuthTokens),
         tap((tokens) => {
@@ -128,19 +110,25 @@ export class UserService {
       );
   }
 
-  updateName(userId: string, request: UpdateNameRequest): Observable<User> {
-    const apiRequest: ApiUserUpdateNameRequest = mapUpdateNameRequest(request)
+  updateName(request: UpdateNameRequest): Observable<User> {
+    const apiRequest: ApiUserUpdateNameRequest = mapUpdateNameRequest(request);
 
     if (this.useMock) {
       return of(MOCK_USER).pipe(delay(this.mockDelay));
     }
 
     return this.http
-      .patch<ApiUserMeResponse>(`${this.apiUrl}/users/me/name`, apiRequest, {
-        headers: {
-          'x-user-id': userId,
-        },
-      })
+      .patch<ApiUserMeResponse>(`${this.apiUrl}/users/me/name`, apiRequest)
       .pipe(map(mapUser));
+  }
+  
+  getMyAccounts(): Observable<Account[]> {
+    if (this.useMock) {
+      return of(MOCK_ACCOUNTS).pipe(delay(this.mockDelay));
+    }
+
+    return this.http
+    .get<ApiAccountMeResponse[]>(`${this.apiUrl}/users/me/accounts`)
+    .pipe(map((data) => data.map(mapAccount)));
   }
 }
