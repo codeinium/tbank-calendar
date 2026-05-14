@@ -46,7 +46,10 @@ export class AuthService {
     const apiRequest = mapLoginRequest(request);
 
     if (this.useMock) {
-      return of(MOCK_AUTH_TOKENS).pipe(delay(this.mockDelay));
+      return of(MOCK_AUTH_TOKENS).pipe(
+        delay(this.mockDelay),
+        tap((tokens) => this.saveTokens(tokens)),
+      );
     }
 
     return this.http
@@ -61,7 +64,10 @@ export class AuthService {
     const apiRequest = mapRegisterRequest(request);
 
     if (this.useMock) {
-      return of(MOCK_AUTH_TOKENS).pipe(delay(this.mockDelay));
+      return of(MOCK_AUTH_TOKENS).pipe(
+        delay(this.mockDelay),
+        tap((tokens) => this.saveTokens(tokens)),
+      );
     }
 
     return this.http
@@ -76,7 +82,10 @@ export class AuthService {
     const apiRequest: ApiRefreshRequest = mapRefreshRequest(request)
 
     if (this.useMock) {
-      return of(MOCK_AUTH_TOKENS).pipe(delay(this.mockDelay));
+      return of(MOCK_AUTH_TOKENS).pipe(
+        delay(this.mockDelay),
+        tap((tokens) => this.saveTokens(tokens)),
+      );
     }
 
     return this.http
@@ -115,7 +124,10 @@ export class AuthService {
     const apiRequest = mapPasswordResetConfirmRequest(request);
 
     if (this.useMock) {
-      return of(MOCK_AUTH_TOKENS).pipe(delay(this.mockDelay));
+      return of(MOCK_AUTH_TOKENS).pipe(
+        delay(this.mockDelay),
+        tap((tokens) => this.saveTokens(tokens)),
+      );
     }
 
     return this.http
@@ -130,7 +142,10 @@ export class AuthService {
     const apiRequest: ApiSwitchAccountRequest = mapSwitchAccountRequest(request)
 
     if (this.useMock) {
-      return of(MOCK_AUTH_TOKENS).pipe(delay(this.mockDelay));
+      return of(MOCK_AUTH_TOKENS).pipe(
+        delay(this.mockDelay),
+        tap((tokens) => this.saveTokens(tokens)),
+      );
     }
 
     return this.http
@@ -141,7 +156,7 @@ export class AuthService {
       );
   }
 
-  private saveTokens(tokens: AuthTokens): void {
+  saveTokens(tokens: AuthTokens): void {
     localStorage.setItem('accessToken', tokens.accessToken);
     localStorage.setItem('refreshToken', tokens.refreshToken);
   }
