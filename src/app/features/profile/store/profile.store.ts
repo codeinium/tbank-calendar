@@ -1,18 +1,14 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { User, Account } from '@/app/models/user/user.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ProfileStore {
   readonly user = signal<User | null>(null);
   readonly accounts = signal<Account[]>([]);
   readonly activeAccount = signal<Account | null>(null);
   readonly loading = signal(false);
-  readonly error = signal<string | null>(null);
-
-  readonly accountSwitching = signal(false);
-  readonly emailUpdating = signal(false);
-  readonly passwordChanging = signal(false);
-  readonly nameUpdating = signal(false);
+  readonly profilePageError = signal<string | null>(null);
+  readonly isInitialized = signal(false);
 
   readonly fullName = computed(() => {
     const currentUser = this.user();
@@ -42,31 +38,24 @@ export class ProfileStore {
     this.accounts.set(accounts);
   }
 
-  setAccountSwitching(value: boolean) {
-    this.accountSwitching.set(value);
-  }
-
   setActiveAccount(account: Account | null) {
     this.activeAccount.set(account);
   }
 
   setError(error: string | null) {
-    this.error.set(error);
-  }
-
-  setEmailUpdating(value: boolean) {
-    this.emailUpdating.set(value);
-  }
-
-  setPasswordChanging(value: boolean) {
-    this.passwordChanging.set(value);
-  }
-
-  setNameUpdating(value: boolean) {
-    this.nameUpdating.set(value);
+    this.profilePageError.set(error);
   }
 
   clearState() {
-    this.error.set(null);
+    this.profilePageError.set(null);
+  }
+
+  reset() {
+    this.user.set(null);
+    this.accounts.set([]);
+    this.activeAccount.set(null);
+    this.isInitialized.set(false);
+    this.profilePageError.set(null);
+    this.loading.set(false);
   }
 }

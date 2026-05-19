@@ -51,9 +51,23 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        // canActivate: [authGuard],
-        loadComponent: () =>
-          import('./features/profile/pages/profile-page/profile-page').then((m) => m.ProfilePage),
+        children: [
+          {
+            path: '',
+            // canActivate: [authGuard],
+            loadComponent: () =>
+              import('./features/profile/pages/profile-page/profile-page').then(
+                (m) => m.ProfilePage,
+              ),
+          },
+          {
+            path: 'settings',
+            loadComponent: () =>
+              import('./features/profile/pages/settings-page/settings-page').then(
+                (m) => m.SettingsPage,
+              ),
+          },
+        ],
       },
     ],
   },

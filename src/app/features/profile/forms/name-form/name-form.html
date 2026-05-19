@@ -1,0 +1,60 @@
+<div
+  class="min-h-30 px-7 py-3 rounded-(--tui-radius-l) shadow-(--tui-shadow-m) bg-(--card-2) flex flex-col gap-3"
+>
+  <div class="flex flex-col gap-5">
+    <p class="text-base text-(--text-faded)">Имя фамилия</p>
+    @if (!isNameOpened()) {
+      <div class="flex gap-2 items-center justify-between">
+        @if (!loading()) {
+          <p class="text-lg">{{ fullName() }}</p>
+        } @else {
+          <app-skeleton-line width="w-40" height="h-7" color="dark" />
+        }
+        <button (click)="openEdit()">
+          <img src="assets/icons/icon-edit.svg" alt="edit name" class="h-5 cursor-pointer" />
+        </button>
+      </div>
+    } @else {
+      <form [formGroup]="nameForm" class="flex flex-wrap gap-3 items-start">
+        <label>
+          Имя
+          <tui-textfield class="w-60">
+            <input tuiTextfield type="text" formControlName="firstName" />
+          </tui-textfield>
+
+          @if (nameForm.get('firstName')?.errors?.['required']) {
+            <p class="text-red-500">Имя обязательно</p>
+          }
+
+          @if (nameForm.get('firstName')?.errors?.['backend']) {
+            <p class="text-red-500">
+              {{ nameForm.get('firstName')?.errors?.['backend'] }}
+            </p>
+          }
+        </label>
+
+        <label>
+          Фамилия
+          <tui-textfield class="w-60">
+            <input tuiTextfield formControlName="lastName" />
+          </tui-textfield>
+
+          @if (nameForm.get('lastName')?.errors?.['required']) {
+            <p class="text-red-500">Фамилия обязательна</p>
+          }
+
+          @if (nameForm.get('lastName')?.errors?.['backend']) {
+            <p class="text-red-500">
+              {{ nameForm.get('lastName')?.errors?.['backend'] }}
+            </p>
+          }
+        </label>
+      </form>
+      <div class="flex gap-2">
+        <button tuiButton type="button" (click)="saveName()">Сохранить</button>
+
+        <button tuiButton type="button" (click)="cancelEdit()">Отмена</button>
+      </div>
+    }
+  </div>
+</div>

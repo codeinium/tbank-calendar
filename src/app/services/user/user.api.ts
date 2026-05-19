@@ -4,6 +4,7 @@ export interface ApiUserMeResponse {
   last_name: string;
   email: string | null;
   phone: string;
+  account_id: string;
 }
 
 export interface ApiUserEmailRequest {

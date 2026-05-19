@@ -1,0 +1,25 @@
+<div
+  class="px-7 py-3 rounded-(--tui-radius-l) shadow-(--tui-shadow-m) bg-(--card-2) flex flex-col gap-3"
+>
+  <div class="flex gap-2">
+    <h2 class="text-3xl">Персональные данные</h2>
+    <button [routerLink]="['settings']">
+      <img src="assets/icons/icon-settings.svg" alt="settings" class="h-6 cursor-pointer" />
+    </button>
+  </div>
+  @if (!loading()) {
+    <p class="text-base">{{ fullName() }}</p>
+    <p class="text-base">Номер телефона: {{ phone() }}</p>
+    <p class="text-base">Email: {{ email() }}</p>
+    <p class="text-base">Номер активного счёта: {{ activeAccount() }}</p>
+  } @else {
+    <!-- имя -->
+    <app-skeleton-line width="w-50" height="h-6" color="dark"/>
+    <!-- телефон -->
+    <app-skeleton-line width="w-70" height="h-6" color="dark"/>
+    <!-- почта -->
+    <app-skeleton-line width="w-40" height="h-6" color="dark"/>
+    <!-- счет -->
+    <app-skeleton-line width="w-80" height="h-6" color="dark"/>
+  }
+</div>

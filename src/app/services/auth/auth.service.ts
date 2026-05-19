@@ -156,7 +156,7 @@ export class AuthService {
       );
   }
 
-  saveTokens(tokens: AuthTokens): void {
+  private saveTokens(tokens: AuthTokens): void {
     localStorage.setItem('accessToken', tokens.accessToken);
     localStorage.setItem('refreshToken', tokens.refreshToken);
   }

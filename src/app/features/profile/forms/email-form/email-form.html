@@ -1,0 +1,132 @@
+<div
+  class="min-h-30 px-7 py-3 rounded-(--tui-radius-l) shadow-(--tui-shadow-m) bg-(--card-2) flex flex-col gap-3"
+>
+  <div>
+    <p class="text-base text-(--text-faded) mb-3">Электронная почта</p>
+
+    @if (!isEmailOpened()) {
+      <div class="flex gap-2 items-center justify-between">
+        @if (!loading()) {
+          <p class="text-lg">
+            {{ currentEmail() || 'Не указана' }}
+          </p>
+        } @else {
+          <app-skeleton-line width="w-40" height="h-7" color="dark"/>
+        }
+
+        <div class="flex gap-2">
+          @if (currentEmail()) {
+            <button tuiButton type="button" appearance="flat-destructive" (click)="deleteEmail()">
+              Удалить
+            </button>
+          }
+
+          <button (click)="openEdit()">
+            <img src="assets/icons/icon-edit.svg" alt="edit email" class="h-5 cursor-pointer" />
+          </button>
+        </div>
+      </div>
+    } @else {
+      @if (step() === 'input') {
+        <form [formGroup]="emailForm" class="flex flex-wrap gap-3 items-start">
+          <label class="w-full">
+            Новая почта
+
+            <tui-textfield class="w-60">
+              <input tuiTextfield type="email" formControlName="newEmail" autocomplete="email" />
+            </tui-textfield>
+
+            @if (
+              emailForm.get('newEmail')?.errors?.['required'] && emailForm.get('newEmail')?.touched
+            ) {
+              <p class="text-red-500">Почта обязательна</p>
+            }
+
+            @if (
+              emailForm.get('newEmail')?.errors?.['email'] && emailForm.get('newEmail')?.touched
+            ) {
+              <p class="text-red-500">Некорректный формат почты</p>
+            }
+
+            @if (emailForm.get('newEmail')?.errors?.['backend']) {
+              <p class="text-red-500">
+                {{ emailForm.get('newEmail')?.errors?.['backend'] }}
+              </p>
+            }
+          </label>
+
+          @if (error()) {
+            <p class="text-red-500 w-full">
+              {{ error() }}
+            </p>
+          }
+
+          <div class="flex gap-2 items-center">
+            <button tuiButton type="button" (click)="sendCode()" [disabled]="isSendCodeLoading()">
+              Отправить код
+            </button>
+
+            <button tuiButton type="button" appearance="secondary" (click)="cancelEdit()">
+              Отмена
+            </button>
+          </div>
+        </form>
+      }
+      @if (step() === 'confirm') {
+        <form [formGroup]="codeForm" class="flex flex-wrap gap-3 items-start">
+          <label>
+            Код подтверждения
+
+            <tui-textfield class="w-40">
+              <input
+                tuiTextfield
+                type="text"
+                formControlName="verificationCode"
+                placeholder="123456"
+                maxlength="6"
+              />
+            </tui-textfield>
+
+            @if (
+              codeForm.get('verificationCode')?.errors?.['required'] &&
+              codeForm.get('verificationCode')?.touched
+            ) {
+              <p class="text-red-500">Код обязателен</p>
+            }
+
+            @if (codeForm.get('verificationCode')?.errors?.['backend']) {
+              <p class="text-red-500">
+                {{ codeForm.get('verificationCode')?.errors?.['backend'] }}
+              </p>
+            }
+          </label>
+
+          @if (error()) {
+            <p class="text-red-500 w-full">
+              {{ error() }}
+            </p>
+          }
+
+          <div class="flex gap-2 items-center">
+            <button
+              tuiButton
+              type="button"
+              (click)="confirmCode()"
+              [disabled]="isConfirmCodeLoading()"
+            >
+              Подтвердить
+            </button>
+
+            <button tuiButton type="button" appearance="secondary" (click)="goToInputStep()">
+              Назад
+            </button>
+
+            <button tuiButton type="button" appearance="secondary" (click)="cancelEdit()">
+              Отмена
+            </button>
+          </div>
+        </form>
+      }
+    }
+  </div>
+</div>

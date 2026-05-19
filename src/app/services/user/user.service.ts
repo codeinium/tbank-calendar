@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '@/environments/environment';
-import { delay, map, Observable, of, tap } from 'rxjs';
+import { delay, map, Observable, of, tap, throwError } from 'rxjs';
 
 import {
   ApiUserMeResponse,
@@ -76,7 +76,21 @@ export class UserService {
 
   confirmEmail(request: EmailConfirmRequest): Observable<User> {
     if (this.useMock) {
-      return of(MOCK_USER).pipe(delay(this.mockDelay));
+      return of({
+        ...MOCK_USER,
+        email: request.email
+      }).pipe(delay(this.mockDelay));
+      // return throwError(
+      //   () =>
+      //     new HttpErrorResponse({
+      //       status: 400,
+      //       statusText: 'Bad Request',
+      //       error: {
+      //         message: 'Недопустимое значение',
+              
+      //       },
+      //     }),
+      // ).pipe(delay(100000));
     }
 
     return this.http
@@ -114,21 +128,38 @@ export class UserService {
     const apiRequest: ApiUserUpdateNameRequest = mapUpdateNameRequest(request);
 
     if (this.useMock) {
-      return of(MOCK_USER).pipe(delay(this.mockDelay));
+      // return throwError(
+      //   () =>
+      //     new HttpErrorResponse({
+      //       status: 400,
+      //       statusText: 'Bad Request',
+      //       error: {
+      //         message: 'Недопустимое значение',
+      //         errors: {
+      //           firstName: 'Имя не может содержать нецензурную брань',
+      //         },
+      //       },
+      //     }),
+      // ).pipe(delay(100000));
+      return of({
+        ...MOCK_USER,
+        firstName: request.firstName,
+        lastName: request.lastName,
+      }).pipe(delay(this.mockDelay));
     }
 
     return this.http
       .patch<ApiUserMeResponse>(`${this.apiUrl}/users/me/name`, apiRequest)
       .pipe(map(mapUser));
   }
-  
+
   getMyAccounts(): Observable<Account[]> {
     if (this.useMock) {
       return of(MOCK_ACCOUNTS).pipe(delay(this.mockDelay));
     }
 
     return this.http
-    .get<ApiAccountMeResponse[]>(`${this.apiUrl}/users/me/accounts`)
-    .pipe(map((data) => data.map(mapAccount)));
+      .get<ApiAccountMeResponse[]>(`${this.apiUrl}/users/me/accounts`)
+      .pipe(map((data) => data.map(mapAccount)));
   }
 }

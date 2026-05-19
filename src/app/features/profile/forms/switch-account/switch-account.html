@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-3 w-full">
+  <span class="text-lg"> Активный счет </span>
+
+  <tui-textfield tuiChevron [stringify]="stringifyAccount" [tuiTextfieldCleaner]="false" [disabledItemHandler]="disabledItems">
+    <input tuiSelect [ngModel]="activeAccount()" (ngModelChange)="switchAccount($event)"/>
+
+    <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="accounts()" />
+  </tui-textfield>
+
+  @if (isSwitching()) {
+    <tui-loader class="ml-2" size="s"></tui-loader>
+  }
+
+  @if (activeAccount(); as account) {
+    <div class="text-base text-(--text-faded) flex flex-col gap-1">
+      <span>
+        Номер счета:
+        <span [tuiSensitive]="sensitive">{{ account.accountNumber }}</span>
+      </span>
+
+      <span>
+        Баланс:
+        <span [tuiSensitive]="sensitive">₽{{ account.balance }}</span>
+      </span>
+      <label tuiLabel>
+        <input tuiSwitch type="checkbox" [(ngModel)]="sensitive" />
+        Показать данные
+      </label>
+    </div>
+  }
+</div>

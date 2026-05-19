@@ -1,0 +1,11 @@
+<div class="w-full max-w-200 mx-auto mt-5 flex flex-col gap-5">
+  <span class="text-4xl">
+    Перейти обратно
+    <u><a [routerLink]="['/profile']">в профиль</a></u>
+  </span>
+  <app-name-form />
+  <app-password-form />
+  <app-email-form />
+  <app-switch-account />
+  <button tuiButton type="button" (click)="logout()">Выйти из аккаунта</button>
+</div>

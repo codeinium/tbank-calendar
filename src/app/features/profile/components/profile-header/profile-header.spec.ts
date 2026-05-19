@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StatisticPageComponent } from './statistic-page';
+import { ProfileHeader } from './profile-header';
 
-describe('StatisticPage', () => {
-  let component: StatisticPageComponent;
-  let fixture: ComponentFixture<StatisticPageComponent>;
+describe('ProfileHeader', () => {
+  let component: ProfileHeader;
+  let fixture: ComponentFixture<ProfileHeader>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StatisticPageComponent],
+      imports: [ProfileHeader],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StatisticPageComponent);
+    fixture = TestBed.createComponent(ProfileHeader);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

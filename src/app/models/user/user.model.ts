@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   email: string | null;
   phone: string;
+  accountId: string;
 }
 
 export interface UserEmail {

@@ -23,6 +23,7 @@ export function mapUser(api: ApiUserMeResponse): User {
     lastName: api.last_name,
     email: api.email,
     phone: api.phone,
+    accountId: api.account_id,
   };
 }
 
