@@ -18,7 +18,7 @@ export const routes: Routes = [
       {
         path: 'about',
         loadComponent: () =>
-          import('./features/about-page/pages/about-page/about-page').then((m) => m.AboutPage),
+          import('./features/about/pages/about-page/about-page').then((m) => m.AboutPage),
       },
       {
         path: 'calendar',

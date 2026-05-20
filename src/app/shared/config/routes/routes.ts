@@ -5,4 +5,6 @@ export const routes = {
   goals: '/goals',
   payments: '/payments',
   profile: '/profile',
+  login: '/login',
+  register: '/register'
 } as const;

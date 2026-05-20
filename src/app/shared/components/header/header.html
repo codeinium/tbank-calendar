@@ -2,8 +2,9 @@
   class="w-full max-w-425.5 mx-auto min-h-17 md:min-h-15 px-8 fixed z-30 left-1/2 -translate-x-1/2 md:top-2 md:rounded-t-xl rounded-b-xl flex justify-between items-center bg-(--background) shadow-(--tui-shadow-m)"
 >
   <div class="w-full flex items-center justify-between">
+
     <nav class="h-full hidden md:flex items-center gap-6">
-      @for (item of navigation.slice(0, -1); track item; let last = $last) {
+      @for (item of navigation().slice(0, -1); track item) {
         <a
           [routerLink]="item.to"
           routerLinkActive="active-link"
@@ -18,8 +19,9 @@
         </a>
       }
     </nav>
+
     <div class="hidden md:flex items-center">
-      @if (navigation[navigation.length - 1]; as rightItem) {
+      @if (navigation()[navigation().length - 1]; as rightItem) {
         <a
           [routerLink]="rightItem.to"
           class="text-base h-[3.4rem] flex items-center rounded-xl px-4"
@@ -28,18 +30,26 @@
         </a>
       }
     </div>
+
     <button
       class="md:hidden p-2 text-gray-600 hover:text-gray-900 transition"
       (click)="toggleSidebar()"
       [attr.aria-expanded]="isSidebarOpen"
     >
-      <img src="assets/icons/hamburger.svg" alt="Открыть меню" />
+      <img
+        src="assets/icons/hamburger.svg"
+        alt="Открыть меню"
+      />
     </button>
+
   </div>
 </header>
 
 @if (isSidebarOpen) {
-  <div class="fixed inset-0 bg-black/40 backdrop-blur-sm z-3" (click)="closeSidebar()"></div>
+  <div
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-3"
+    (click)="closeSidebar()"
+  ></div>
 }
 
 <aside
@@ -48,10 +58,17 @@
 >
   <div class="flex items-center justify-between p-4">
     <span class="text-lg">Меню</span>
-    <button (click)="closeSidebar()" class="text-base cursor-pointer">✖</button>
+
+    <button
+      (click)="closeSidebar()"
+      class="text-base cursor-pointer"
+    >
+      ✖
+    </button>
   </div>
+
   <nav class="h-full flex flex-col gap-2">
-    @for (item of navigation; track item) {
+    @for (item of navigation(); track item) {
       <a
         [routerLink]="item.to"
         routerLinkActive="active-link"
@@ -61,6 +78,7 @@
           'bg-(--foreground) text-(--background)': rla.isActive,
           'bg-(--background) text-(--foreground)': !rla.isActive,
         }"
+        (click)="closeSidebar()"
       >
         {{ item.label }}
       </a>
