@@ -1,5 +1,5 @@
 import { BillingCycle } from '../types/billing-cycle.type';
-import { Status } from '../types/status.type';
+import { ReminderPaymentStatus } from '../types/status.type';
 
 export interface Subscription {
   id: string;
@@ -13,7 +13,7 @@ export interface Subscription {
   nextBillingDate: string;
   endDate: string;
   logoUrl?: string;
-  status: Status;
+  status: ReminderPaymentStatus;
 }
 
 export interface CreateSubscriptionRequest {

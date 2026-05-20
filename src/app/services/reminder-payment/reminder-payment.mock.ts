@@ -8,7 +8,7 @@ import {
   Subscription,
 } from '@/app/models/subscription/subscription.model';
 import { BillingCycle } from '@/app/models/types/billing-cycle.type';
-import { Status } from '@/app/models/types/status.type';
+import { ReminderPaymentStatus } from '@/app/models/types/status.type';
 
 export const MOCK_SUBSCRIPTIONS: Subscription[] = [
   {
@@ -24,7 +24,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     endDate: '2027-05-26T00:00:00.000Z',
     logoUrl:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Netflix_icon.svg/500px-Netflix_icon.svg.png?_=20220806170125',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '2',
@@ -38,7 +38,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '3',
@@ -52,7 +52,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '4',
@@ -66,7 +66,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '5',
@@ -80,7 +80,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '6',
@@ -94,7 +94,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '7',
@@ -108,7 +108,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '8',
@@ -122,7 +122,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
   {
     id: '9',
@@ -136,7 +136,7 @@ export const MOCK_SUBSCRIPTIONS: Subscription[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
 ];
 
@@ -153,7 +153,7 @@ export const MOCK_SCHEDULED_PAYMENTS: SheduledPayment[] = [
     nextBillingDate: '2026-06-15T00:00:00.000Z',
     endDate: '2026-12-31T00:00:00.000Z',
     logoUrl: 'https://img.freepik.com/premium-vector/yandex-music-logo_578229-242.jpg',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   },
 ];
 
@@ -172,7 +172,7 @@ export function createMockSubscription(request: CreateSubscriptionRequest): Subs
     nextBillingDate: request.nextBillingDate,
     endDate: request.endDate,
     logoUrl: '',
-    status: 'active' as Status,
+    status: 'active' as ReminderPaymentStatus,
   };
 }
 
@@ -191,7 +191,7 @@ export function createMockScheduledPayment(
     nextBillingDate: request.nextBillingDate,
     endDate: request.endDate,
     logoUrl: '',
-    status: 'pending' as Status,
+    status: 'pending' as ReminderPaymentStatus,
   };
 }
 

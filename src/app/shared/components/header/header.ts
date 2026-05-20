@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { navigation, NavItem } from "@/app/shared/config/routes/navigation"
-
-
+import { navigation, guestNavigation, NavItem } from '@/app/shared/config/routes/navigation';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +12,12 @@ import { navigation, NavItem } from "@/app/shared/config/routes/navigation"
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  public readonly navigation: NavItem[] = navigation;
+  readonly isAuthorized = computed(() => !!localStorage.getItem('accessToken'));
+
+  readonly navigation = computed<NavItem[]>(() =>
+    this.isAuthorized() ? navigation : guestNavigation,
+  );
+
   isSidebarOpen = false;
 
   toggleSidebar(): void {

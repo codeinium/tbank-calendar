@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectionStrategy, computed, signal } from '@an
 import { BaseChartDirective } from 'ng2-charts';
 import { Transaction } from '@/app/models/transaction/transaction.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { ChartConfiguration } from 'chart.js';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-chart-line',
