@@ -1,6 +1,7 @@
 import { GoalStatus } from '../../models/goal/goal.model';
 import { BillingCycle } from '../../models/types/billing-cycle.type';
-/* для списка */
+import { ApiTransaction } from '../transaction/transaction.api';
+
 export interface ApiGoal {
   id: string;
   name: string;
@@ -9,58 +10,56 @@ export interface ApiGoal {
   status: GoalStatus;
 }
 
-/* полная версия */
-export interface ApiGoalDetails {
-  id: string;
+export interface ApiGoalDetails extends ApiGoal {
   account_id: string;
-  name: string;
-  target_amount: number;
-  current_amount: number;
   deadline: string;
   created_at: string;
   achieved_at: string | null;
   hard_mode: boolean;
-  status: GoalStatus;
   auto_pay: boolean;
-  auto_pay_account_id?: string;
-  billing_cycle?: BillingCycle;
-  billing_interval?: number;
-  auto_pay_amount?: number;
+  auto_pay_account_id?: string | null;
+  billing_cycle?: BillingCycle | null;
+  billing_interval?: number | null;
+  auto_pay_amount?: number | null;
+  transactions: ApiTransaction[];
 }
 
-/* создание новой цели */
 export interface ApiCreateGoalRequest {
   name: string;
   target_amount: number;
   deadline: string;
   hard_mode: boolean;
   auto_pay: boolean;
-  auto_pay_account_id?: string;
-  billing_cycle?: BillingCycle;
-  billing_interval?: number;
-  auto_pay_amount?: number;
+  auto_pay_account_id?: string | null;
+  billing_cycle?: BillingCycle | null;
+  billing_interval?: number | null;
+  auto_pay_amount?: number | null;
 }
 
-/* пополнение/снятие */
 export interface ApiGoalTransactionRequest {
-  id: string;
   amount: number;
   account_id: string;
 }
 
-/* изменение цели (название, дедлайн) */
 export interface ApiUpdateGoalRequest {
-  id: string;
   name: string;
   deadline: string;
 }
 
-/* изменение цели (автопополнение) */
 export interface ApiUpdateGoalAutoPayRequest {
-  id: string;
   is_active: boolean;
-  auto_pay_account_id?: string;
-  billing_cycle?: BillingCycle;
-  billing_interval?: number;
-  amount?: number;
+  auto_pay_account_id?: string | null;
+  billing_cycle?: BillingCycle | null;
+  billing_interval?: number | null;
+  amount?: number | null;
+}
+
+export interface ApiGoalAccount {
+  id: string;
+  customer_id: string;
+  account_number: string;
+  status: 'ACTIVE' | 'FROZEN' | 'CLOSED';
+  balance: number;
+  created_at: string;
+  updated_at: string;
 }
