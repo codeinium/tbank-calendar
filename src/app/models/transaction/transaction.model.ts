@@ -2,9 +2,7 @@ import { TransactionType } from '@/app/models/types/transaction.type';
 
 export interface Transaction {
   id: string;
-  fromAccountName: string;
-  toAccountName?: string | null;
-  counterpartyName?: string | null;
+  counterpartyName: string;
   categoryName: string;
   amount: number;
   type: TransactionType;

@@ -4,9 +4,7 @@ import { Transaction } from '../../models/transaction/transaction.model';
 export function mapTransaction(api: ApiTransaction): Transaction {
   return {
     id: api.id,
-    fromAccountName: api.from_account_name,
-    toAccountName: api.to_account_name,
-    counterpartyName: api.counterparty_name,
+    counterpartyName: api.counterparty,
     categoryName: api.category_name,
     amount: api.amount,
     type: api.type,

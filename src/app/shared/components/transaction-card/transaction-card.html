@@ -1,16 +1,15 @@
 @switch (variant) {
   @case ('month') {
     <div
-      class="w-full flex flex-col sm:flex-wrap gap-2 h-full p-0.5 rounded-md lg:rounded-md text-xs lg:text-sm overflow-hidden"
+      class="w-full flex flex-col gap-1 h-full p-1 rounded-md text-xs lg:text-sm overflow-hidden"
       [ngClass]="
         isIncome
           ? 'bg-(--income-background) text-(--income-dark)'
           : 'bg-(--expense-background) text-(--expense-dark)'
       "
     >
-
-      <p class="shrink-0">
-        {{ amountLabel }} {{ categotyLabel }}
+      <p class="shrink-0 font-medium">
+        {{ amountLabel }}
       </p>
 
       <p class="truncate min-w-0">
@@ -18,51 +17,75 @@
       </p>
     </div>
   }
+
   @case ('week') {
     <div
-      class="lg:min-h-12 p-1 rounded-xs lg:rounded-md text-xs lg:text-sm break-all"
+      class="lg:min-h-16 p-2 rounded-xs lg:rounded-md text-xs lg:text-sm flex flex-col gap-1 overflow-hidden"
       [ngClass]="
         isIncome
           ? 'bg-(--income-background) text-(--income-dark)'
           : 'bg-(--expense-background) text-(--expense-dark)'
       "
     >
-        <p class="shrink-0">
+      <div class="flex items-start justify-between gap-2">
+        <p class="font-semibold shrink-0">
           {{ amountLabel }}
         </p>
-        <p class="min-w-0 break-words">
-          {{ title }}
-        </p>
 
-      <p class="wrap-break-words">
-        {{ subtitle }}
+        <p class="shrink-0 text-[10px] lg:text-xs opacity-80">
+          {{ timeLabel }}
+        </p>
+      </div>
+
+      <p class="font-medium truncate">
+        {{ title }}
+      </p>
+
+      <p class="truncate opacity-80">
+        {{ categoryLabel }}
+      </p>
+
+      <p class="line-clamp-2 opacity-80">
+        {{ descriptionLabel }}
       </p>
     </div>
   }
+
   @case ('day') {
     <div
-      class="min-h-12 p-2 rounded-lg text-xs md:text-base flex items-center justify-between gap-3 break-all"
+      class="min-h-16 p-3 rounded-lg text-xs md:text-base flex items-center justify-between gap-3"
       [ngClass]="
         isIncome
           ? 'bg-(--income-background) text-(--income-dark)'
           : 'bg-(--expense-background) text-(--expense-dark)'
       "
     >
-        <p class="shrink-0">
-          {{ amountLabel }}
-        </p>
-        <p class="min-w-0 break-words">
-          {{ title }}
+      <div class="min-w-0 flex flex-col gap-1">
+        <div class="flex items-center gap-2 min-w-0">
+          <p class="font-semibold shrink-0">
+            {{ amountLabel }}
+          </p>
+
+          <p class="truncate font-medium">
+            {{ title }}
+          </p>
+        </div>
+
+        <p class="truncate text-xs md:text-sm opacity-80">
+          {{ detailsLabel }}
         </p>
 
-      <p class="wrap-break-words">
-        {{ subtitle }}
-      </p>
-      <p>
-        {{timeLabel}}
+        <p class="truncate text-xs md:text-sm opacity-80">
+          {{ descriptionLabel }}
+        </p>
+      </div>
+
+      <p class="shrink-0 text-xs md:text-sm opacity-80">
+        {{ timeLabel }}
       </p>
     </div>
   }
+
   @case ('goal') {
     <div
       class="w-full min-h-7.5 p-2 rounded-lg text-xs md:text-base flex items-center justify-between gap-3 break-all"
@@ -72,17 +95,16 @@
           : 'bg-(--income-background) text-(--income-dark)'
       "
     >
-        <p class="shrink-0">
-          {{ amountLabel }}
-        </p>
-
-
-      <p class="wrap-break-words">
-        {{ subtitle }}
+      <p class="shrink-0">
+        {{ amountLabel }}
       </p>
-      <p class="hidden md:block">{{dateLabel}}</p>
+
+      <p class="hidden md:block">
+        {{ dateLabel }}
+      </p>
+
       <p>
-        {{timeLabel}}
+        {{ timeLabel }}
       </p>
     </div>
   }

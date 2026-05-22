@@ -86,7 +86,7 @@ export function getMockGoalDetails(goalId: string): GoalDetails | null {
 
 export function getMockTransactions(goalId: string): Transaction[] {
   let transactions = TRANSACTIONS_MOCK.filter(
-    (t) => t.toAccountName === goalId || t.fromAccountName === goalId,
+    (t) => t.counterpartyName === goalId
   );
   return transactions;
 }

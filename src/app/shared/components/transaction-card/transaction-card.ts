@@ -16,12 +16,9 @@ export class TransactionCard {
     return this.transaction.type === 'income';
   }
 
-  get categotyLabel() {
-    return this.transaction.categoryName;
-  }
-
   get amountLabel() {
     const sign = this.isIncome ? '+' : '-';
+
     return `${sign}${this.transaction.amount.toLocaleString()} ₽`;
   }
 
@@ -33,30 +30,23 @@ export class TransactionCard {
     return dayjs(this.transaction.date).format('D MMMM YYYY');
   }
 
-  get title(): string {
-    const t = this.transaction;
-
-    if (t.counterpartyName) {
-      return t.counterpartyName;
-    }
-    if (t.toAccountName) {
-      return t.fromAccountName;
-    }
-
-    return ' ';
+  get title() {
+    return this.transaction.counterpartyName;
   }
 
-  get subtitle(): string {
-    const t = this.transaction;
+  get categoryLabel() {
+    return this.transaction.categoryName;
+  }
 
-    if (t.counterpartyName) {
-      return t.categoryName;
-    }
+  get descriptionLabel() {
+    return this.transaction.description;
+  }
 
-    if (t.toAccountName && !t.counterpartyName) {
-      return 'Перевод';
-    }
+  get typeLabel() {
+    return this.isIncome ? 'Доход' : 'Расход';
+  }
 
-    return t.categoryName;
+  get detailsLabel() {
+    return `${this.categoryLabel} · ${this.typeLabel}`;
   }
 }
