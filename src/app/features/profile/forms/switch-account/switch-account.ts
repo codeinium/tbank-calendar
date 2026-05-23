@@ -52,5 +52,5 @@ export class SwitchAccount {
     });
   }
 
-  disabledItems = (account: Account) => account.status === 'inactive';
+  disabledItems = (account: Account) => account.status !== "ACTIVE";
 }

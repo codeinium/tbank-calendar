@@ -1,8 +1,7 @@
-import { transition } from '@angular/animations';
-import { inject, Injectable, signal, computed, effect } from '@angular/core';
+import { ChartRange } from '@/app/models/types/chart-range.type';
+import { inject, Injectable, signal, computed } from '@angular/core';
 import { GoalsPageStore } from './goal-page.store';
 import { Transaction } from '@/app/models/transaction/transaction.model';
-import { ChartRange, GoalDetails } from '@/app/models/goal/goal.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { weekDayLabelsShort } from '@/app/features/calendar/models/types';
 

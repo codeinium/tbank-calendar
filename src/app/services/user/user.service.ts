@@ -155,7 +155,7 @@ export class UserService {
 
   getMyAccounts(): Observable<Account[]> {
     if (this.useMock) {
-      return of(MOCK_ACCOUNTS).pipe(delay(this.mockDelay));
+      // return of(MOCK_ACCOUNTS).pipe(delay(this.mockDelay));
     }
 
     return this.http
