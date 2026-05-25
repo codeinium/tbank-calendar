@@ -1,11 +1,24 @@
 <app-stats-card
-    [title]="'Платежи'"
-    [monthlyTotal]="service.monthlyTotal"
-    [yearlyTotal]="service.yearlyTotal"
-    [activeCount]="service.activeCount"
-    [upcomingCount]="service.upcomingCount"
-    [onSearch]="service.setSearch.bind(service)"
-    [items]="service.payments"
-    [onSortChange]="service.setSortOption.bind(service)"
-    [listType]="'payment'"
+  [items]="scheduledPaymentService.payments"
+  [title]="'Платежи'"
+  [monthlyTotal]="scheduledPaymentService.monthlyTotal"
+  [yearlyTotal]="scheduledPaymentService.yearlyTotal"
+  [activeCount]="scheduledPaymentService.activeCount"
+  [upcomingCount]="scheduledPaymentService.upcomingCount"
+  [onSearch]="scheduledPaymentService.setSearch.bind(scheduledPaymentService)"
+  [onSortChange]="scheduledPaymentService.setSortOption.bind(scheduledPaymentService)"
+  [onEdit]="openEditPaymentModal.bind(this)"
+  [onDelete]="scheduledPaymentService.delete.bind(scheduledPaymentService)"
+  [onPause]="scheduledPaymentService.pause.bind(scheduledPaymentService)"
+  [onResume]="scheduledPaymentService.resume.bind(scheduledPaymentService)"
+  listType="payment"
 />
+@if (isUpdatePaymentModalOpen() && updatingPayment()) {
+  <app-modal-dialog title="Изменить платёж" (close)="closeEditPaymentModal()">
+    <app-update-payment-form
+      [payment]="updatingPayment()!"
+      (close)="closeEditPaymentModal()"
+      (update)="updatePayment($event)"
+    />
+  </app-modal-dialog>
+}

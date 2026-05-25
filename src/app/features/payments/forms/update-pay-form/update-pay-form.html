@@ -1,0 +1,77 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+  <label class="text-base mt-5">
+    Название
+    <tui-textfield>
+      <input tuiTextfield type="text" formControlName="title" />
+    </tui-textfield>
+  </label>
+
+  <label class="text-base">
+    Описание
+    <tui-textfield>
+      <input tuiTextfield type="text" formControlName="description" />
+    </tui-textfield>
+  </label>
+
+  <label class="text-base">
+    Сумма
+    <tui-textfield>
+      <input tuiTextfield type="number" formControlName="amount" />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <label class="text-base">Выберите категорию</label>
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
+      <input tuiSelect formControlName="categoryName" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="categories" />
+    </tui-textfield>
+  </label>
+
+  <label class="text-base">
+    Дата следующего платежа
+    <tui-textfield>
+      <input tuiInputDate formControlName="nextBillingDate" />
+      <tui-calendar *tuiTextfieldDropdown />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <label class="text-base">Выберите промежуток времени</label>
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
+      <input tuiSelect formControlName="billingCycle" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="billingCycles" />
+    </tui-textfield>
+  </label>
+
+  <label class="text-base">
+    Интервал
+    <tui-textfield>
+      <input
+        tuiTextfield
+        type="number"
+        placeholder="Например: 1"
+        formControlName="billingInterval"
+      />
+    </tui-textfield>
+
+    @if (labelInterval()) {
+      <p class="text-sm text-(--text-faded)">
+        {{ labelInterval() }}
+      </p>
+    }
+  </label>
+
+  <label class="text-base">
+    Дата окончания
+    <tui-textfield>
+      <input tuiInputDate formControlName="endDate" />
+      <tui-calendar *tuiTextfieldDropdown />
+    </tui-textfield>
+  </label>
+
+  <div class="flex justify-center gap-10">
+    <button tuiButton type="button" (click)="close.emit()">Отмена</button>
+    <button tuiButton type="submit" [disabled]="form.invalid">Сохранить</button>
+  </div>
+</form>
