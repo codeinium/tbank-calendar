@@ -26,6 +26,7 @@ export interface GoalDetails extends Goal {
 }
 
 export interface CreateGoalRequest {
+  refundAccountId: string;
   name: string;
   targetAmount: number;
   deadline: string;
@@ -37,9 +38,13 @@ export interface CreateGoalRequest {
   autoPayAmount?: number | null;
 }
 
-export interface GoalTransactionRequest {
-  amount: number;
+export interface GoalContributeRequest {
   accountId: string;
+  amount: number;
+}
+
+export interface GoalWithdrawRequest {
+  amount: number;
 }
 
 export interface UpdateGoalRequest {
@@ -53,14 +58,4 @@ export interface UpdateGoalAutoPayRequest {
   billingCycle?: BillingCycle | null;
   billingInterval?: number | null;
   amount?: number | null;
-}
-
-export interface GoalAccount {
-  id: string;
-  customerId: string;
-  accountNumber: string;
-  status: 'ACTIVE' | 'FROZEN' | 'CLOSED';
-  balance: number;
-  createdAt: string;
-  updatedAt: string;
 }

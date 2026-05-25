@@ -52,12 +52,12 @@ export function mapUpdateNameRequest(request: UpdateNameRequest): ApiUserUpdateN
 
 export function mapAccount(api: ApiAccountMeResponse): Account {
   return {
-    accountId: api.accountId,
-    customerId: api.customerId,
-    accountNumber: api.accountNumber,
+    accountId: api.id,
+    customerId: api.customer_id,
+    accountNumber: api.account_number,
     status: api.status,
     balance: api.balance,
-    createdAt: api.createdAt,
-    updateAt: api.updateAt,
+    createdAt: api.created_at,
+    updatedAt: api.updated_at,
   };
 }

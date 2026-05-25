@@ -1,25 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay, map } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, delay, map, throwError } from 'rxjs';
 import { environment } from '@/environments/environment';
 import {
   Goal,
   GoalDetails,
   CreateGoalRequest,
-  GoalTransactionRequest,
   UpdateGoalAutoPayRequest,
   UpdateGoalRequest,
+  GoalContributeRequest,
+  GoalWithdrawRequest,
 } from '../../models/goal/goal.model';
 
 import { ApiGoal, ApiGoalDetails } from './goal.api';
 
 import {
+  mapContributeGoal,
   mapCreateGoal,
   mapGoal,
   mapGoalDetails,
-  mapTransactionGoal,
   mapUpdateGoal,
   mapUpdateGoalAutoPay,
+  mapWithdrawGoal,
 } from './goal.mapper';
 
 import {
@@ -33,9 +35,9 @@ import {
   MOCK_GOAL_ACCOUNTS,
 } from './goal.mock';
 
-import { ApiGoalAccount } from './goal.api';
-import { GoalAccount } from '../../models/goal/goal.model';
-import { mapGoalAccount } from './goal.mapper';
+import { Account } from '@/app/models/user/user.model';
+import { ApiAccountMeResponse } from '../user/user.api';
+import { mapAccount } from '../user/user.mapper';
 
 @Injectable({ providedIn: 'root' })
 export class GoalsService {
@@ -78,8 +80,8 @@ export class GoalsService {
       .pipe(map(mapGoalDetails));
   }
 
-  contribute(goalId: string, request: GoalTransactionRequest): Observable<GoalDetails> {
-    const apiRequest = mapTransactionGoal(request);
+  contribute(goalId: string, request: GoalContributeRequest): Observable<GoalDetails> {
+    const apiRequest = mapContributeGoal(request);
 
     if (this.useMock) {
       return of(mockDepositToGoal(goalId, apiRequest)).pipe(delay(this.mockDelay));
@@ -90,8 +92,8 @@ export class GoalsService {
       .pipe(map(mapGoalDetails));
   }
 
-  withdraw(goalId: string, request: GoalTransactionRequest): Observable<GoalDetails> {
-    const apiRequest = mapTransactionGoal(request);
+  withdraw(goalId: string, request: GoalWithdrawRequest): Observable<GoalDetails> {
+    const apiRequest = mapWithdrawGoal(request);
 
     if (this.useMock) {
       return of(mockWithdrawFromGoal(goalId, apiRequest)).pipe(delay(this.mockDelay));
@@ -106,6 +108,19 @@ export class GoalsService {
     const apiRequest = mapUpdateGoal(request);
 
     if (this.useMock) {
+      // return throwError(
+      //   () =>
+      //     new HttpErrorResponse({
+      //       status: 400,
+      //       statusText: 'Bad Request',
+      //       error: {
+      //         message: 'Недопустимое значение',
+      //         errors: {
+      //           name: 'Имя не может содержать нецензурную брань',
+      //         },
+      //       },
+      //     }),
+      // ).pipe(delay(100000));
       return of(mockUpdateGoal(goalId, apiRequest)).pipe(delay(this.mockDelay));
     }
 
@@ -126,18 +141,14 @@ export class GoalsService {
       .pipe(map(mapGoalDetails));
   }
 
-  getGoalAccounts(customerId: string): Observable<GoalAccount[]> {
+  getGoalAccounts(): Observable<Account[]> {
     if (this.useMock) {
       return of(MOCK_GOAL_ACCOUNTS).pipe(delay(this.mockDelay));
     }
 
     return this.http
-      .get<ApiGoalAccount[]>(`${this.apiUrl}/goals/accounts`, {
-        params: {
-          customer_id: customerId,
-        },
-      })
-      .pipe(map((data) => data.map(mapGoalAccount)));
+      .get<ApiAccountMeResponse[]>(`${this.apiUrl}/goals/accounts`)
+      .pipe(map((data) => data.map(mapAccount)));
   }
 
   cancelGoal(goalId: string): Observable<void> {

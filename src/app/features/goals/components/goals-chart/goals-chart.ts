@@ -1,6 +1,5 @@
+import { GoalPageUiService } from './../../service/goal-page-ui.service';
 import { AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { GoalService } from '../../services/goal.service';
-import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { NgClass } from '@angular/common';
 import { TuiButton } from '@taiga-ui/core';
 
@@ -12,12 +11,12 @@ import { TuiButton } from '@taiga-ui/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsChart implements AfterViewInit {
-  readonly service = inject(GoalService);
-  readonly chartData = this.service.chartData;
-  readonly range = this.service.range;
-  readonly selectedBucket = this.service.selectedBucket;
+  readonly goalUiService = inject(GoalPageUiService);
+  readonly chartData = this.goalUiService.chartData;
+  readonly range = this.goalUiService.range;
+  readonly selectedBucket = this.goalUiService.selectedBucket;
   readonly isEmpty = computed(() => this.chartData().length === 0);
-  
+
   @ViewChild('scrollContainer')
   scrollContainer!: ElementRef<HTMLDivElement>;
 
@@ -64,11 +63,11 @@ export class GoalsChart implements AfterViewInit {
   }
 
   setRange(range: string) {
-    this.service.setRange(range as any);
+    this.goalUiService.setRange(range as any);
   }
 
   setBucket(key: string | null) {
-    this.service.selectBucket(key);
+    this.goalUiService.selectBucket(key);
   }
 
   private scrollByAmount(direction: number) {

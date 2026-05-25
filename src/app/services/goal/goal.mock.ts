@@ -2,16 +2,17 @@ import dayjs from 'dayjs';
 import { Goal, GoalDetails } from '../../models/goal/goal.model';
 import {
   ApiCreateGoalRequest,
-  ApiGoalTransactionRequest,
+  ApiGoalContributeRequest,
+  ApiGoalWithdrawRequest,
   ApiUpdateGoalAutoPayRequest,
   ApiUpdateGoalRequest,
 } from './goal.api';
 import { TRANSACTIONS_MOCK } from '../transaction/transaction.mock';
-import { GoalAccount } from '../../models/goal/goal.model';
+import { Account } from '@/app/models/user/user.model';
 
-export const MOCK_GOAL_ACCOUNTS: GoalAccount[] = [
+export const MOCK_GOAL_ACCOUNTS: Account[] = [
   {
-    id: 'account-main-1',
+    accountId: 'account-main-1',
     customerId: 'customer-1',
     accountNumber: '40817810000000000001',
     status: 'ACTIVE',
@@ -20,16 +21,16 @@ export const MOCK_GOAL_ACCOUNTS: GoalAccount[] = [
     updatedAt: '2026-05-01T12:00:00Z',
   },
   {
-    id: 'account-main-2',
+    accountId: 'account-main-2',
     customerId: 'customer-1',
     accountNumber: '40817810000000000002',
-    status: 'ACTIVE',
+    status: 'FROZEN',
     balance: 82000,
     createdAt: '2025-02-10T12:00:00Z',
     updatedAt: '2026-05-10T12:00:00Z',
   },
   {
-    id: 'account-main-3',
+    accountId: 'account-main-3',
     customerId: 'customer-1',
     accountNumber: '40817810000000000003',
     status: 'ACTIVE',
@@ -144,14 +145,14 @@ export function createMockGoal(request: ApiCreateGoalRequest): GoalDetails {
     status: 'active',
     autoPay: request.auto_pay,
     autoPayAccountId: request.auto_pay_account_id ?? null,
-    billingCycle: request.billing_cycle ?? null,
-    billingInterval: request.billing_interval ?? null,
+    billingCycle: request.billing_interval ?? null,
+    billingInterval: request.billing_cycle ?? null,
     autoPayAmount: request.auto_pay_amount ?? null,
     transactions: [],
   };
 }
 
-export function mockDepositToGoal(goalId: string, request: ApiGoalTransactionRequest): GoalDetails {
+export function mockDepositToGoal(goalId: string, request: ApiGoalContributeRequest): GoalDetails {
   const goal = getMockGoalDetails(goalId);
   if (!goal) throw new Error(`Goal with id ${goalId} not found`);
 
@@ -168,7 +169,7 @@ export function mockDepositToGoal(goalId: string, request: ApiGoalTransactionReq
 
 export function mockWithdrawFromGoal(
   goalId: string,
-  request: ApiGoalTransactionRequest,
+  request: ApiGoalWithdrawRequest,
 ): GoalDetails {
   const goal = getMockGoalDetails(goalId);
   if (!goal) throw new Error(`Goal with id ${goalId} not found`);
@@ -201,7 +202,7 @@ export function mockUpdateGoalAutoPay(
   const goal = getMockGoalDetails(goalId);
   if (!goal) throw new Error(`Goal with id ${goalId} not found`);
 
-  if (!request.is_active) {
+  if (!request.auto_pay) {
     return {
       ...goal,
       autoPay: false,
@@ -216,8 +217,8 @@ export function mockUpdateGoalAutoPay(
     ...goal,
     autoPay: true,
     autoPayAccountId: request.auto_pay_account_id ?? goal.autoPayAccountId,
-    billingCycle: request.billing_cycle ?? goal.billingCycle,
-    billingInterval: request.billing_interval ?? goal.billingInterval,
-    autoPayAmount: request.amount ?? goal.autoPayAmount,
+    billingCycle: request.billing_interval ?? goal.billingCycle,
+    billingInterval: request.billing_cycle ?? goal.billingInterval,
+    autoPayAmount: request.auto_pay_amount ?? goal.autoPayAmount,
   };
 }

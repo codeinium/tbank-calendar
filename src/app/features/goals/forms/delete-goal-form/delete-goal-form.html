@@ -1,0 +1,28 @@
+<div class="flex flex-col gap-5">
+  <div class="flex flex-col gap-2">
+    <p class="text-base">
+      Вы уверены, что хотите закрыть цель
+      <span class="font-medium">«{{ goal()?.name }}»</span>?
+    </p>
+
+    <p class="text-sm text-(--text-faded)">
+      Все деньги с цели будут списаны и возвращены на основной счёт.
+    </p>
+  </div>
+
+  @if (formError()) {
+    <p class="text-red-500">
+      {{ formError() }}
+    </p>
+  }
+
+  <div class="flex justify-center gap-4">
+    <button tuiButton type="button" appearance="secondary" (click)="close.emit()">
+      Отмена
+    </button>
+
+    <button tuiButton type="button" [disabled]="formLoading()" (click)="submit()">
+      Списать все деньги с цели
+    </button>
+  </div>
+</div>

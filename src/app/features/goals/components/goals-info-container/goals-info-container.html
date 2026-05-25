@@ -16,6 +16,9 @@
         <button [hidden]="isHardModeOn()" (click)="openUpdateModal()">
           <img src="assets/icons/icon-edit.svg" alt="edit" class="h-6 cursor-pointer" />
         </button>
+        <button tuiButton type="button" (click)="openDeleteTheGoalModal()">
+          Закрыть цель
+        </button>
       </div>
       <span class="text-base">Осталось дней до закрытия цели: {{ restDays() }}</span>
       <div
@@ -25,8 +28,8 @@
         <p class="text-[2.25rem]">₽ {{ goal()?.targetAmount }}</p>
         <div class="flex gap-2.5 items-end">
           <span class="text-base">Уже внесено: {{ goal()?.currentAmount }}</span>
-          <button tuiButton type="button">Внести</button>
-          <button tuiButton type="button">Вывести</button>
+          <button tuiButton type="button" (click)="openContributeModal()">Внести</button>
+          <button [hidden]="isHardModeOn()" (click)="openWithdrawModal()" tuiButton type="button">Вывести</button>
         </div>
         <div class="mt-1 flex items-center gap-2.5">
           <div class="flex-1 h-2.5 bg-(--primary) rounded-2xl overflow-hidden">
@@ -51,5 +54,23 @@
 @if (isUpdateModalOpen()) {
   <app-modal-dialog title="Изменить цель" (close)="closeUpdateModal()">
     <app-update-goal-form (close)="closeUpdateModal()" />
+  </app-modal-dialog>
+}
+
+@if (isContributeModalOpen()) {
+  <app-modal-dialog title="Внести деньги в цель" (close)="closeContributeModal()">
+    <app-contribute-goal-form (close)="closeContributeModal()" />
+  </app-modal-dialog>
+}
+
+@if (isWithdrawModalOpen()) {
+  <app-modal-dialog title="Вывести деньги с цели на основной счёт" (close)="closeWithdraweModal()">
+    <app-withdraw-goal-form (close)="closeWithdraweModal()" />
+  </app-modal-dialog>
+}
+
+@if (isDeleteTheGoalModalOpen()) {
+  <app-modal-dialog title="Закрыть цель" (close)="closeDeleteTheGoalModal()">
+    <app-delete-goal-form (close)="closeDeleteTheGoalModal()" />
   </app-modal-dialog>
 }

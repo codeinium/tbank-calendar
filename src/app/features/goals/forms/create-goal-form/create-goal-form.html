@@ -1,5 +1,16 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
-  <label class="text-base mt-5">
+  <label class="text-base">
+    Номер счёта
+    <tui-icon
+        tuiHintDirection="right"
+        tuiTooltip="Выберите номер счёта на который вернётся накопленная сумма, когда цель будет закрыта"
+      />
+    <tui-textfield tuiChevron [stringify]="stringifyAccount" [tuiTextfieldCleaner]="false"  [disabledItemHandler]="disabledItems">
+      <input tuiSelect formControlName="refundAccountId" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="accounts()" />
+    </tui-textfield>
+  </label>
+  <label class="text-base">
     Название
     <tui-textfield>
       <input
@@ -9,6 +20,11 @@
         formControlName="name"
       />
     </tui-textfield>
+    @if (form.get('name')?.errors?.['backend']) {
+      <p class="text-red-500">
+        {{ form.get('name')?.errors?.['backend'] }}
+      </p>
+    }
   </label>
 
   <label class="text-base">
@@ -16,6 +32,11 @@
     <tui-textfield>
       <input tuiTextfield type="number" placeholder="100 000" formControlName="targetAmount" />
     </tui-textfield>
+    @if (form.get('targetAmount')?.errors?.['backend']) {
+      <p class="text-red-500">
+        {{ form.get('targetAmount')?.errors?.['backend'] }}
+      </p>
+    }
   </label>
 
   <label class="text-base">
@@ -27,6 +48,11 @@
     @if (monthlyPayment()) {
       <p class="text-sm">Нужно откладывать примерно {{ monthlyPayment() }} ₽/месяц</p>
     }
+    @if (form.get('deadline')?.errors?.['backend']) {
+      <p class="text-red-500">
+        {{ form.get('deadline')?.errors?.['backend'] }}
+      </p>
+    }
   </label>
 
   <label class="flex gap-2 items-center text-base">
@@ -36,6 +62,11 @@
       tuiHintDirection="right"
       tuiTooltip="Внимание! В сложном режиме невозможно снять деньги с цели, если вы не успеете закрыть цель до дедлайна, ваши деньги сгорят!"
     />
+    @if (form.get('hardMode')?.errors?.['backend']) {
+      <p class="text-red-500">
+        {{ form.get('hardMode')?.errors?.['backend'] }}
+      </p>
+    }
   </label>
 
   <label class="flex gap-2 items-center text-base">
@@ -46,15 +77,21 @@
   @if (form.get('autoPay')?.value) {
     <div [@autoPaySlide] class="flex flex-col gap-2">
       <label class="text-base">
-        Account ID
-        <tui-textfield>
-          <input
-            tuiTextfield
-            type="text"
-            placeholder="Введите ID"
-            formControlName="autoPayAccountId"
-          />
+        Номер счёта
+        <tui-icon
+        tuiHintDirection="right"
+        tuiTooltip="Выберите номер счёта с которого будет выполнятся автоплатёж"
+      />
+        <tui-textfield tuiChevron [stringify]="stringifyAccount" [tuiTextfieldCleaner]="false">
+          <input tuiSelect formControlName="autoPayAccountId" />
+
+          <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="accounts()" />
         </tui-textfield>
+        @if (form.get('autoPayAccountId')?.errors?.['backend']) {
+          <p class="text-red-500">
+            {{ form.get('autoPayAccountId')?.errors?.['backend'] }}
+          </p>
+        }
       </label>
       <label tuiLabel>
         <label class="text-base">Выберите промежуток времени</label>
@@ -62,6 +99,11 @@
           <input tuiSelect formControlName="billingCycle" />
           <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="billingCycles" />
         </tui-textfield>
+        @if (form.get('billingCycle')?.errors?.['backend']) {
+          <p class="text-red-500">
+            {{ form.get('billingCycle')?.errors?.['backend'] }}
+          </p>
+        }
       </label>
       <label class="text-base">
         Интервал
@@ -78,6 +120,11 @@
             {{ labelInterval() }}
           </p>
         }
+        @if (form.get('billingInterval')?.errors?.['backend']) {
+          <p class="text-red-500">
+            {{ form.get('billingInterval')?.errors?.['backend'] }}
+          </p>
+        }
       </label>
 
       <label class="text-base">
@@ -85,8 +132,18 @@
         <tui-textfield>
           <input tuiTextfield type="number" placeholder="Сумма" formControlName="autoPayAmount" />
         </tui-textfield>
+        @if (form.get('autoPayAmount')?.errors?.['backend']) {
+          <p class="text-red-500">
+            {{ form.get('autoPayAmount')?.errors?.['backend'] }}
+          </p>
+        }
       </label>
     </div>
+  }
+  @if (formError()) {
+    <p class="text-red-500">
+      {{ formError() }}
+    </p>
   }
 
   <div class="flex justify-center gap-10">

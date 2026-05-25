@@ -7,7 +7,8 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import { GoalsPageStore } from '../../services/goal-page.store';
+import { GoalsPageStore } from '../../store/goal-page.store';
+import { GoalsPageService } from '../../service/goal.service';
 import { TuiDay } from '@taiga-ui/cdk';
 import { TuiButton, TuiTextfield } from '@taiga-ui/core';
 import { UpdateGoalRequest } from '@/app/models/goal/goal.model';
@@ -23,8 +24,12 @@ import { TuiInputDate } from '@taiga-ui/kit';
 export class UpdateGoalForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
+  private goalsPageService = inject(GoalsPageService);
 
   close = output<void>();
+
+  readonly formLoading = this.store.formLoading;
+  readonly formError = this.store.formError;
 
   placeholderName = 'Прошлое название: ' + (this.store.selectedGoal()?.name ?? '');
   placeholderData =
@@ -57,9 +62,27 @@ export class UpdateGoalForm {
         ? raw.deadline.toLocalNativeDate().toISOString()
         : currentGoal.deadline,
     };
+    this.goalsPageService.updateGoal(
+      currentGoal.id,
+      request,
+      (fieldErrors) => {
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+          this.form.get(this.mapBackendField(field))?.setErrors({
+            backend: message,
+          });
+        });
+      },
+      () => this.close.emit(),
+    );
+  }
 
-    this.store.updateGoal(currentGoal.id, request);
-    this.close.emit();
+  private mapBackendField(field: string): string {
+    const map: Record<string, string> = {
+      deadline: 'deadline',
+      name: 'name',
+    };
+
+    return map[field] ?? field;
   }
 
   private notEmptyStringValidator(): ValidatorFn {

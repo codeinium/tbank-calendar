@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { GoalsPageStore } from '../../services/goal-page.store';
+import { GoalsPageStore } from '../../store/goal-page.store';
+import { GoalsPageService } from '../../service/goal.service';
 import { BillingCycle } from '@/app/models/types/billing-cycle.type';
 import { UpdateGoalAutoPayRequest } from '@/app/models/goal/goal.model';
 
@@ -36,17 +37,19 @@ import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 export class UpdateAutoPayForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
+  private goalsPageService = inject(GoalsPageService);
 
   close = output<void>();
 
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
   readonly accounts = this.store.accounts;
+  readonly formLoading = this.store.formLoading;
+  readonly formError = this.store.formError;
 
   readonly labelInterval = signal<string | null>(null);
 
   form = this.fb.group({
     isActive: [false],
-
     autoPayAccountId: [{ value: null as string | null, disabled: true }, Validators.required],
     billingCycle: [
       { value: null as { value: BillingCycle; label: string } | null, disabled: true },
@@ -142,9 +145,30 @@ export class UpdateAutoPayForm {
         amount: raw.amount!,
       };
     }
+    this.goalsPageService.updateGoalAutoPay(
+      currentGoal.id,
+      request,
+      (fieldErrors) => {
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+          this.form.get(this.mapBackendField(field))?.setErrors({
+            backend: message,
+          });
+        });
+      },
+      () => this.close.emit(),
+    );
+  }
 
-    this.store.updateGoalAutoPay(currentGoal.id, request);
-    this.close.emit();
+  private mapBackendField(field: string): string {
+    const map: Record<string, string> = {
+      auto_pay: 'autoPay',
+      auto_pay_account_id: 'autoPayAccountId',
+      billing_cycle: 'billingCycle',
+      billing_interval: 'billingInterval',
+      auto_pay_amount: 'autoPayAmount',
+    };
+
+    return map[field] ?? field;
   }
 
   stringifyBillingCycle = (item: { value: BillingCycle; label: string }) => item.label;

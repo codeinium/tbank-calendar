@@ -31,11 +31,11 @@ export interface ApiUserUpdateNameRequest {
 }
 
 export interface ApiAccountMeResponse {
-  accountId: string;
-  customerId: string;
-  accountNumber: string;
+  id: string;
+  customer_id: string;
+  account_number: string;
   status: 'ACTIVE' | 'FROZEN' | 'CLOSED';
   balance: number;
-  createdAt: string;
-  updateAt: string;
+  created_at: string;
+  updated_at: string;
 }

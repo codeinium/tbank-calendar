@@ -1,0 +1,73 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5">
+  <label class="text-base">
+    Счёт списания
+
+    <tui-textfield
+      tuiChevron
+      [stringify]="stringifyAccount"
+      [tuiTextfieldCleaner]="false"
+      [disabledItemHandler]="disabledItems"
+    >
+      <input tuiSelect formControlName="account" />
+
+      <tui-data-list-wrapper
+        *tuiTextfieldDropdown
+        new
+        [items]="accounts()"
+      />
+    </tui-textfield>
+
+    @if (form.get('account')?.errors?.['required'] && form.get('account')?.touched) {
+      <p class="text-red-500">Выберите счёт</p>
+    }
+
+    @if (form.get('account')?.errors?.['backend']) {
+      <p class="text-red-500">
+        {{ form.get('account')?.errors?.['backend'] }}
+      </p>
+    }
+  </label>
+
+  <label class="text-base">
+    Сумма пополнения
+
+    <tui-textfield>
+      <input
+        tuiTextfield
+        type="number"
+        placeholder="Например: 10 000"
+        formControlName="amount"
+      />
+    </tui-textfield>
+
+    @if (form.get('amount')?.errors?.['required'] && form.get('amount')?.touched) {
+      <p class="text-red-500">Введите сумму</p>
+    }
+
+    @if (form.get('amount')?.errors?.['min'] && form.get('amount')?.touched) {
+      <p class="text-red-500">Сумма должна быть больше 0</p>
+    }
+
+    @if (form.get('amount')?.errors?.['backend']) {
+      <p class="text-red-500">
+        {{ form.get('amount')?.errors?.['backend'] }}
+      </p>
+    }
+  </label>
+
+  @if (formError()) {
+    <p class="text-red-500">
+      {{ formError() }}
+    </p>
+  }
+
+  <div class="flex justify-center gap-4">
+    <button tuiButton type="button" (click)="close.emit()">
+      Отмена
+    </button>
+
+    <button tuiButton type="submit" [disabled]="form.invalid || formLoading()">
+      Пополнить
+    </button>
+  </div>
+</form>

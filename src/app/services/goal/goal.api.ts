@@ -18,27 +18,36 @@ export interface ApiGoalDetails extends ApiGoal {
   hard_mode: boolean;
   auto_pay: boolean;
   auto_pay_account_id?: string | null;
-  billing_cycle?: BillingCycle | null;
-  billing_interval?: number | null;
+  billing_cycle?: number | null;
+  billing_interval?: BillingCycle | null;
+
   auto_pay_amount?: number | null;
   transactions: ApiTransaction[];
 }
 
 export interface ApiCreateGoalRequest {
+  refund_account_id: string;
   name: string;
   target_amount: number;
   deadline: string;
   hard_mode: boolean;
   auto_pay: boolean;
   auto_pay_account_id?: string | null;
-  billing_cycle?: BillingCycle | null;
-  billing_interval?: number | null;
+
+  // отправляем как хочет бек
+  billing_cycle?: number | null;
+  billing_interval?: BillingCycle | null;
+
   auto_pay_amount?: number | null;
 }
 
-export interface ApiGoalTransactionRequest {
+export interface ApiGoalContributeRequest {
+  from_account_id: string;
   amount: number;
-  account_id: string;
+}
+
+export interface ApiGoalWithdrawRequest {
+  amount: number;
 }
 
 export interface ApiUpdateGoalRequest {
@@ -47,19 +56,12 @@ export interface ApiUpdateGoalRequest {
 }
 
 export interface ApiUpdateGoalAutoPayRequest {
-  is_active: boolean;
+  auto_pay: boolean;
   auto_pay_account_id?: string | null;
-  billing_cycle?: BillingCycle | null;
-  billing_interval?: number | null;
-  amount?: number | null;
-}
 
-export interface ApiGoalAccount {
-  id: string;
-  customer_id: string;
-  account_number: string;
-  status: 'ACTIVE' | 'FROZEN' | 'CLOSED';
-  balance: number;
-  created_at: string;
-  updated_at: string;
+  // отправляем как хочет бек
+  billing_cycle?: number | null;
+  billing_interval?: BillingCycle | null;
+
+  auto_pay_amount?: number | null;
 }

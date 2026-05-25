@@ -37,5 +37,5 @@ export interface Account {
   status: 'ACTIVE' | 'FROZEN' | 'CLOSED';
   balance: number;
   createdAt: string;
-  updateAt: string;
+  updatedAt: string;
 }

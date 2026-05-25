@@ -2,7 +2,7 @@ import { BillingCycle } from '@/app/models/types/billing-cycle.type';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
 import { UpdateAutoPayForm } from '../../forms/update-auto-pay-form/update-auto-pay-form';
-import { GoalsPageStore } from '../../services/goal-page.store';
+import { GoalsPageStore } from '../../store/goal-page.store';
 import { TuiButton } from '@taiga-ui/core';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 
