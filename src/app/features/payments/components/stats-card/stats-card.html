@@ -90,14 +90,7 @@
         <div class="flex flex-col gap-3">
           @for (item of items(); track item.id) {
             <div class="grid grid-cols-[2fr_1.5fr_2fr_1fr] gap-4 items-center">
-              <div class="flex gap-3 items-center min-w-0">
-                <img
-                  [src]="item.logoUrl"
-                  alt="logo"
-                  class="w-11.25 h-11.25 object-cover object-center rounded-lg shrink-0"
-                />
-                <span class="text-base truncate">{{ item.title }}</span>
-              </div>
+              <span class="text-base truncate">{{ item.title }}</span>
 
               <span class="text-base">{{ formatDate(item.nextBillingDate) }}</span>
 

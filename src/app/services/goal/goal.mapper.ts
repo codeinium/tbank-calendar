@@ -92,11 +92,8 @@ export function mapUpdateGoalAutoPay(model: UpdateGoalAutoPayRequest): ApiUpdate
   return {
     auto_pay: model.isActive,
     auto_pay_account_id: model.autoPayAccountId,
-
-    // внутрь API отправляем наоборот, как ждёт бек
     billing_cycle: model.billingInterval,
     billing_interval: model.billingCycle,
-
     auto_pay_amount: model.amount,
   };
 }

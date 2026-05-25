@@ -75,7 +75,7 @@ export class SubscriptionStore extends BaseListStore<Subscription> {
     }, 0),
   );
 
-  readonly activeCount = computed(() => this.items().filter((s) => s.status === 'active').length);
+  readonly activeCount = computed(() => this.items().filter((s) => s.status === 'ACTIVE').length);
 
   readonly upcomingSubscriptions = computed(() => {
     const now = dayjs().startOf('day');

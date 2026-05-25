@@ -62,7 +62,7 @@ export class ScheduledPaymentStore extends BaseListStore<SheduledPayment> {
     }, 0),
   );
 
-  readonly activeCount = computed(() => this.items().filter((s) => s.status === 'active').length);
+  readonly activeCount = computed(() => this.items().filter((s) => s.status === 'ACTIVE').length);
 
   readonly upcomingSheduledPayments = computed(() => {
     const now = dayjs().startOf('day');
