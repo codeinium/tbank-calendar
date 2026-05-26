@@ -16,7 +16,8 @@
     [appearance]="view() === 'week' ? 'primary' : 'secondary'"
     (click)="
       setView('week');
-      setDayMaxTransaction(1000)"
+      setDayMaxTransaction(1000);
+      setDayMaxPlanned(1000);"
   >
     Неделя
   </button>

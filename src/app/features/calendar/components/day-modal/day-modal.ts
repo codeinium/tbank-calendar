@@ -37,6 +37,8 @@ export class DayModal {
     return map;
   });
 
+  readonly plannedPayments = computed(() => this.modal().plannedPayments);
+
   close() {
     this.calendar.closeDayModal();
   }
