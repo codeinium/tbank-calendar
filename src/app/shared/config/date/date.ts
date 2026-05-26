@@ -2,13 +2,13 @@ import dayjs from 'dayjs';
 import { Transaction } from '@/app/models/transaction/transaction.model';
 
 export function getWeekDays(currentDate: dayjs.Dayjs, firstDayOfWeek: number): dayjs.Dayjs[] {
-  const startOfWeekFromCurrentDate = currentDate.startOf('week').day(firstDayOfWeek);
+  const currentDay = currentDate.day();
+  const diff = (currentDay - firstDayOfWeek + 7) % 7;
+  const startOfWeek = currentDate.startOf('day').subtract(diff, 'day');
 
-  const adjustedStartOfWeek = currentDate.isBefore(startOfWeekFromCurrentDate)
-    ? startOfWeekFromCurrentDate.subtract(1, 'week')
-    : startOfWeekFromCurrentDate;
-
-  return Array.from({ length: 7 }, (_, dayIndex) => adjustedStartOfWeek.add(dayIndex, 'day'));
+  return Array.from({ length: 7 }, (_, dayIndex) => {
+    return startOfWeek.add(dayIndex, 'day');
+  });
 }
 
 export function getMonthWeeks(monthDate: dayjs.Dayjs, firstDayOfWeek: number): dayjs.Dayjs[][] {
@@ -64,10 +64,10 @@ export function getMonthWeeksList(
       const start = week[0];
       const end = week[6];
 
-      // тут фильтруем недели, которые не относятся к текущему месяцу
-      if (!start.isSame(monthDate, 'month') && !end.isSame(monthDate, 'month')) {
+      if (!start.isSame(monthDate, 'month')) {
         return null;
       }
+
       return {
         start,
         end,

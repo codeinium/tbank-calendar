@@ -17,9 +17,7 @@ export class TransactionCard {
   }
 
   get amountLabel() {
-    const sign = this.isIncome ? '+' : '-';
-
-    return `${sign}${this.transaction.amount.toLocaleString()} ₽`;
+    return `${this.transaction.amount.toLocaleString()} ₽`;
   }
 
   get timeLabel() {
