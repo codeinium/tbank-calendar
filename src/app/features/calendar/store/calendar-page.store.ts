@@ -8,10 +8,12 @@ import {
   WEEK_DAY_TO_NUMBER,
   ChartView,
 } from '@/app/features/calendar/models/types';
+import { PlannedCalendarPayment } from '@/app/models/planned-calendar-item/planned-calendar-item.model';
 
 export interface ModalState {
   date: Dayjs | null;
   transactions: Transaction[];
+  plannedPayments: PlannedCalendarPayment[];
 }
 
 type CalendarTransactionsCache = {
@@ -19,11 +21,17 @@ type CalendarTransactionsCache = {
   data: Transaction[];
 };
 
+type CalendarPlannedPaymentsCache = {
+  key: string;
+  data: PlannedCalendarPayment[];
+};
+
 @Injectable()
 export class CalendarPageStore {
   private readonly _view = signal<CalendarView>('month');
   private readonly _firstDayOfWeek = signal<WeekDay>('Понедельник');
   private readonly _dayMaxTransaction = signal(2);
+  private readonly _dayMaxPlanned = signal(2);
   private readonly _showIncomes = signal(true);
   private readonly _showExpenses = signal(true);
   private readonly _chartView = signal<ChartView>('line');
@@ -35,9 +43,15 @@ export class CalendarPageStore {
   private readonly _modalState = signal<ModalState>({
     date: null,
     transactions: [],
+    plannedPayments: [],
   });
-  private readonly _currentCache = signal<CalendarTransactionsCache | null>(null);
-  private readonly _previousCache = signal<CalendarTransactionsCache | null>(null);
+  private readonly _currentTransactionCache = signal<CalendarTransactionsCache | null>(null);
+  private readonly _previousTransactionCache = signal<CalendarTransactionsCache | null>(null);
+  private readonly _plannedPayments = signal<PlannedCalendarPayment[]>([]);
+  private readonly _currentPlannedPaymentsCache = signal<CalendarPlannedPaymentsCache | null>(null);
+  private readonly _previousPlannedPaymentsCache = signal<CalendarPlannedPaymentsCache | null>(
+    null,
+  );
 
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
@@ -45,6 +59,7 @@ export class CalendarPageStore {
   readonly view = this._view.asReadonly();
   readonly firstDayOfWeek = this._firstDayOfWeek.asReadonly();
   readonly dayMaxTransaction = this._dayMaxTransaction.asReadonly();
+  readonly dayMaxPlanned = this._dayMaxPlanned.asReadonly();
   readonly showIncomes = this._showIncomes.asReadonly();
   readonly showExpenses = this._showExpenses.asReadonly();
   readonly chartView = this._chartView.asReadonly();
@@ -52,8 +67,11 @@ export class CalendarPageStore {
   readonly today = this._today.asReadonly();
   readonly transactions = this._transactions.asReadonly();
   readonly modalState = this._modalState.asReadonly();
-  readonly currentCache = this._currentCache.asReadonly();
-  readonly previousCache = this._previousCache.asReadonly();
+  readonly currentTransactionCache = this._currentTransactionCache.asReadonly();
+  readonly previousTransactionCache = this._previousTransactionCache.asReadonly();
+  readonly plannedPayments = this._plannedPayments.asReadonly();
+  readonly currentPlannedPaymentsCache = this._currentPlannedPaymentsCache.asReadonly();
+  readonly previousPlannedPaymentsCache = this._previousPlannedPaymentsCache.asReadonly();
 
   readonly firstDayOfWeekNumber = computed(() => {
     return WEEK_DAY_TO_NUMBER[this._firstDayOfWeek()];
@@ -83,10 +101,10 @@ export class CalendarPageStore {
   }
 
   setTransactionsCache(key: string, transactions: Transaction[]) {
-    const current = this._currentCache();
+    const current = this._currentTransactionCache();
 
     if (current) {
-      this._previousCache.set(current);
+      this._previousTransactionCache.set(current);
     }
 
     const cache = {
@@ -94,18 +112,49 @@ export class CalendarPageStore {
       data: transactions,
     };
 
-    this._currentCache.set(cache);
+    this._currentTransactionCache.set(cache);
     this._transactions.set(transactions);
   }
 
-  restorePreviousCache() {
-    const current = this._currentCache();
-    const previous = this._previousCache();
+  setPlannedPayments(plannedPayments: PlannedCalendarPayment[]) {
+    this._plannedPayments.set(plannedPayments);
+  }
+
+  setPlannedPaymentsCache(key: string, plannedPayments: PlannedCalendarPayment[]) {
+    const current = this._currentPlannedPaymentsCache();
+
+    if (current) {
+      this._previousPlannedPaymentsCache.set(current);
+    }
+
+    const cache = {
+      key,
+      data: plannedPayments,
+    };
+
+    this._currentPlannedPaymentsCache.set(cache);
+    this._plannedPayments.set(plannedPayments);
+  }
+
+  restorePreviousPlannedPaymentsCache() {
+    const current = this._currentPlannedPaymentsCache();
+    const previous = this._previousPlannedPaymentsCache();
 
     if (!previous) return;
 
-    this._currentCache.set(previous);
-    this._previousCache.set(current);
+    this._currentPlannedPaymentsCache.set(previous);
+    this._previousPlannedPaymentsCache.set(current);
+    this._plannedPayments.set(previous.data);
+  }
+
+  restorePreviousCache() {
+    const current = this._currentTransactionCache();
+    const previous = this._previousTransactionCache();
+
+    if (!previous) return;
+
+    this._currentTransactionCache.set(previous);
+    this._previousTransactionCache.set(current);
     this._transactions.set(previous.data);
   }
 
@@ -113,6 +162,7 @@ export class CalendarPageStore {
     view: this._view(),
     currentDate: this._currentDate(),
     transactions: this._transactions(),
+    plannedPayments: this._plannedPayments(),
     loading: this.loading(),
     error: this.error(),
   }));
@@ -131,6 +181,10 @@ export class CalendarPageStore {
 
   setDayMaxTransaction(count: number) {
     this._dayMaxTransaction.set(count);
+  }
+
+  setDayMaxPlanned(count: number) {
+    this._dayMaxPlanned.set(count);
   }
 
   setShowIncomes(show: boolean) {
@@ -187,11 +241,23 @@ export class CalendarPageStore {
     this._currentDate.set(weekStart);
   }
 
-  openDayModal(date: Dayjs, transactions: Transaction[]) {
-    this._modalState.set({ date, transactions });
+  openDayModal(
+    date: Dayjs,
+    transactions: Transaction[],
+    plannedPayments: PlannedCalendarPayment[],
+  ) {
+    this._modalState.set({
+      date,
+      transactions,
+      plannedPayments,
+    });
   }
 
   closeDayModal() {
-    this._modalState.set({ date: null, transactions: [] });
+    this._modalState.set({
+      date: null,
+      transactions: [],
+      plannedPayments: [],
+    });
   }
 }

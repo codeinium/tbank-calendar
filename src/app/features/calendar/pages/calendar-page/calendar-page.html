@@ -1,19 +1,24 @@
-<div class="grid grid-cols-1 2xl:grid-cols-[1fr_343px] gap-3 max-w-425.5 mx-auto" >
-  <section class="w-full bg-(--card-2) rounded-(--tui-radius-l) px-1 py-2.5 lg:py-5 lg:px-10 shadow-(--tui-shadow-m)">
-    <app-calendar-header/>
-      @if (view() === 'month') {
-        <app-month-view [transactions]="vm().transactions"></app-month-view>
-      } 
-      @else {
-        <app-week-view [transactions]="vm().transactions"></app-week-view>
-      }
+<div class="grid grid-cols-1 2xl:grid-cols-[1fr_343px] gap-3 max-w-425.5 mx-auto">
+  <section
+    class="w-full bg-(--card-2) rounded-(--tui-radius-l) px-1 py-2.5 lg:py-5 lg:px-10 shadow-(--tui-shadow-m)"
+  >
+    <app-calendar-header />
+    @if (view() === 'month') {
+      <app-month-view
+        [transactions]="vm().transactions"
+        [plannedPayments]="vm().plannedPayments"
+      ></app-month-view>
+    } @else {
+      <app-week-view
+        [transactions]="vm().transactions"
+        [plannedPayments]="vm().plannedPayments"
+      ></app-week-view>
+    }
   </section>
-  
-
 
   <aside class="flex flex-col gap-3">
     <app-calendar-chart></app-calendar-chart>
     <app-calendar-settings></app-calendar-settings>
   </aside>
 </div>
-<app-day-modal/>
+<app-day-modal />

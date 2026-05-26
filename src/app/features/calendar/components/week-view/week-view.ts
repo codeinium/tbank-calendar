@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseCalendarView } from '../base-calendar-view/base-calendar-view';
 import { DayCell } from '../day-cell/day-cell';
@@ -18,6 +18,7 @@ export class WeekView extends BaseCalendarView {
         date,
         isCurrentMonth: this.isCurrentMonth(date),
         transactions: this.getTransactionsForDay(date),
+        plannedPayments: this.getPlannedPaymentsForDay(date),
       })),
     ];
   }

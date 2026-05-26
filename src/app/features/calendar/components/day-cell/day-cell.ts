@@ -6,6 +6,7 @@ import { Dayjs } from 'dayjs';
 import { TransactionCard } from '@/app/shared/components/transaction-card/transaction-card';
 import type { Transaction } from '@/app/models/transaction/transaction.model';
 import type { CalendarView } from '@/app/features/calendar/models/types';
+import { PlannedCalendarPayment } from '@/app/models/planned-calendar-item/planned-calendar-item.model';
 
 @Component({
   selector: 'app-day-cell',
@@ -22,11 +23,13 @@ export class DayCell {
   readonly isCurrentMonth = input.required<boolean>();
   readonly date = input.required<Dayjs>();
   readonly transactions = input.required<Transaction[]>();
+  readonly plannedPayments = input.required<PlannedCalendarPayment[]>();
 
   private calendar = inject(CalendarPageStore);
 
   readonly today = this.calendar.today;
   readonly dayMaxTransaction = this.calendar.dayMaxTransaction;
+  readonly dayMaxPlanned = this.calendar.dayMaxPlanned;
   readonly showIncomes = this.calendar.showIncomes;
   readonly showExpenses = this.calendar.showExpenses;
   readonly view = this.calendar.view;
@@ -57,10 +60,24 @@ export class DayCell {
     this.filteredTransactions().slice(0, this.dayMaxTransaction()),
   );
 
-  readonly hasMore = computed(() => this.transactions().length - this.dayMaxTransaction() > 0);
+  readonly displayedPlannedPayments = computed(() => {
+    return this.plannedPayments().slice(0, this.dayMaxPlanned());
+  });
+
+  readonly hasMoreTransactions = computed(() => {
+    return this.filteredTransactions().length > this.dayMaxTransaction();
+  });
+
+  readonly hasMorePlannedPayments = computed(() => {
+    return this.plannedPayments().length > this.dayMaxPlanned();
+  });
+
+  readonly hasMore = computed(() => {
+    return this.hasMoreTransactions() || this.hasMorePlannedPayments();
+  });
 
   readonly sumOfDay = computed(() =>
-    this.transactions().reduce(
+    this.filteredTransactions().reduce(
       (acc, t) => (t.type === 'income' ? acc + t.amount : acc - t.amount),
       0,
     ),
@@ -83,7 +100,7 @@ export class DayCell {
   });
 
   openModal() {
-    this.calendar.openDayModal(this.date(), this.transactions());
+    this.calendar.openDayModal(this.date(), this.transactions(), this.plannedPayments());
   }
 
   formatSum(sum: number): string {

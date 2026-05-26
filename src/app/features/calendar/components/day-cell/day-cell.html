@@ -6,23 +6,32 @@
     >
       {{ dayNumber() }}
     </div>
-    
+
     @if (sumOfDay() !== 0) {
-      <span class="text-xs sm:text-base lg:text-xl " [class]="sumClass()">
+      <span class="text-xs sm:text-base lg:text-xl" [class]="sumClass()">
         {{ formatSum(sumOfDay()) }} ₽
       </span>
     }
   </div>
 
   <div class="flex flex-col gap-1 lg:gap-1.5">
+    @if (displayedPlannedPayments().length > 0) {
+      <div class="flex flex-col gap-1 lg:gap-1.5 mt-1">
+        @for (
+          payment of displayedPlannedPayments();
+          track payment.type + payment.item.id + payment.plannedDate
+        ) {
+          <div class="rounded-lg px-2 py-1 text-xs lg:text-sm bg-(--primary) truncate">
+            {{ payment.item.title }} · {{ payment.item.amount }} ₽
+          </div>
+        }
+      </div>
+    }
     @for (transaction of displayedTransactions(); track transaction.id) {
-      <app-transaction-card 
-        [transaction]="transaction" 
-        [variant]="view()" 
-      />
+      <app-transaction-card [transaction]="transaction" [variant]="view()" />
     }
   </div>
-  
+
   <div class="w-full mt-auto flex justify-center text-2xl">
     @if (hasMore()) {
       <span>...</span>

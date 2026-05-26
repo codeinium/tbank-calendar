@@ -34,6 +34,6 @@ export class CalendarPageComponent {
   readonly vm = this.store.vm;
 
   ngOnInit() {
-    this.pageService.loadTransactions();
+    this.pageService.loadCalendarData();
   }
 }

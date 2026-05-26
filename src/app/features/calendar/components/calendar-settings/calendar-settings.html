@@ -29,13 +29,24 @@
   </label>
   <label tuiLabel>
     <label class="text-base">Максимум транзакций в день</label>
-    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false" [stringify]="stringifyDayTransaction">
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false" [stringify]="stringifyDayLimit">
       <input
         tuiSelect
-        [ngModel]="selectedLimit()"
+        [ngModel]="selectedTransactionLimit()"
         (ngModelChange)="setDayMaxTransaction($event.value)"
       />
       <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="transactionLimits" />
+    </tui-textfield>
+  </label>
+   <label tuiLabel>
+    <label class="text-base">Максимум напоминаний в день</label>
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false" [stringify]="stringifyDayLimit">
+      <input
+        tuiSelect
+        [ngModel]="selectedPlannedLimit()"
+        (ngModelChange)="setDayMaxPlanned($event.value)"
+      />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="plannedLimits" />
     </tui-textfield>
   </label>
   <div class="flex items-center gap-2">

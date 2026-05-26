@@ -41,6 +41,7 @@ export class CalendarSettings {
   readonly showIncomes = this.calendar.showIncomes;
   readonly showExpense = this.calendar.showExpenses;
   readonly dayMaxTransaction = this.calendar.dayMaxTransaction;
+  readonly dayMaxPlanned = this.calendar.dayMaxPlanned;
 
   readonly weekDays: WeekDay[] = [
     'Понедельник',
@@ -63,11 +64,28 @@ export class CalendarSettings {
     { value: 1000, label: 'Без лимита' },
   ];
 
-  readonly selectedLimit = computed((): LimitOption => {
+  readonly plannedLimits: LimitOption[] = [
+    { value: 1, label: '1 напоминание' },
+    { value: 2, label: '2 напоминания' },
+    { value: 3, label: '3 напоминания' },
+    { value: 4, label: '4 напоминания' },
+    { value: 5, label: '5 напоминаний' },
+    { value: 1000, label: 'Без лимита' },
+  ];
+
+  readonly selectedTransactionLimit = computed((): LimitOption => {
     const count = this.dayMaxTransaction();
 
     return (
       this.transactionLimits.find((limit) => limit.value === count) ?? this.transactionLimits[0]
+    );
+  });
+
+  readonly selectedPlannedLimit = computed((): LimitOption => {
+    const count = this.dayMaxPlanned();
+
+    return (
+      this.plannedLimits.find((limit) => limit.value === count) ?? this.plannedLimits[0]
     );
   });
 
@@ -91,11 +109,15 @@ export class CalendarSettings {
     this.calendar.setDayMaxTransaction(count);
   }
 
+  setDayMaxPlanned(count: number) {
+    this.calendar.setDayMaxPlanned(count);
+  }
+
   stringifyView = (view: CalendarView) => {
     return view === 'month' ? 'Месяц' : 'Неделя';
   };
 
-  stringifyDayTransaction = (item: LimitOption) => {
+  stringifyDayLimit = (item: LimitOption) => {
     return item.label;
   };
 }
