@@ -5,7 +5,13 @@
     <label class="text-base">
       Номер телефона
       <tui-textfield>
-        <input tuiTextfield formControlName="phone" placeholder="+ 7 (111) 222 33 44" />
+        <input
+          tuiInputPhone
+          autocomplete="tel"
+          mask="+7 ### ###-##-##"
+          formControlName="phone"
+          placeholder="+ 7 (111) 222 33 44"
+        />
       </tui-textfield>
 
       @if (form.get('phone')?.errors?.['required'] && form.get('phone')?.touched) {
@@ -16,6 +22,9 @@
         <p class="text-red-500 text-xs">
           {{ form.get('phone')?.errors?.['backend'] }}
         </p>
+      }
+      @if (form.get('phone')?.errors?.['phoneLength'] && form.get('phone')?.touched) {
+        <p class="text-red-500 text-xs">Номер телефона должен содержать 11 цифр</p>
       }
     </label>
 

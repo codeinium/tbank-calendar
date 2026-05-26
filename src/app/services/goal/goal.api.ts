@@ -58,8 +58,6 @@ export interface ApiUpdateGoalRequest {
 export interface ApiUpdateGoalAutoPayRequest {
   auto_pay: boolean;
   auto_pay_account_id?: string | null;
-
-  // отправляем как хочет бек
   billing_cycle?: number | null;
   billing_interval?: BillingCycle | null;
 

@@ -4,7 +4,8 @@ import { TuiButton, TuiTextfield, TuiTextfieldComponent, TuiIcon } from '@taiga-
 import { RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { AuthPageService } from '../../services/auth.service';
-import { TuiPassword } from '@taiga-ui/kit';
+import { TuiPassword, TuiInputPhone } from '@taiga-ui/kit';
+import { normalizePhone, phoneValidator } from '@/app/shared/helpers/phone.validator';
 
 @Component({
   selector: 'app-login-form',
@@ -16,6 +17,7 @@ import { TuiPassword } from '@taiga-ui/kit';
     RouterLink,
     TuiPassword,
     TuiIcon,
+    TuiInputPhone,
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.scss',
@@ -27,8 +29,7 @@ export class LoginForm {
   readonly authStore = inject(AuthStore);
 
   readonly form = this.fb.group({
-    phone: ['', Validators.required],
-
+    phone: ['', [Validators.required, phoneValidator]],
     password: ['', Validators.required],
   });
 
@@ -40,8 +41,7 @@ export class LoginForm {
 
     this.authService.login(
       {
-        phone: this.form.value.phone!,
-
+        phone: normalizePhone(this.form.value.phone!),
         password: this.form.value.password!,
       },
       (fieldErrors) => {

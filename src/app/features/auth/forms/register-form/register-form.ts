@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TuiButton, TuiTextfield, TuiTextfieldComponent, TuiIcon } from '@taiga-ui/core';
-import { TuiPassword, TuiTooltip } from '@taiga-ui/kit';
+import { TuiPassword, TuiTooltip, TuiInputPhone } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 import { AuthStore } from '../../store/auth.store';
 import { AuthPageService } from '../../services/auth.service';
+import { normalizePhone, phoneValidator } from '@/app/shared/helpers/phone.validator';
 
 @Component({
   selector: 'app-register-form',
@@ -17,6 +18,7 @@ import { AuthPageService } from '../../services/auth.service';
     TuiIcon,
     TuiPassword,
     TuiTooltip,
+    TuiInputPhone,
   ],
   templateUrl: './register-form.html',
   styleUrl: './register-form.scss',
@@ -28,7 +30,7 @@ export class RegisterForm {
   readonly authStore = inject(AuthStore);
 
   readonly form = this.fb.group({
-    phone: ['', Validators.required],
+    phone: ['', Validators.required, phoneValidator],
 
     bankPassword: ['', Validators.required],
 
@@ -43,7 +45,7 @@ export class RegisterForm {
 
     this.authService.register(
       {
-        phone: this.form.value.phone!,
+        phone: normalizePhone(this.form.value.phone!),
 
         bankPassword: this.form.value.bankPassword!,
 
