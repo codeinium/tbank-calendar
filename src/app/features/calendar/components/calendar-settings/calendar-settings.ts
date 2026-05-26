@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
-import { CalendarService } from '../../services/calendar.service';
-import { WeekDay } from '@/app/features/calendar/models/types';
+import { CalendarPageStore } from './../../store/calendar-page.store';
+import { CalendarPageService } from './../../services/calendar.service';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { WeekDay, CalendarView } from '@/app/features/calendar/models/types';
 import { FormsModule } from '@angular/forms';
-import { tuiItemsHandlersProvider, TuiTextfield, TuiButton} from '@taiga-ui/core';
+import { tuiItemsHandlersProvider, TuiTextfield, TuiButton } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect, TuiCheckbox } from '@taiga-ui/kit';
 
 interface LimitOption {
@@ -32,13 +33,16 @@ interface LimitOption {
   ],
 })
 export class CalendarSettings {
-  private calendar = inject(CalendarService);
+  private readonly calendar = inject(CalendarPageStore);
+  private readonly pageService = inject(CalendarPageService);
+
   readonly view = this.calendar.view;
   readonly firstDayOfWeek = this.calendar.firstDayOfWeek;
   readonly showIncomes = this.calendar.showIncomes;
   readonly showExpense = this.calendar.showExpenses;
   readonly dayMaxTransaction = this.calendar.dayMaxTransaction;
-  readonly weekDays = [
+
+  readonly weekDays: WeekDay[] = [
     'Понедельник',
     'Вторник',
     'Среда',
@@ -47,6 +51,9 @@ export class CalendarSettings {
     'Суббота',
     'Воскресенье',
   ];
+
+  readonly views: CalendarView[] = ['month', 'week'];
+
   readonly transactionLimits: LimitOption[] = [
     { value: 1, label: '1 транзакция' },
     { value: 2, label: '2 транзакции' },
@@ -58,11 +65,14 @@ export class CalendarSettings {
 
   readonly selectedLimit = computed((): LimitOption => {
     const count = this.dayMaxTransaction();
-    return this.transactionLimits.find((l) => l.value === count) ?? this.transactionLimits[0];
+
+    return (
+      this.transactionLimits.find((limit) => limit.value === count) ?? this.transactionLimits[0]
+    );
   });
 
-  setView(view: 'month' | 'week') {
-    this.calendar.setView(view);
+  setView(view: CalendarView) {
+    this.pageService.setView(view);
   }
 
   setFirstDayOfWeek(day: WeekDay) {
@@ -72,6 +82,7 @@ export class CalendarSettings {
   setShowIncomes(show: boolean) {
     this.calendar.setShowIncomes(show);
   }
+
   setShowExpenses(show: boolean) {
     this.calendar.setShowExpenses(show);
   }
@@ -80,7 +91,11 @@ export class CalendarSettings {
     this.calendar.setDayMaxTransaction(count);
   }
 
+  stringifyView = (view: CalendarView) => {
+    return view === 'month' ? 'Месяц' : 'Неделя';
+  };
+
   stringifyDayTransaction = (item: LimitOption) => {
-    return (item as LimitOption).label;
+    return item.label;
   };
 }

@@ -21,8 +21,8 @@
     </div>
   </div>
   @if (chartView() === 'pie') {
-    <app-chart-pie [transactions]="transactions"></app-chart-pie>
+    <app-chart-pie [transactions]="vm().transactions"></app-chart-pie>
   } @else {
-    <app-chart-line [transactions]="transactions"></app-chart-line>
+    <app-chart-line [transactions]="vm().transactions"></app-chart-line>
   }
 </div>

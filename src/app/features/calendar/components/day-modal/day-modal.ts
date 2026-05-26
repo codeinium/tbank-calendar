@@ -1,3 +1,4 @@
+import { CalendarPageStore } from './../../store/calendar-page.store';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,7 +7,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { CalendarService } from '../../services/calendar.service';
 import { CommonModule } from '@angular/common';
 import { TransactionCard } from '@/app/shared/components/transaction-card/transaction-card';
 import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
@@ -19,7 +19,7 @@ import { ModalDialog } from '@/app/shared/components/modal-dialog/modal-dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayModal {
-  private calendar = inject(CalendarService);
+  private calendar = inject(CalendarPageStore);
 
   readonly modal = this.calendar.modalState;
   readonly date = computed(() => this.modal().date?.format('dddd DD MMMM YYYY') ?? '');

@@ -7,21 +7,33 @@ import { MonthView } from '../../components/month-view/month-view';
 import { WeekView } from '../../components/week-view/week-view';
 import { CalendarChart } from '../../components/calendar-chart/calendar-chart';
 
-import { CalendarService } from '../../services/calendar.service';
-import { CalendarPageStore } from '../../services/calendar-page.store';
+import { CalendarPageService } from '../../services/calendar.service';
+import { CalendarPageStore } from '../../store/calendar-page.store';
 
 @Component({
   selector: 'app-calendar-page',
-  imports: [CommonModule, CalendarHeader, CalendarSettings, MonthView, WeekView, CalendarChart, DayModal],
+  imports: [
+    CommonModule,
+    CalendarHeader,
+    CalendarSettings,
+    MonthView,
+    WeekView,
+    CalendarChart,
+    DayModal,
+  ],
   templateUrl: './calendar-page.html',
   styleUrl: './calendar-page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CalendarPageStore],
+  providers: [CalendarPageStore, CalendarPageService],
 })
 export class CalendarPageComponent {
-  readonly calendar = inject(CalendarService);
   readonly store = inject(CalendarPageStore);
+  readonly pageService = inject(CalendarPageService);
 
-  readonly view = this.calendar.view;
+  readonly view = this.store.view;
   readonly vm = this.store.vm;
+
+  ngOnInit() {
+    this.pageService.loadTransactions();
+  }
 }

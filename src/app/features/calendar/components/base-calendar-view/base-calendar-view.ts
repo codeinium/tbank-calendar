@@ -1,6 +1,6 @@
+import { CalendarPageStore } from './../../store/calendar-page.store';
 import { Component, inject, input, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarService } from '@/app/features/calendar/services/calendar.service';
 import { filterTransactionsByDay } from '@/app/shared/config/date/date';
 import type { Transaction } from '@/app/models/transaction/transaction.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
@@ -25,7 +25,7 @@ export interface CalendarViewData {
 export abstract class BaseCalendarView {
   readonly transactions = input.required<Transaction[]>();
 
-  protected calendar = inject(CalendarService);
+  protected calendar = inject(CalendarPageStore);
 
   protected readonly currentDate = this.calendar.currentDate;
   protected readonly firstDayOfWeekNumber = this.calendar.firstDayOfWeekNumber;

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, signal, computed } from '@angular/core';
+import { Component, Input, signal, computed } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { Transaction } from '@/app/models/transaction/transaction.model';
 

@@ -1,6 +1,6 @@
+import { CalendarPageStore } from './../../store/calendar-page.store';
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { TuiButton } from '@taiga-ui/core';
-import { CalendarService } from '../../services/calendar.service';
 import { ChartView } from '@/app/features/calendar/models/types';
 import { ChartLine } from '../chart-line/chart-line';
 import { ChartPie } from '../chart-pie/chart-pie';
@@ -14,13 +14,14 @@ import { Transaction } from '@/app/models/transaction/transaction.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarChart {
-  @Input() transactions: Transaction[] = [];
 
-  private service = inject(CalendarService);
+  private store = inject(CalendarPageStore);
 
-  readonly chartView = this.service.chartView;
+  readonly chartView = this.store.chartView;
+
+  readonly vm = this.store.vm;
 
   setChartView(chartView: ChartView) {
-    this.service.setChartView(chartView);
+    this.store.setChartView(chartView);
   }
 }

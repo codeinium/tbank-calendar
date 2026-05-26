@@ -1,8 +1,8 @@
+import { CalendarPageStore } from './../../store/calendar-page.store';
 import { ChangeDetectionStrategy, Component, input, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { Dayjs } from 'dayjs';
-import { CalendarService } from '@/app/features/calendar/services/calendar.service';
 import { TransactionCard } from '@/app/shared/components/transaction-card/transaction-card';
 import type { Transaction } from '@/app/models/transaction/transaction.model';
 import type { CalendarView } from '@/app/features/calendar/models/types';
@@ -23,7 +23,7 @@ export class DayCell {
   readonly date = input.required<Dayjs>();
   readonly transactions = input.required<Transaction[]>();
 
-  private calendar = inject(CalendarService);
+  private calendar = inject(CalendarPageStore);
 
   readonly today = this.calendar.today;
   readonly dayMaxTransaction = this.calendar.dayMaxTransaction;
