@@ -30,6 +30,7 @@ import { CategoryType } from '@/app/models/types/category.type';
 import { CATEGORY_OPTIONS } from '@/app/shared/constants/categories-option';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
+import { CategoriesStore, CategoryOption } from '@/app/services/category/category.store';
 
 @Component({
   selector: 'app-update-payment-form',
@@ -58,13 +59,15 @@ import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 })
 export class UpdatePayForm implements OnInit {
   private fb = inject(FormBuilder);
+  private readonly categoriesStore = inject(CategoriesStore);
 
   @Input({ required: true }) payment!: SheduledPayment;
 
+  readonly categories = this.categoriesStore.categoryOptions;
+  readonly categoriesLoading = this.categoriesStore.loading;
   close = output<void>();
   update = output<UpdateScheduledPaymentRequest>();
 
-  readonly categories = CATEGORY_OPTIONS;
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
   readonly labelInterval = signal<string | null>(null);
@@ -74,10 +77,7 @@ export class UpdatePayForm implements OnInit {
     description: ['', [Validators.required, this.notEmptyStringValidator()]],
     amount: [null as number | null, [Validators.required, Validators.min(1)]],
 
-    categoryName: [
-      { value: null as { value: CategoryType; label: string } | null, disabled: false },
-      Validators.required,
-    ],
+    categoryName: [{ value: null as CategoryOption | null, disabled: false }, Validators.required],
 
     billingCycle: [
       { value: null as { value: BillingCycle; label: string } | null, disabled: false },
@@ -109,7 +109,7 @@ export class UpdatePayForm implements OnInit {
       amount: this.payment.amount,
 
       categoryName:
-        this.categories.find((category) => category.value === this.payment.categoryName) ?? null,
+        this.categories().find((category) => category.value === this.payment.categoryName) ?? null,
 
       billingCycle:
         this.billingCycles.find((cycle) => cycle.value === this.payment.billingCycle) ?? null,

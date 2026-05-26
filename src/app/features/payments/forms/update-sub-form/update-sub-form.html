@@ -24,7 +24,7 @@
     <label class="text-base">Выберите категорию</label>
     <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
       <input tuiSelect formControlName="categoryName" />
-      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="categories" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="categories()" />
     </tui-textfield>
   </label>
 

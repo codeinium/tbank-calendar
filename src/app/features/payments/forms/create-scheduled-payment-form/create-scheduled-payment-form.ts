@@ -17,6 +17,7 @@ import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 import { CreateScheduledPaymentRequest } from '@/app/models/scheduled-payment/scheduled-payment.model';
 import { ScheduledPaymentService } from '../../services/scheduled-payment.service';
 import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
+import { CategoriesStore, CategoryOption } from '@/app/services/category/category.store';
 
 @Component({
   selector: 'app-create-scheduled-payment-form',
@@ -46,10 +47,12 @@ import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 export class CreateScheduledPaymentForm {
   private fb = inject(FormBuilder);
   private service = inject(ScheduledPaymentService);
-
+  private readonly categoriesStore = inject(CategoriesStore);
+  
   close = output<void>();
 
-  readonly categories = CATEGORY_OPTIONS;
+  readonly categories = this.categoriesStore.categoryOptions;
+  readonly categoriesLoading = this.categoriesStore.loading;
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
   readonly labelInterval = signal<string | null>(null);
@@ -58,10 +61,7 @@ export class CreateScheduledPaymentForm {
     title: ['', [Validators.required, this.notEmptyStringValidator()]],
     description: ['', [Validators.required, this.notEmptyStringValidator()]],
     amount: [null as number | null, [Validators.required, Validators.min(1)]],
-    categoryName: [
-      { value: null as { value: CategoryType; label: string } | null, disabled: false },
-      Validators.required,
-    ],
+    categoryName: [{ value: null as CategoryOption | null, disabled: false }, Validators.required],
 
     billingCycle: [
       { value: null as { value: BillingCycle; label: string } | null, disabled: false },
@@ -84,7 +84,6 @@ export class CreateScheduledPaymentForm {
       this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
     });
   }
-
 
   submit() {
     if (this.form.invalid) {

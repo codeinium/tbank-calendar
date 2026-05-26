@@ -30,6 +30,7 @@ import { CategoryType } from '@/app/models/types/category.type';
 import { CATEGORY_OPTIONS } from '@/app/shared/constants/categories-option';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
+import { CategoriesStore, CategoryOption } from '@/app/services/category/category.store';
 
 @Component({
   selector: 'app-update-sub-form',
@@ -58,13 +59,15 @@ import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 })
 export class UpdateSubForm implements OnInit {
   private fb = inject(FormBuilder);
+  private readonly categoriesStore = inject(CategoriesStore);
 
   @Input({ required: true }) subscription!: Subscription;
 
   close = output<void>();
   update = output<UpdateSubscriptionRequest>();
 
-  readonly categories = CATEGORY_OPTIONS;
+  readonly categories = this.categoriesStore.categoryOptions;
+  readonly categoriesLoading = this.categoriesStore.loading;
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
   readonly labelInterval = signal<string | null>(null);
@@ -74,10 +77,7 @@ export class UpdateSubForm implements OnInit {
     description: ['', [Validators.required, this.notEmptyStringValidator()]],
     amount: [null as number | null, [Validators.required, Validators.min(1)]],
 
-    categoryName: [
-      { value: null as { value: CategoryType; label: string } | null, disabled: false },
-      Validators.required,
-    ],
+    categoryName: [{ value: null as CategoryOption | null, disabled: false }, Validators.required],
 
     billingCycle: [
       { value: null as { value: BillingCycle; label: string } | null, disabled: false },
@@ -109,8 +109,7 @@ export class UpdateSubForm implements OnInit {
       amount: this.subscription.amount,
 
       categoryName:
-        this.categories.find((category) => category.value === this.subscription.categoryName) ??
-        null,
+        this.categories().find((category) => category.value === this.subscription.categoryName) ?? null,
 
       billingCycle:
         this.billingCycles.find((cycle) => cycle.value === this.subscription.billingCycle) ?? null,

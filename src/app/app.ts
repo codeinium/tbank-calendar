@@ -1,7 +1,8 @@
 import { TuiRoot } from '@taiga-ui/core';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
+import { CategoriesStore } from './services/category/category.store';
 Chart.register(...registerables);
 
 
@@ -12,4 +13,9 @@ Chart.register(...registerables);
   styleUrl: './app.css',
 })
 export class App {
+  private readonly categoriesStore = inject(CategoriesStore);
+
+  ngOnInit() {
+    this.categoriesStore.loadCategories();
+  }
 }
