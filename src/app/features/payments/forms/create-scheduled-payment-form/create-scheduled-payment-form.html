@@ -7,7 +7,7 @@
   </label>
 
   <label class="text-base">
-    Описание
+    Описание (необязательно)
     <tui-textfield -textfield>
       <input tuiTextfield type="text" formControlName="description" />
     </tui-textfield>
@@ -61,7 +61,7 @@
     }
   </label>
   <label class="text-base">
-    Дата окончания
+    Дата окончания (необязательно)
     <tui-textfield>
       <input tuiInputDate formControlName="endDate" />
       <tui-calendar *tuiTextfieldDropdown />
@@ -70,6 +70,12 @@
 
   <div class="flex justify-center gap-10">
     <button tuiButton type="button" (click)="close.emit()">Отмена</button>
-    <button tuiButton type="submit" [disabled]="form.invalid">Создать</button>
+    <button tuiButton type="submit" [disabled]="loading()">
+      @if (loading()) {
+        <tui-loader size="s" [inheritColor]="true"/>
+      } @else {
+        Создать платёж
+      }
+    </button>
   </div>
 </form>

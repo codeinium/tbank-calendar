@@ -42,7 +42,7 @@ export class ScheduledPaymentService {
       });
   }
 
-  create(request: CreateScheduledPaymentRequest) {
+  create(request: CreateScheduledPaymentRequest, onSuccess?: () => void) {
     this.store.setLoading(true);
     this.store.setError(null);
 
@@ -53,6 +53,7 @@ export class ScheduledPaymentService {
         next: (created) => {
           this.store.addItem(created);
           this.store.setLoading(false);
+          onSuccess?.();
         },
         error: (err) => {
           this.store.setError(err.message);

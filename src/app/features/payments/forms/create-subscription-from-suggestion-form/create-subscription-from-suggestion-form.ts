@@ -1,33 +1,36 @@
-import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
 import {
-  FormBuilder,
-  Validators,
-  ReactiveFormsModule,
-  ValidatorFn,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  effect,
+  inject,
+  output,
+  signal,
+} from '@angular/core';
+import {
   AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
   ValidationErrors,
+  ValidatorFn,
+  Validators,
 } from '@angular/forms';
-import { TuiButton, tuiItemsHandlersProvider, TuiTextfield, TuiLabel, TuiLoader } from '@taiga-ui/core';
-import { BillingCycle } from '@/app/models/types/billing-cycle.type';
-import { TuiInputDate, TuiChevron, TuiDataListWrapper, TuiSelect } from '@taiga-ui/kit';
+
 import { TuiDay } from '@taiga-ui/cdk';
+import { TuiButton, TuiLabel, TuiTextfield, tuiItemsHandlersProvider, TuiLoader } from '@taiga-ui/core';
+import { TuiChevron, TuiDataListWrapper, TuiInputDate, TuiSelect } from '@taiga-ui/kit';
+
 import { SubscriptionService } from '../../services/subscription.service';
 import { CreateSubscriptionRequest } from '@/app/models/subscription/subscription.model';
-import { CategoryType } from '@/app/models/types/category.type';
-import { CATEGORY_OPTIONS } from '@/app/shared/constants/categories-option';
+import { BillingCycle } from '@/app/models/types/billing-cycle.type';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 import { CategoriesStore, CategoryOption } from '@/app/services/category/category.store';
-
-
-type BillingCycleOption = {
-  value: BillingCycle;
-  label: string;
-};
-
+import { RecurringSuggestion } from '@/app/models/recurring-suggestion/recurring-suggestion.model';
 
 @Component({
-  selector: 'app-create-subscription-form',
+  selector: 'app-create-subscription-from-suggestion-form',
   imports: [
     ReactiveFormsModule,
     TuiButton,
@@ -37,10 +40,10 @@ type BillingCycleOption = {
     TuiDataListWrapper,
     TuiSelect,
     TuiLabel,
-    TuiLoader,
-  ],
-  templateUrl: './create-subscription-form.html',
-  styleUrl: './create-subscription-form.scss',
+    TuiLoader
+],
+  templateUrl: './create-subscription-from-suggestion-form.html',
+  styleUrl: './create-subscription-from-suggestion-form.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     tuiItemsHandlersProvider({
@@ -52,27 +55,25 @@ type BillingCycleOption = {
     }),
   ],
 })
-export class CreateSubscriptionForm {
-  private fb = inject(FormBuilder);
-  private service = inject(SubscriptionService);
+export class CreateSubscriptionFromSuggestionForm implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly service = inject(SubscriptionService);
   private readonly categoriesStore = inject(CategoriesStore);
 
-  readonly defaultBillingCycle =
-    BILLING_CYCLE_OPTIONS.find((cycle) => cycle.value === 'monthly') ?? null;
+  @Input({ required: true }) suggestion!: RecurringSuggestion;
 
   readonly loading = this.service.loading;
-
-  close = output<void>();
+  readonly close = output<void>();
+  readonly created = output<void>();
 
   readonly categories = this.categoriesStore.categoryOptions;
-  readonly categoriesLoading = this.categoriesStore.loading;
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
 
   readonly labelInterval = signal<string | null>(null);
+  private readonly patched = signal(false);
 
   form = this.fb.group({
     title: ['', [Validators.required, this.notEmptyStringValidator()]],
-
     description: [''],
 
     amount: [null as number | null, [Validators.required, Validators.min(1)]],
@@ -80,28 +81,18 @@ export class CreateSubscriptionForm {
     categoryName: [{ value: null as CategoryOption | null, disabled: false }, Validators.required],
 
     billingCycle: [
-      {
-        value: this.defaultBillingCycle,
-        disabled: false,
-      },
+      { value: null as { value: BillingCycle; label: string } | null, disabled: false },
       Validators.required,
     ],
 
     billingInterval: [1 as number | null, [Validators.required, Validators.min(1)]],
 
-    endDate: [null as TuiDay | null, [this.minDateValidator()]],
-
     nextBillingDate: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
+
+    endDate: [null as TuiDay | null, [this.minDateValidator()]],
   });
 
   constructor() {
-    const defaultCycle = this.form.get('billingCycle')?.value;
-    const defaultInterval = this.form.get('billingInterval')?.value;
-
-    if (defaultCycle && defaultInterval) {
-      this.labelInterval.set(getBillingIntervalLabel(defaultCycle.value, defaultInterval));
-    }
-
     this.form.valueChanges.subscribe(() => {
       const { billingCycle, billingInterval } = this.form.getRawValue();
 
@@ -112,6 +103,22 @@ export class CreateSubscriptionForm {
 
       this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
     });
+
+    effect(() => {
+      if (this.patched() || !this.suggestion || this.categories().length === 0) {
+        return;
+      }
+
+      this.patchFromSuggestion();
+      this.patched.set(true);
+    });
+  }
+
+  ngOnInit() {
+    if (!this.patched() && this.categories().length > 0) {
+      this.patchFromSuggestion();
+      this.patched.set(true);
+    }
   }
 
   submit() {
@@ -126,24 +133,42 @@ export class CreateSubscriptionForm {
       title: raw.title!,
       description: raw.description?.trim() || null,
       amount: Number(raw.amount),
-
       categoryName: raw.categoryName!.value,
-      billingCycle: raw.billingCycle?.value ?? null,
-
-      nextBillingDate: raw.nextBillingDate!.toLocalNativeDate().toISOString(),
-
+      billingCycle: raw.billingCycle!.value,
       billingInterval: raw.billingInterval!,
+      nextBillingDate: raw.nextBillingDate!.toLocalNativeDate().toISOString(),
       endDate: raw.endDate ? raw.endDate.toLocalNativeDate().toISOString() : null,
     };
+
     this.service.create(request, () => {
-      this.close.emit();
+      this.created.emit();
+    });
+  }
+
+  private patchFromSuggestion() {
+    this.form.patchValue({
+      title: this.suggestion.counterpartyName,
+      amount: this.suggestion.amount,
+      description: '',
+
+      categoryName:
+        this.categories().find((category) => category.value === this.suggestion.category) ?? null,
+
+      billingCycle:
+        this.billingCycles.find((cycle) => cycle.value === this.suggestion.suggestedBillingCycle) ??
+        null,
+
+      billingInterval: 1,
+      nextBillingDate: null,
+      endDate: null,
     });
   }
 
   private notEmptyStringValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const isNotEmpty = control.value && control.value.trim().length > 0;
-      return isNotEmpty ? null : { emptyString: true };
+      const value = control.value;
+
+      return value && value.trim().length > 0 ? null : { emptyString: true };
     };
   }
 

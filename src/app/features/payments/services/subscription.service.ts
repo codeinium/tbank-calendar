@@ -44,7 +44,7 @@ export class SubscriptionService {
       });
   }
 
-  create(request: CreateSubscriptionRequest) {
+  create(request: CreateSubscriptionRequest, onSuccess?: () => void) {
     this.store.setLoading(true);
     this.store.setError(null);
 
@@ -55,6 +55,7 @@ export class SubscriptionService {
         next: (created) => {
           this.store.addItem(created);
           this.store.setLoading(false);
+          onSuccess?.();
         },
         error: (err) => {
           this.store.setError(err.message);

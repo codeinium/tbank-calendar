@@ -1,0 +1,77 @@
+<form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="submit()">
+  <label tuiLabel>
+    <span class="text-base">Название</span>
+    <tui-textfield>
+      <input tuiTextfield formControlName="title" />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <span class="text-base">Описание (необязательно)</span>
+    <tui-textfield>
+      <input tuiTextfield formControlName="description" />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <span class="text-base">Сумма</span>
+    <tui-textfield>
+      <input tuiTextfield type="number" formControlName="amount" />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <span class="text-base">Категория</span>
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
+      <input tuiSelect formControlName="categoryName" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="categories()" />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <span class="text-base">Периодичность</span>
+    <tui-textfield tuiChevron [tuiTextfieldCleaner]="false">
+      <input tuiSelect formControlName="billingCycle" />
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="billingCycles" />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <span class="text-base">Интервал</span>
+    <tui-textfield>
+      <input tuiTextfield type="number" formControlName="billingInterval" />
+    </tui-textfield>
+    @if (labelInterval()) {
+      <p class="text-sm text-(--text-faded)">
+        {{ labelInterval() }}
+      </p>
+    }
+  </label>
+  <label tuiLabel>
+    <span class="text-base">Дата следующего списания</span>
+    <tui-textfield>
+      <input tuiInputDate formControlName="nextBillingDate" />
+      <tui-calendar *tuiTextfieldDropdown />
+    </tui-textfield>
+  </label>
+
+  <label tuiLabel>
+    <span class="text-base">Дата окончания (необязательно)</span>
+    <tui-textfield>
+      <input tuiInputDate formControlName="endDate" />
+      <tui-calendar *tuiTextfieldDropdown />
+    </tui-textfield>
+  </label>
+
+  <div class="flex gap-2">
+    <button tuiButton type="submit" [disabled]="loading()">
+      @if (loading()) {
+        <tui-loader size="s" [inheritColor]="true"/>
+      } @else {
+        Создать подписку
+      }
+    </button>
+
+    <button tuiButton type="button" appearance="secondary" (click)="close.emit()">Назад</button>
+  </div>
+</form>

@@ -31,7 +31,7 @@ export class CalendarPageStore {
   private readonly _view = signal<CalendarView>('month');
   private readonly _firstDayOfWeek = signal<WeekDay>('Понедельник');
   private readonly _dayMaxTransaction = signal(2);
-  private readonly _dayMaxPlanned = signal(2);
+  private readonly _dayMaxPlanned = signal(1000);
   private readonly _showIncomes = signal(true);
   private readonly _showExpenses = signal(true);
   private readonly _chartView = signal<ChartView>('line');

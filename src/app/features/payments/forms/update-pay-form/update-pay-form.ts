@@ -25,9 +25,6 @@ import {
   UpdateScheduledPaymentRequest,
 } from '@/app/models/scheduled-payment/scheduled-payment.model';
 import { BillingCycle } from '@/app/models/types/billing-cycle.type';
-import { CategoryType } from '@/app/models/types/category.type';
-
-import { CATEGORY_OPTIONS } from '@/app/shared/constants/categories-option';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 import { CategoriesStore, CategoryOption } from '@/app/services/category/category.store';

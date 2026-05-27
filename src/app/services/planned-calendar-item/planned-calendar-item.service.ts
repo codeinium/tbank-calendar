@@ -29,7 +29,7 @@ export class PlannedCalendarPaymentService {
     }
 
     return this.http
-      .get<ApiPlannedCalendarPaymentsResponse>(`${this.apiUrl}/calendar/planned-payments`, {
+      .get<ApiPlannedCalendarPaymentsResponse>(`${this.apiUrl}/payments/timeline`, {
         params: {
           dateFrom: from,
           dateTo: to,
