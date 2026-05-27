@@ -4,7 +4,13 @@
     <label class="text-base">
       Номер телефона
       <tui-textfield>
-        <input tuiTextfield formControlName="phone" placeholder="+ 7 (111) 222 33 44" />
+        <input
+          tuiInputPhone
+          autocomplete="tel"
+          mask="+7 ### ###-##-##"
+          formControlName="phone"
+          placeholder="+ 7 (111) 222 33 44"
+        />
       </tui-textfield>
       @if (form.get('phone')?.hasError('required') && form.get('phone')?.touched) {
         <p class="text-red-500 text-xs">Обязательное поле</p>
@@ -14,14 +20,14 @@
           {{ form.get('phone')?.errors?.['backend'] }}
         </p>
       }
+      @if (form.get('phone')?.errors?.['phoneLength'] && form.get('phone')?.touched) {
+        <p class="text-red-500 text-xs">Номер телефона должен содержать 11 цифр</p>
+      }
     </label>
 
     <label class="text-base">
       Пароль от банка
-      <tui-icon
-        tuiHintDirection="right"
-        tuiTooltip="Введите пароль от аккаунта основного банка"
-      />
+      <tui-icon tuiHintDirection="right" tuiTooltip="Введите пароль от аккаунта основного банка" />
       <tui-textfield>
         <input tuiTextfield type="password" formControlName="bankPassword" />
         <tui-icon tuiPassword />

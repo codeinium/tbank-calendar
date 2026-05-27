@@ -4,27 +4,39 @@ import { ReminderPaymentStatus } from '../types/status.type';
 export interface Subscription {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   amount: number;
-  categoryName: string;
-  categoryColor: string;
-  billingCycle: BillingCycle;
+  categoryName: string | null;
+  categoryColor: string | null;
+  billingCycle: BillingCycle | null;
   billingInterval: number;
   nextBillingDate: string;
-  endDate: string;
-  logoUrl?: string;
+  endDate: string | null;
+  logoUrl?: string | null;
   status: ReminderPaymentStatus;
 }
 
 export interface CreateSubscriptionRequest {
   title: string;
-  description: string;
+  description: string | null;
   amount: number;
   categoryName: string;
-  billingCycle: BillingCycle;
+  billingCycle: BillingCycle | null;
   billingInterval: number;
-  endDate: string;
+  endDate: string | null;
   nextBillingDate: string;
+}
+
+export interface UpdateSubscriptionRequest {
+  title?: string | null;
+  description?: string | null;
+  amount?: number | null;
+  categoryName?: string | null;
+  billingCycle?: BillingCycle | null;
+  billingInterval?: number | null;
+  endDate?: string | null;
+  nextBillingDate?: string | null;
+  logoUrl?: string | null;
 }
 
 export interface StatisticSubscriptions {

@@ -1,5 +1,5 @@
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, output, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -7,9 +7,10 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import { GoalsPageStore } from '../../services/goal-page.store';
+import { GoalsPageStore } from '../../store/goal-page.store';
+import { GoalsPageService } from '../../service/goal.service';
 import { TuiDay } from '@taiga-ui/cdk';
-import { TuiTextfield, TuiButton } from '@taiga-ui/core';
+import { TuiButton, TuiTextfield } from '@taiga-ui/core';
 import { UpdateGoalRequest } from '@/app/models/goal/goal.model';
 import { TuiInputDate } from '@taiga-ui/kit';
 
@@ -23,13 +24,16 @@ import { TuiInputDate } from '@taiga-ui/kit';
 export class UpdateGoalForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
+  private goalsPageService = inject(GoalsPageService);
 
   close = output<void>();
 
+  readonly formLoading = this.store.formLoading;
+  readonly formError = this.store.formError;
+
   placeholderName = 'Прошлое название: ' + (this.store.selectedGoal()?.name ?? '');
   placeholderData =
-    'Прошлая дата окончания: ' +
-    (dayjs(this.store.selectedGoal()?.deadline).format('YYYY-MM-DD') ?? '');
+    'Прошлая дата окончания: ' + dayjs(this.store.selectedGoal()?.deadline).format('YYYY-MM-DD');
 
   form = this.fb.group(
     {
@@ -46,65 +50,68 @@ export class UpdateGoalForm {
       this.form.markAllAsTouched();
       return;
     }
+
     const currentGoal = this.store.selectedGoal();
-    if (!currentGoal || !currentGoal.id) {
-      return;
-    }
+    if (!currentGoal?.id) return;
 
     const raw = this.form.getRawValue();
-    const newName = raw.name && raw.name.trim().length > 0 ? raw.name : currentGoal.name;
-    let newDeadlineIso: string;
-    if (raw.deadline) {
-      newDeadlineIso = raw.deadline.toLocalNativeDate().toISOString();
-    } else {
-      newDeadlineIso = currentGoal.deadline;
-    }
 
     const request: UpdateGoalRequest = {
-      id: currentGoal.id,
-      name: newName,
-      deadline: newDeadlineIso,
+      name: raw.name?.trim() || currentGoal.name,
+      deadline: raw.deadline
+        ? raw.deadline.toLocalNativeDate().toISOString()
+        : currentGoal.deadline,
+    };
+    this.goalsPageService.updateGoal(
+      currentGoal.id,
+      request,
+      (fieldErrors) => {
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+          this.form.get(this.mapBackendField(field))?.setErrors({
+            backend: message,
+          });
+        });
+      },
+      () => this.close.emit(),
+    );
+  }
+
+  private mapBackendField(field: string): string {
+    const map: Record<string, string> = {
+      deadline: 'deadline',
+      name: 'name',
     };
 
-    this.store.updateGoal(currentGoal.id, request);
-    this.close.emit();
+    return map[field] ?? field;
   }
 
   private notEmptyStringValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
-      const isNotEmpty = control.value.trim().length > 0;
-      return isNotEmpty ? null : { emptyString: true };
+
+      return control.value.trim().length > 0 ? null : { emptyString: true };
     };
   }
 
   private minDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;
+
       const today = TuiDay.currentLocal();
+
       return control.value.dayBefore(today) ? { minDate: true } : null;
     };
   }
 
   private atLeastOneValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-      const nameControl = group.get('name');
-      const deadlineControl = group.get('deadline');
-
-      if (!nameControl || !deadlineControl) {
-        return null;
-      }
-
-      const nameValue = nameControl.value;
-      const deadlineValue = deadlineControl.value;
+      const nameValue = group.get('name')?.value;
+      const deadlineValue = group.get('deadline')?.value;
 
       const isNameEmpty =
         !nameValue || (typeof nameValue === 'string' && nameValue.trim().length === 0);
 
-      if (isNameEmpty && !deadlineValue) {
-        return { atLeastOneRequired: true };
-      }
-      return null;
+      return isNameEmpty && !deadlineValue ? { atLeastOneRequired: true } : null;
     };
   }
 }

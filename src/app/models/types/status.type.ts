@@ -1,1 +1,1 @@
-export type ReminderPaymentStatus = 'active' | 'completed' | 'paused' | 'cancelled';
+export type ReminderPaymentStatus = 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'CANCELLED';

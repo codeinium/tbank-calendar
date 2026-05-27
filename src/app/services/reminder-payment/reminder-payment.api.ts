@@ -1,56 +1,78 @@
 import { BillingCycle } from '../../models/types/billing-cycle.type';
 import { ReminderPaymentStatus } from '@/app/models/types/status.type';
 
-export interface ApiSubsription {
+export interface ApiSubscription {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   amount: number;
-  category_name: string;
-  category_color: string;
-  billing_cycle: BillingCycle;
+  category_name: string | null;
+  category_color: string | null;
+  billing_cycle: BillingCycle | null;
   billing_interval: number;
   next_billing_date: string;
-  end_date: string;
-  logo_url?: string;
+  end_date: string | null;
+  logo_url: string | null;
   status: ReminderPaymentStatus;
 }
 
 export interface ApiScheduledPayments {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   amount: number;
-  category_name: string;
-  category_color: string;
-  frequency: BillingCycle;
+  category_name: string | null;
+  category_color: string | null;
+  frequency: BillingCycle | null;
   interval: number;
   next_payment_at: string;
-  end_date: string;
-  logo_url?: string;
+  end_date: string | null;
   status: ReminderPaymentStatus;
 }
 
 export interface ApiCreateScheduledPaymentRequest {
   title: string;
-  description: string;
+  description: string | null;
   amount: number;
   category_name: string;
-  frequency: BillingCycle;
+  frequency: BillingCycle | null;
   interval: number;
-  end_date: string;
-  next_billing_date: string;
+  end_date: string | null;
+  next_payment_at: string;
 }
 
 export interface ApiCreateSubscriptionRequest {
   name: string;
-  description: string;
+  description: string | null;
   amount: number;
   category_name: string;
-  billing_cycle: BillingCycle;
+  billing_cycle: BillingCycle | null;
   billing_interval: number;
-  end_date: string;
+  end_date: string | null;
   next_billing_date: string;
+}
+
+export interface ApiUpdateSubscriptionRequest {
+  name?: string | null;
+  description?: string | null;
+  amount?: number | null;
+  category_name?: string | null;
+  billing_cycle?: BillingCycle | null;
+  billing_interval?: number | null;
+  end_date?: string | null;
+  next_billing_date?: string | null;
+  logo_url?: string | null;
+}
+
+export interface ApiUpdateScheduledPaymentRequest {
+  title?: string | null;
+  description?: string | null;
+  amount?: number | null;
+  category_name?: string | null;
+  frequency?: BillingCycle | null;
+  interval?: number | null;
+  end_date?: string | null;
+  next_payment_at?: string | null;
 }
 
 export interface ApiStatisticSubscriptions {

@@ -2,15 +2,20 @@ import {
   Goal,
   GoalDetails,
   CreateGoalRequest,
-  GoalTransactionRequest,
+  GoalContributeRequest,
+  GoalWithdrawRequest,
   UpdateGoalRequest,
   UpdateGoalAutoPayRequest,
 } from '../../models/goal/goal.model';
+
+import { mapTransaction } from '../transaction/transaction.mapper';
+
 import {
   ApiGoal,
   ApiGoalDetails,
   ApiCreateGoalRequest,
-  ApiGoalTransactionRequest,
+  ApiGoalContributeRequest,
+  ApiGoalWithdrawRequest,
   ApiUpdateGoalRequest,
   ApiUpdateGoalAutoPayRequest,
 } from './goal.api';
@@ -28,48 +33,56 @@ export function mapGoal(api: ApiGoal): Goal {
 export function mapGoalDetails(api: ApiGoalDetails): GoalDetails {
   return {
     id: api.id,
-    accountId: api.account_id,
     name: api.name,
     targetAmount: api.target_amount,
     currentAmount: api.current_amount,
-    createdAt: api.created_at,
+    status: api.status,
+    accountId: api.account_id,
     deadline: api.deadline,
+    createdAt: api.created_at,
     achievedAt: api.achieved_at,
     hardMode: api.hard_mode,
-    status: api.status,
     autoPay: api.auto_pay,
-    autoPayAccountId: api.auto_pay_account_id,
-    billingCycle: api.billing_cycle,
-    billingInterval: api.billing_interval,
-    autoPayAmount: api.auto_pay_amount,
+    autoPayAccountId: api.auto_pay_account_id ?? null,
+    billingCycle: api.billing_interval ?? null,
+    billingInterval: api.billing_cycle ?? null,
+
+    autoPayAmount: api.auto_pay_amount ?? null,
+    transactions: api.transactions?.map(mapTransaction) ?? [],
   };
 }
 
 export function mapCreateGoal(model: CreateGoalRequest): ApiCreateGoalRequest {
   return {
+    refund_account_id: model.refundAccountId,
     name: model.name,
     target_amount: model.targetAmount,
     deadline: model.deadline,
     hard_mode: model.hardMode,
     auto_pay: model.autoPay,
     auto_pay_account_id: model.autoPayAccountId,
-    billing_cycle: model.billingCycle,
-    billing_interval: model.billingInterval,
+    billing_cycle: model.billingInterval,
+    billing_interval: model.billingCycle,
+
     auto_pay_amount: model.autoPayAmount,
   };
 }
 
-export function mapTransactionGoal(model: GoalTransactionRequest): ApiGoalTransactionRequest {
+export function mapContributeGoal(model: GoalContributeRequest): ApiGoalContributeRequest {
   return {
-    id: model.id,
+    from_account_id: model.accountId,
     amount: model.amount,
-    account_id: model.accountId,
+  };
+}
+
+export function mapWithdrawGoal(model: GoalWithdrawRequest): ApiGoalWithdrawRequest {
+  return {
+    amount: model.amount,
   };
 }
 
 export function mapUpdateGoal(model: UpdateGoalRequest): ApiUpdateGoalRequest {
   return {
-    id: model.id,
     name: model.name,
     deadline: model.deadline,
   };
@@ -77,11 +90,10 @@ export function mapUpdateGoal(model: UpdateGoalRequest): ApiUpdateGoalRequest {
 
 export function mapUpdateGoalAutoPay(model: UpdateGoalAutoPayRequest): ApiUpdateGoalAutoPayRequest {
   return {
-    id: model.id,
-    is_active: model.isActive,
+    auto_pay: model.isActive,
     auto_pay_account_id: model.autoPayAccountId,
-    billing_cycle: model.billingCycle,
-    billing_interval: model.billingInterval,
-    amount: model.amount,
+    billing_cycle: model.billingInterval,
+    billing_interval: model.billingCycle,
+    auto_pay_amount: model.amount,
   };
 }

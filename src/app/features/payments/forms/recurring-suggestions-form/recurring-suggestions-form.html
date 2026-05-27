@@ -1,0 +1,52 @@
+<div class="min-h-50 flex flex-col gap-4">
+  @if (loading()) {
+    <tui-loader size="xl"/>
+  }
+
+  @if (error()) {
+    <p class="text-(--expense-background)">{{ error() }}</p>
+  }
+
+  @if (!loading() && suggestions().length === 0) {
+    <p>Новых предложений нет</p>
+  }
+
+  @for (suggestion of suggestions(); track suggestion.counterpartyName) {
+    <div class="rounded-2xl bg-(--card-2) p-4 flex flex-col gap-3 shadow-(--tui-shadow-m)">
+      <div class="flex justify-between gap-3">
+        <div>
+          <p class="text-xl font-medium">{{ suggestion.counterpartyName }}</p>
+          <p class="text-base">{{ suggestion.category }}</p>
+        </div>
+
+        <div class="text-right">
+          <p class="text-xl font-medium">{{ suggestion.amount }} ₽</p>
+          <p class="text-sm">Уверенность: {{ suggestion.confidence }}%</p>
+        </div>
+      </div>
+
+      <p class="text-sm">
+        Периодичность: {{ suggestion.suggestedBillingCycle }}
+      </p>
+
+      <div class="flex gap-2">
+        <button
+          tuiButton
+          type="button"
+          (click)="createFromSuggestion.emit(suggestion)"
+        >
+          Добавить
+        </button>
+
+        <button
+          tuiButton
+          type="button"
+          appearance="secondary"
+          (click)="reject(suggestion)"
+        >
+          Не предлагать
+        </button>
+      </div>
+    </div>
+  }
+</div>

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
-import { CalendarService } from '../../services/calendar.service';
-import { WeekDay } from '@/app/features/calendar/models/types';
+import { CalendarPageStore } from './../../store/calendar-page.store';
+import { CalendarPageService } from './../../services/calendar.service';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { WeekDay, CalendarView } from '@/app/features/calendar/models/types';
 import { FormsModule } from '@angular/forms';
-import { tuiItemsHandlersProvider, TuiTextfield, TuiButton} from '@taiga-ui/core';
+import { tuiItemsHandlersProvider, TuiTextfield, TuiButton } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect, TuiCheckbox } from '@taiga-ui/kit';
 
 interface LimitOption {
@@ -32,13 +33,17 @@ interface LimitOption {
   ],
 })
 export class CalendarSettings {
-  private calendar = inject(CalendarService);
+  private readonly calendar = inject(CalendarPageStore);
+  private readonly pageService = inject(CalendarPageService);
+
   readonly view = this.calendar.view;
   readonly firstDayOfWeek = this.calendar.firstDayOfWeek;
   readonly showIncomes = this.calendar.showIncomes;
   readonly showExpense = this.calendar.showExpenses;
   readonly dayMaxTransaction = this.calendar.dayMaxTransaction;
-  readonly weekDays = [
+  readonly dayMaxPlanned = this.calendar.dayMaxPlanned;
+
+  readonly weekDays: WeekDay[] = [
     'Понедельник',
     'Вторник',
     'Среда',
@@ -47,6 +52,9 @@ export class CalendarSettings {
     'Суббота',
     'Воскресенье',
   ];
+
+  readonly views: CalendarView[] = ['month', 'week'];
+
   readonly transactionLimits: LimitOption[] = [
     { value: 1, label: '1 транзакция' },
     { value: 2, label: '2 транзакции' },
@@ -56,13 +64,33 @@ export class CalendarSettings {
     { value: 1000, label: 'Без лимита' },
   ];
 
-  readonly selectedLimit = computed((): LimitOption => {
+  readonly plannedLimits: LimitOption[] = [
+    { value: 1, label: '1 напоминание' },
+    { value: 2, label: '2 напоминания' },
+    { value: 3, label: '3 напоминания' },
+    { value: 4, label: '4 напоминания' },
+    { value: 5, label: '5 напоминаний' },
+    { value: 1000, label: 'Без лимита' },
+  ];
+
+  readonly selectedTransactionLimit = computed((): LimitOption => {
     const count = this.dayMaxTransaction();
-    return this.transactionLimits.find((l) => l.value === count) ?? this.transactionLimits[0];
+
+    return (
+      this.transactionLimits.find((limit) => limit.value === count) ?? this.transactionLimits[0]
+    );
   });
 
-  setView(view: 'month' | 'week') {
-    this.calendar.setView(view);
+  readonly selectedPlannedLimit = computed((): LimitOption => {
+    const count = this.dayMaxPlanned();
+
+    return (
+      this.plannedLimits.find((limit) => limit.value === count) ?? this.plannedLimits[0]
+    );
+  });
+
+  setView(view: CalendarView) {
+    this.pageService.setView(view);
   }
 
   setFirstDayOfWeek(day: WeekDay) {
@@ -72,6 +100,7 @@ export class CalendarSettings {
   setShowIncomes(show: boolean) {
     this.calendar.setShowIncomes(show);
   }
+
   setShowExpenses(show: boolean) {
     this.calendar.setShowExpenses(show);
   }
@@ -80,7 +109,15 @@ export class CalendarSettings {
     this.calendar.setDayMaxTransaction(count);
   }
 
-  stringifyDayTransaction = (item: LimitOption) => {
-    return (item as LimitOption).label;
+  setDayMaxPlanned(count: number) {
+    this.calendar.setDayMaxPlanned(count);
+  }
+
+  stringifyView = (view: CalendarView) => {
+    return view === 'month' ? 'Месяц' : 'Неделя';
+  };
+
+  stringifyDayLimit = (item: LimitOption) => {
+    return item.label;
   };
 }

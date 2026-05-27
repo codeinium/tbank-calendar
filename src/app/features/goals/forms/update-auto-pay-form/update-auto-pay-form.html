@@ -2,6 +2,11 @@
   <label class="flex gap-2 items-center text-base">
     <input tuiSwitch type="checkbox" formControlName="isActive" />
     Автоплатёж
+    @if (form.get('autoPay')?.errors?.['backend']) {
+      <p class="text-red-500">
+        {{ form.get('autoPay')?.errors?.['backend'] }}
+      </p>
+    }
   </label>
 
   <div class="flex flex-col gap-2">
@@ -15,6 +20,11 @@
           formControlName="autoPayAccountId"
         />
       </tui-textfield>
+      @if (form.get('autoPayAccountId')?.errors?.['backend']) {
+        <p class="text-red-500">
+          {{ form.get('autoPayAccountId')?.errors?.['backend'] }}
+        </p>
+      }
     </label>
     <label tuiLabel>
       <label class="text-base">Выберите промежуток времени</label>
@@ -22,6 +32,11 @@
         <input tuiSelect formControlName="billingCycle" />
         <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="billingCycles" />
       </tui-textfield>
+      @if (form.get('billingCycle')?.errors?.['backend']) {
+        <p class="text-red-500">
+          {{ form.get('billingCycle')?.errors?.['backend'] }}
+        </p>
+      }
     </label>
     <label class="text-base">
       Интервал
@@ -38,14 +53,29 @@
           {{ labelInterval() }}
         </p>
       }
+      @if (form.get('billingInterval')?.errors?.['backend']) {
+        <p class="text-red-500">
+          {{ form.get('billingInterval')?.errors?.['backend'] }}
+        </p>
+      }
     </label>
     <label class="text-base">
       Сумма автоплатежа
       <tui-textfield>
         <input tuiTextfield type="number" placeholder="Сумма" formControlName="amount" />
       </tui-textfield>
+      @if (form.get('amount')?.errors?.['backend']) {
+        <p class="text-red-500">
+          {{ form.get('amount')?.errors?.['backend'] }}
+        </p>
+      }
     </label>
   </div>
+  @if (formError()) {
+    <p class="text-red-500">
+      {{ formError() }}
+    </p>
+  }
   <div class="flex justify-center gap-10">
     <button tuiButton type="button" (click)="close.emit()">Отмена</button>
     <button tuiButton type="submit" [disabled]="form.invalid">Сохранить</button>

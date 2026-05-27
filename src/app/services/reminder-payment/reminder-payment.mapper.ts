@@ -3,21 +3,23 @@ import {
   ApiCreateSubscriptionRequest,
   ApiScheduledPayments,
   ApiStatisticSubscriptions,
-  ApiStatisticSubscriptionsItem,
-  ApiSubsription,
+  ApiSubscription,
+  ApiUpdateScheduledPaymentRequest,
+  ApiUpdateSubscriptionRequest,
 } from './reminder-payment.api';
 import {
   CreateScheduledPaymentRequest,
   SheduledPayment,
+  UpdateScheduledPaymentRequest,
 } from '@/app/models/scheduled-payment/scheduled-payment.model';
 import {
   CreateSubscriptionRequest,
   StatisticSubscriptions,
-  StatisticSubscriptionsItem,
   Subscription,
+  UpdateSubscriptionRequest,
 } from '@/app/models/subscription/subscription.model';
 
-export function mapSubscription(api: ApiSubsription): Subscription {
+export function mapSubscription(api: ApiSubscription): Subscription {
   return {
     id: api.id,
     title: api.name,
@@ -46,7 +48,6 @@ export function mapScheduledPayments(api: ApiScheduledPayments): SheduledPayment
     billingInterval: api.interval,
     nextBillingDate: api.next_payment_at,
     endDate: api.end_date,
-    logoUrl: api.logo_url,
     status: api.status,
   };
 }
@@ -76,7 +77,38 @@ export function mapCreateScheduledPaymentRequest(
     frequency: request.billingCycle,
     interval: request.billingInterval,
     end_date: request.endDate,
+    next_payment_at: request.nextBillingDate,
+  };
+}
+
+export function mapUpdateSubscriptionRequest(
+  request: UpdateSubscriptionRequest,
+): ApiUpdateSubscriptionRequest {
+  return {
+    name: request.title,
+    description: request.description,
+    amount: request.amount,
+    category_name: request.categoryName,
+    billing_cycle: request.billingCycle,
+    billing_interval: request.billingInterval,
+    end_date: request.endDate,
     next_billing_date: request.nextBillingDate,
+    logo_url: request.logoUrl,
+  };
+}
+
+export function mapUpdateScheduledPaymentRequest(
+  request: UpdateScheduledPaymentRequest,
+): ApiUpdateScheduledPaymentRequest {
+  return {
+    title: request.title,
+    description: request.description,
+    amount: request.amount,
+    category_name: request.categoryName,
+    frequency: request.billingCycle,
+    interval: request.billingInterval,
+    end_date: request.endDate,
+    next_payment_at: request.nextBillingDate,
   };
 }
 

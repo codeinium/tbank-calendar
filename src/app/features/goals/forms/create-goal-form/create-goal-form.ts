@@ -7,7 +7,8 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { GoalsPageStore } from '@/app/features/goals/services/goal-page.store';
+import { GoalsPageStore } from '../../store/goal-page.store';
+import { GoalsPageService } from '../../service/goal.service';
 import {
   TuiButton,
   TuiIcon,
@@ -30,6 +31,7 @@ import { TuiDay } from '@taiga-ui/cdk';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
 import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
+import { Account } from '@/app/models/user/user.model';
 
 @Component({
   selector: 'app-create-goal-form',
@@ -80,16 +82,21 @@ import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 export class CreateGoalForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
-
-  readonly monthlyPayment = signal<number | null>(null);
-
-  readonly billingCycles = BILLING_CYCLE_OPTIONS;
+  private goalsPageService = inject(GoalsPageService);
 
   close = output<void>();
 
+  readonly monthlyPayment = signal<number | null>(null);
   readonly labelInterval = signal<string | null>(null);
 
+  readonly billingCycles = BILLING_CYCLE_OPTIONS;
+  readonly accounts = this.store.accounts;
+  readonly formLoading = this.store.formLoading;
+  readonly formError = this.store.formError;
+
   form = this.fb.group({
+    refundAccountId: [null as string | null, Validators.required],
+
     name: ['', [Validators.required, this.notEmptyStringValidator()]],
     targetAmount: [null as number | null, [Validators.required, Validators.min(1)]],
     deadline: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
@@ -114,32 +121,41 @@ export class CreateGoalForm {
   constructor() {
     this.form.get('autoPay')?.valueChanges.subscribe((enabled) => {
       const fields = ['autoPayAccountId', 'billingCycle', 'billingInterval', 'autoPayAmount'];
+
       fields.forEach((key) => {
         const control = this.form.get(key);
+
         if (enabled) {
-          control?.enable();
+          control?.enable({ emitEvent: false });
         } else {
-          control?.reset();
-          control?.disable();
+          control?.reset(null, { emitEvent: false });
+          control?.disable({ emitEvent: false });
         }
       });
+
+      this.labelInterval.set(null);
     });
+
     this.form.valueChanges.subscribe(() => {
       const { targetAmount, deadline } = this.form.getRawValue();
+
       if (!targetAmount || !deadline) {
         this.monthlyPayment.set(null);
         return;
       }
+
       const today = dayjs().startOf('day');
       const endDate = dayjs(deadline.toLocalNativeDate());
       const months = (endDate.year() - today.year()) * 12 + (endDate.month() - today.month());
+
       if (months <= 0) {
         this.monthlyPayment.set(null);
         return;
       }
-      const perMonth = targetAmount / months;
-      this.monthlyPayment.set(Number(Math.round(perMonth)));
+
+      this.monthlyPayment.set(Math.round(targetAmount / months));
     });
+
     this.form.valueChanges.subscribe(() => {
       const { billingCycle, billingInterval } = this.form.getRawValue();
 
@@ -151,6 +167,48 @@ export class CreateGoalForm {
       this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
     });
   }
+
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const raw = this.form.getRawValue();
+
+    const request: CreateGoalRequest = {
+      refundAccountId: raw.refundAccountId!,
+      name: raw.name!.trim(),
+      targetAmount: raw.targetAmount!,
+      deadline: raw.deadline!.toLocalNativeDate().toISOString(),
+      hardMode: raw.hardMode ?? false,
+      autoPay: raw.autoPay ?? false,
+
+      autoPayAccountId: raw.autoPay ? raw.autoPayAccountId : null,
+      billingCycle: raw.autoPay ? raw.billingCycle!.value : null,
+      billingInterval: raw.autoPay ? raw.billingInterval : null,
+      autoPayAmount: raw.autoPay ? raw.autoPayAmount : null,
+    };
+
+    this.goalsPageService.createGoal(
+      request,
+      (fieldErrors) => {
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+          this.form.get(this.mapBackendField(field))?.setErrors({
+            backend: message,
+          });
+        });
+      },
+      () => this.close.emit(),
+    );
+  }
+
+  stringifyAccount = (account: Account | null): string => {
+    if (!account) return '';
+    return account.accountNumber;
+  };
+
+  disabledItems = (account: Account) => account.status !== 'ACTIVE';
 
   private minDateValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -164,33 +222,28 @@ export class CreateGoalForm {
 
   private notEmptyStringValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const isNotEmpty = control.value && control.value.trim().length > 0;
-      return isNotEmpty ? null : { emptyString: true };
+      const value = control.value;
+
+      if (!value) return null;
+
+      return value.trim().length > 0 ? null : { emptyString: true };
     };
   }
 
-  submit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    const raw = this.form.getRawValue();
-
-    const request: CreateGoalRequest = {
-      name: raw.name!,
-      targetAmount: raw.targetAmount!,
-      deadline: raw.deadline!.toLocalNativeDate().toISOString(),
-      hardMode: raw.hardMode ?? false,
-      autoPay: raw.autoPay ?? false,
-
-      autoPayAccountId: raw.autoPay ? (raw.autoPayAccountId ?? undefined) : undefined,
-      billingCycle: raw.autoPay ? raw.billingCycle?.value : undefined,
-      billingInterval: raw.autoPay ? (raw.billingInterval ?? undefined) : undefined,
-      autoPayAmount: raw.autoPay ? (raw.autoPayAmount ?? undefined) : undefined,
+  private mapBackendField(field: string): string {
+    const map: Record<string, string> = {
+      refund_account_id: 'refundAccountId',
+      target_amount: 'targetAmount',
+      hard_mode: 'hardMode',
+      auto_pay: 'autoPay',
+      auto_pay_account_id: 'autoPayAccountId',
+      billing_cycle: 'billingCycle',
+      billing_interval: 'billingInterval',
+      auto_pay_amount: 'autoPayAmount',
+      deadline: 'deadline',
+      name: 'name',
     };
 
-    this.store.createGoal(request);
-    this.close.emit();
+    return map[field] ?? field;
   }
 }

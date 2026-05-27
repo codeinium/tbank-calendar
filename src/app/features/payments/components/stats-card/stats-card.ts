@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, signal, computed, Signal } f
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 
-import { TuiTextfield } from '@taiga-ui/core';
+import { TuiTextfield, TuiButton, TuiDataList, TuiDropdown } from '@taiga-ui/core';
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from '@taiga-ui/kit';
 
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
@@ -25,6 +25,9 @@ export type ListType = 'subscription' | 'payment';
     TuiDataListWrapper,
     TuiSelect,
     TuiTextfield,
+    TuiButton,
+    TuiDataList,
+    TuiDropdown,
   ],
   templateUrl: './stats-card.html',
   styleUrl: './stats-card.scss',
@@ -47,6 +50,44 @@ export class StatsCard {
   @Input() onSortChange?: (value: SortValue) => void;
 
   @Input() listType!: ListType;
+  @Input() onEdit?: (item: any) => void;
+  @Input() onDelete?: (id: string) => void;
+  @Input() onPause?: (id: string) => void;
+  @Input() onResume?: (id: string) => void;
+
+  readonly openedDropdownId = signal<string | null>(null);
+
+  isDropdownOpen(id: string): boolean {
+    return this.openedDropdownId() === id;
+  }
+
+  setDropdownOpen(id: string, open: boolean) {
+    this.openedDropdownId.set(open ? id : null);
+  }
+
+  closeDropdown() {
+    this.openedDropdownId.set(null);
+  }
+
+  editItem(item: any) {
+    this.onEdit?.(item);
+    this.closeDropdown();
+  }
+
+  deleteItem(id: string) {
+    this.onDelete?.(id);
+    this.closeDropdown();
+  }
+
+  pauseItem(id: string) {
+    this.onPause?.(id);
+    this.closeDropdown();
+  }
+
+  resumeItem(id: string) {
+    this.onResume?.(id);
+    this.closeDropdown();
+  }
 
   searchControl = new FormControl<string>('');
 
@@ -139,9 +180,9 @@ export class StatsCard {
     },
   ]);
 
-  firstLetter = ((value: string) => {
+  firstLetter = (value: string) => {
     return value.charAt(0);
-  })
+  };
 
   stringifyCategory = (item: SelectOption<CategorySelectValue> | null) =>
     item?.label ?? 'Все категории';

@@ -1,7 +1,7 @@
+import { GoalPageUiService } from './../../service/goal-page-ui.service';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { GoalService } from '../../services/goal.service';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
-import { GoalsPageStore } from '../../services/goal-page.store';
+import { GoalsPageStore } from '../../store/goal-page.store';
 import { TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { TuiTooltip } from '@taiga-ui/kit';
 import { TransactionCard } from '@/app/shared/components/transaction-card/transaction-card';
@@ -14,7 +14,7 @@ import { TransactionCard } from '@/app/shared/components/transaction-card/transa
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsHistory {
-  private goalService = inject(GoalService);
+  private goalService = inject(GoalPageUiService);
   private store = inject(GoalsPageStore);
   readonly isEmpty = computed(() => this.goalService.chartData().length === 0);
 

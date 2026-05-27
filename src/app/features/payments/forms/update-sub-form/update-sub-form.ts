@@ -1,0 +1,169 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  inject,
+  output,
+  signal,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+
+import { TuiDay } from '@taiga-ui/cdk';
+import { TuiButton, TuiLabel, TuiTextfield, tuiItemsHandlersProvider } from '@taiga-ui/core';
+import { TuiChevron, TuiDataListWrapper, TuiInputDate, TuiSelect } from '@taiga-ui/kit';
+
+import {
+  Subscription,
+  UpdateSubscriptionRequest,
+} from '@/app/models/subscription/subscription.model';
+import { BillingCycle } from '@/app/models/types/billing-cycle.type';
+import { CategoryType } from '@/app/models/types/category.type';
+
+import { CATEGORY_OPTIONS } from '@/app/shared/constants/categories-option';
+import { BILLING_CYCLE_OPTIONS } from '@/app/shared/constants/billing-cycle';
+import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
+import { CategoriesStore, CategoryOption } from '@/app/services/category/category.store';
+
+@Component({
+  selector: 'app-update-sub-form',
+  imports: [
+    ReactiveFormsModule,
+    TuiButton,
+    TuiTextfield,
+    TuiInputDate,
+    TuiChevron,
+    TuiDataListWrapper,
+    TuiSelect,
+    TuiLabel,
+  ],
+  templateUrl: './update-sub-form.html',
+  styleUrl: './update-sub-form.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    tuiItemsHandlersProvider({
+      stringify: signal((item: { value: string; label: string }) => item.label),
+      identityMatcher: signal(
+        (a: { value: string; label: string }, b: { value: string; label: string }) =>
+          a.value === b.value,
+      ),
+    }),
+  ],
+})
+export class UpdateSubForm implements OnInit {
+  private fb = inject(FormBuilder);
+  private readonly categoriesStore = inject(CategoriesStore);
+
+  @Input({ required: true }) subscription!: Subscription;
+
+  close = output<void>();
+  update = output<UpdateSubscriptionRequest>();
+
+  readonly categories = this.categoriesStore.categoryOptions;
+  readonly categoriesLoading = this.categoriesStore.loading;
+  readonly billingCycles = BILLING_CYCLE_OPTIONS;
+
+  readonly labelInterval = signal<string | null>(null);
+
+  form = this.fb.group({
+    title: ['', [Validators.required, this.notEmptyStringValidator()]],
+    description: ['', [Validators.required, this.notEmptyStringValidator()]],
+    amount: [null as number | null, [Validators.required, Validators.min(1)]],
+
+    categoryName: [{ value: null as CategoryOption | null, disabled: false }, Validators.required],
+
+    billingCycle: [
+      { value: null as { value: BillingCycle; label: string } | null, disabled: false },
+      Validators.required,
+    ],
+
+    billingInterval: [null as number | null, [Validators.required, Validators.min(1)]],
+    nextBillingDate: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
+    endDate: [null as TuiDay | null, [Validators.required, this.minDateValidator()]],
+  });
+
+  constructor() {
+    this.form.valueChanges.subscribe(() => {
+      const { billingCycle, billingInterval } = this.form.getRawValue();
+
+      if (!billingCycle || !billingInterval) {
+        this.labelInterval.set(null);
+        return;
+      }
+
+      this.labelInterval.set(getBillingIntervalLabel(billingCycle.value, billingInterval));
+    });
+  }
+
+  ngOnInit() {
+    this.form.patchValue({
+      title: this.subscription.title,
+      description: this.subscription.description ?? '',
+      amount: this.subscription.amount,
+
+      categoryName:
+        this.categories().find((category) => category.value === this.subscription.categoryName) ?? null,
+
+      billingCycle:
+        this.billingCycles.find((cycle) => cycle.value === this.subscription.billingCycle) ?? null,
+
+      billingInterval: this.subscription.billingInterval,
+      nextBillingDate: this.toTuiDay(this.subscription.nextBillingDate),
+      endDate: this.subscription.endDate ? this.toTuiDay(this.subscription.endDate) : null,
+    });
+  }
+
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const raw = this.form.getRawValue();
+
+    const request: UpdateSubscriptionRequest = {
+      title: raw.title!,
+      description: raw.description!,
+      amount: Number(raw.amount),
+
+      categoryName: raw.categoryName!.value,
+      billingCycle: raw.billingCycle!.value,
+      billingInterval: raw.billingInterval!,
+
+      nextBillingDate: raw.nextBillingDate!.toLocalNativeDate().toISOString(),
+      endDate: raw.endDate!.toLocalNativeDate().toISOString(),
+    };
+
+    this.update.emit(request);
+  }
+
+  private toTuiDay(date: string): TuiDay {
+    const nativeDate = new Date(date);
+
+    return new TuiDay(nativeDate.getFullYear(), nativeDate.getMonth(), nativeDate.getDate());
+  }
+
+  private notEmptyStringValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const isNotEmpty = control.value && control.value.trim().length > 0;
+      return isNotEmpty ? null : { emptyString: true };
+    };
+  }
+
+  private minDateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value) return null;
+
+      const today = TuiDay.currentLocal();
+
+      return control.value.dayBefore(today) ? { minDate: true } : null;
+    };
+  }
+}

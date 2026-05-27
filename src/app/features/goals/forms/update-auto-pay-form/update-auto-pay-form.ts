@@ -1,14 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  inject,
-  output,
-  Output,
-  signal,
-} from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { GoalsPageStore } from '../../services/goal-page.store';
+import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { GoalsPageStore } from '../../store/goal-page.store';
+import { GoalsPageService } from '../../service/goal.service';
 import { BillingCycle } from '@/app/models/types/billing-cycle.type';
 import { UpdateGoalAutoPayRequest } from '@/app/models/goal/goal.model';
 
@@ -44,18 +37,24 @@ import { getBillingIntervalLabel } from '@/app/shared/utils/billing-label.util';
 export class UpdateAutoPayForm {
   private fb = inject(FormBuilder);
   private store = inject(GoalsPageStore);
+  private goalsPageService = inject(GoalsPageService);
 
   close = output<void>();
 
   readonly billingCycles = BILLING_CYCLE_OPTIONS;
+  readonly accounts = this.store.accounts;
+  readonly formLoading = this.store.formLoading;
+  readonly formError = this.store.formError;
 
-    readonly labelInterval = signal<string | null>(null);
+  readonly labelInterval = signal<string | null>(null);
 
   form = this.fb.group({
     isActive: [false],
-
     autoPayAccountId: [{ value: null as string | null, disabled: true }, Validators.required],
-    billingCycle: [{ value: null as any, disabled: true }, Validators.required],
+    billingCycle: [
+      { value: null as { value: BillingCycle; label: string } | null, disabled: true },
+      Validators.required,
+    ],
     billingInterval: [
       { value: null as number | null, disabled: true },
       [Validators.required, Validators.min(1)],
@@ -71,8 +70,8 @@ export class UpdateAutoPayForm {
 
     if (goal) {
       const isActive = !!goal.autoPay;
+      const selectedCycle = this.billingCycles.find((cycle) => cycle.value === goal.billingCycle);
 
-      const selectedCycle = this.billingCycles.find((c) => c.value === goal.billingCycle);
       this.form.patchValue(
         {
           isActive,
@@ -90,12 +89,9 @@ export class UpdateAutoPayForm {
     }
 
     this.form.get('isActive')?.valueChanges.subscribe((enabled) => {
-      if (enabled) {
-        this.enableFields();
-      } else {
-        this.disableFields();
-      }
+      enabled ? this.enableFields() : this.disableFields();
     });
+
     this.form.valueChanges.subscribe(() => {
       const { billingCycle, billingInterval } = this.form.getRawValue();
 
@@ -109,29 +105,30 @@ export class UpdateAutoPayForm {
   }
 
   private enableFields() {
-    const fields = ['autoPayAccountId', 'billingCycle', 'billingInterval', 'amount'];
-    fields.forEach((key) => this.form.get(key)?.enable({ emitEvent: false }));
+    ['autoPayAccountId', 'billingCycle', 'billingInterval', 'amount'].forEach((key) =>
+      this.form.get(key)?.enable({ emitEvent: false }),
+    );
   }
 
   private disableFields() {
-    const fields = ['autoPayAccountId', 'billingCycle', 'billingInterval', 'amount'];
-    fields.forEach((key) => {
-      this.form.get(key)?.reset();
+    ['autoPayAccountId', 'billingCycle', 'billingInterval', 'amount'].forEach((key) => {
+      this.form.get(key)?.reset(null, { emitEvent: false });
       this.form.get(key)?.disable({ emitEvent: false });
     });
+
+    this.labelInterval.set(null);
   }
 
   submit() {
-    const raw = this.form.getRawValue();
     const currentGoal = this.store.selectedGoal();
-
     if (!currentGoal?.id) return;
+
+    const raw = this.form.getRawValue();
 
     let request: UpdateGoalAutoPayRequest;
 
     if (!raw.isActive) {
       request = {
-        id: currentGoal.id,
         isActive: false,
       };
     } else {
@@ -141,7 +138,6 @@ export class UpdateAutoPayForm {
       }
 
       request = {
-        id: currentGoal.id,
         isActive: true,
         autoPayAccountId: raw.autoPayAccountId!,
         billingCycle: raw.billingCycle!.value,
@@ -149,9 +145,30 @@ export class UpdateAutoPayForm {
         amount: raw.amount!,
       };
     }
+    this.goalsPageService.updateGoalAutoPay(
+      currentGoal.id,
+      request,
+      (fieldErrors) => {
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+          this.form.get(this.mapBackendField(field))?.setErrors({
+            backend: message,
+          });
+        });
+      },
+      () => this.close.emit(),
+    );
+  }
 
-    this.store.updateGoalAutoPay(currentGoal.id, request);
-    this.close.emit();
+  private mapBackendField(field: string): string {
+    const map: Record<string, string> = {
+      auto_pay: 'autoPay',
+      auto_pay_account_id: 'autoPayAccountId',
+      billing_cycle: 'billingCycle',
+      billing_interval: 'billingInterval',
+      auto_pay_amount: 'autoPayAmount',
+    };
+
+    return map[field] ?? field;
   }
 
   stringifyBillingCycle = (item: { value: BillingCycle; label: string }) => item.label;

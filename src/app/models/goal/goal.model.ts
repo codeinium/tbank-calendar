@@ -1,8 +1,8 @@
+import { Transaction } from '../transaction/transaction.model';
 import { BillingCycle } from '../types/billing-cycle.type';
 
 export type GoalStatus = 'active' | 'achieved' | 'closed' | 'forfeited';
 
-/* для списка */
 export interface Goal {
   id: string;
   name: string;
@@ -11,64 +11,51 @@ export interface Goal {
   status: GoalStatus;
 }
 
-/* полная версия */
 export interface GoalDetails extends Goal {
   accountId: string;
-  createdAt: string;
   deadline: string;
+  createdAt: string;
   achievedAt: string | null;
   hardMode: boolean;
   autoPay: boolean;
-  autoPayAccountId?: string;
-  billingCycle?: BillingCycle;
-  billingInterval?: number;
-  autoPayAmount?: number;
+  autoPayAccountId?: string | null;
+  billingCycle?: BillingCycle | null;
+  billingInterval?: number | null;
+  autoPayAmount?: number | null;
+  transactions: Transaction[];
 }
 
-/* создание цели */
 export interface CreateGoalRequest {
+  refundAccountId: string;
   name: string;
   targetAmount: number;
   deadline: string;
   hardMode: boolean;
   autoPay: boolean;
-  autoPayAccountId?: string;
-  billingCycle?: BillingCycle;
-  billingInterval?: number;
-  autoPayAmount?: number;
+  autoPayAccountId?: string | null;
+  billingCycle?: BillingCycle | null;
+  billingInterval?: number | null;
+  autoPayAmount?: number | null;
 }
 
-/* пополнение/снятие */
-export interface GoalTransactionRequest {
-  id: string;
-  amount: number;
+export interface GoalContributeRequest {
   accountId: string;
+  amount: number;
 }
 
-/* изменение цели (название, дедлайн) */
+export interface GoalWithdrawRequest {
+  amount: number;
+}
+
 export interface UpdateGoalRequest {
-  id: string;
   name: string;
   deadline: string;
 }
 
-/* изменение цели (автопополнение) */
 export interface UpdateGoalAutoPayRequest {
-  id: string;
   isActive: boolean;
-  autoPayAccountId?: string;
-  billingCycle?: BillingCycle;
-  billingInterval?: number;
-  amount?: number;
+  autoPayAccountId?: string | null;
+  billingCycle?: BillingCycle | null;
+  billingInterval?: number | null;
+  amount?: number | null;
 }
-
-export interface ChartDataPoint {
-  period: string;
-  label: string;
-  deposits: number;
-  withdrawals: number;
-  percent: number;
-  isNegative: boolean;
-}
-
-export type ChartRange = 'days' | 'months' | 'years';

@@ -46,6 +46,7 @@ export class AuthService {
     const apiRequest = mapLoginRequest(request);
 
     if (this.useMock) {
+      console.log(request.phone)
       return of(MOCK_AUTH_TOKENS).pipe(
         delay(this.mockDelay),
         tap((tokens) => this.saveTokens(tokens)),
@@ -64,6 +65,7 @@ export class AuthService {
     const apiRequest = mapRegisterRequest(request);
 
     if (this.useMock) {
+      console.log(request.phone);
       return of(MOCK_AUTH_TOKENS).pipe(
         delay(this.mockDelay),
         tap((tokens) => this.saveTokens(tokens)),

@@ -1,26 +1,48 @@
-import { Injectable, inject, computed, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import { BaseListStore } from './base-list.store';
-import { CreateSubscriptionRequest, Subscription } from '@/app/models/subscription/subscription.model';
-import { ReminderPaymentService } from '@/app/services/reminder-payment/reminder-payment.service';
-import { take } from 'rxjs';
+import {
+  Subscription,
+} from '@/app/models/subscription/subscription.model';
 import dayjs from '@/app/shared/config/dayjs/dayjs-config';
 import { CategoryType } from '@/app/models/types/category.type';
 import { SelectOption } from '@/app/shared/types/select-option.type';
 
 @Injectable()
 export class SubscriptionStore extends BaseListStore<Subscription> {
-  private api = inject(ReminderPaymentService);
-
   private categoryFilter = signal<string | null>(null);
 
   setCategory(category: string | null) {
     this.categoryFilter.set(category);
   }
 
+  setLoading(value: boolean) {
+    this._loading.set(value);
+  }
+
+  setError(value: string | null) {
+    this._error.set(value);
+  }
+
+  setItems(items: Subscription[]) {
+    this._items.set(items);
+  }
+
+  addItem(item: Subscription) {
+    this._items.update((items) => [item, ...items]);
+  }
+
+  updateItem(id: string, updated: Subscription) {
+    this._items.update((items) => items.map((item) => (item.id === id ? updated : item)));
+  }
+
+
+  removeItem(id: string) {
+    this._items.update((items) => items.filter((item) => item.id !== id));
+  }
+
   protected filterFn(s: Subscription, search: string) {
     const matchesSearch = s.title.toLowerCase().includes(search.toLowerCase());
     const category = this.categoryFilter();
-
     const matchesCategory = category ? s.categoryName === category : true;
 
     return matchesSearch && matchesCategory;
@@ -33,38 +55,6 @@ export class SubscriptionStore extends BaseListStore<Subscription> {
     return 0;
   }
 
-  load() {
-    this._loading.set(true);
-    this._error.set(null);
-
-    this.api
-      .getSubsriptions()
-      .pipe(take(1))
-      .subscribe({
-        next: (data) => {
-          this._items.set(data);
-          this._loading.set(false);
-        },
-        error: (err) => {
-          this._error.set(err.message);
-          this._loading.set(false);
-        },
-      });
-  }
-
-  create(request: CreateSubscriptionRequest) {
-    this.api
-      .createSubscription(request)
-      .pipe(take(1))
-      .subscribe({
-        next: (newSubscription) => {
-          this._items.update((items) => [newSubscription, ...items]);
-          this._loading.set(false);
-        },
-        error: (err) => this._error.set(err.message),
-      });
-  }
-
   readonly monthlyTotal = computed(() => this.items().reduce((sum, s) => sum + s.amount, 0));
 
   readonly yearlyTotal = computed(() =>
@@ -75,7 +65,7 @@ export class SubscriptionStore extends BaseListStore<Subscription> {
     }, 0),
   );
 
-  readonly activeCount = computed(() => this.items().filter((s) => s.status === 'active').length);
+  readonly activeCount = computed(() => this.items().filter((s) => s.status === 'ACTIVE').length);
 
   readonly upcomingSubscriptions = computed(() => {
     const now = dayjs().startOf('day');

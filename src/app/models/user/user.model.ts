@@ -34,8 +34,8 @@ export interface Account {
   accountId: string;
   customerId: string;
   accountNumber: string;
-  status: string;
+  status: 'ACTIVE' | 'FROZEN' | 'CLOSED';
   balance: number;
   createdAt: string;
-  updateAt: string;
+  updatedAt: string;
 }

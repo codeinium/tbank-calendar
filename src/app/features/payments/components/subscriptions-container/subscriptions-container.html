@@ -1,13 +1,27 @@
 <app-stats-card
+  [items]="subscriptionService.subscriptions"
   [title]="'Подписки'"
-  [monthlyTotal]="service.monthlyTotal"
-  [yearlyTotal]="service.yearlyTotal"
-  [activeCount]="service.activeCount"
-  [upcomingCount]="service.upcomingCount"
-  [categories]="service.categories"
-  [onCategorySelect]="service.setCategory.bind(service)"
-  [onSearch]="service.setSearch.bind(service)"
-  [items]="service.subscriptions"
-  [onSortChange]="service.setSortOption.bind(service)"
-  [listType]="'subscription'"
+  [monthlyTotal]="subscriptionService.monthlyTotal"
+  [yearlyTotal]="subscriptionService.yearlyTotal"
+  [activeCount]="subscriptionService.activeCount"
+  [upcomingCount]="subscriptionService.upcomingCount"
+  [categories]="subscriptionService.categories"
+  [onSearch]="subscriptionService.setSearch.bind(subscriptionService)"
+  [onSortChange]="subscriptionService.setSortOption.bind(subscriptionService)"
+  [onCategorySelect]="subscriptionService.setCategory.bind(subscriptionService)"
+  [onEdit]="openEditSubscriptionModal.bind(this)"
+  [onDelete]="subscriptionService.delete.bind(subscriptionService)"
+  [onPause]="subscriptionService.pause.bind(subscriptionService)"
+  [onResume]="subscriptionService.resume.bind(subscriptionService)"
+  listType="subscription"
 />
+
+@if (isUpdateSubscriptionModalOpen() && updatingSubscription()) {
+  <app-modal-dialog title="Изменить подписку" (close)="closeEditSubscriptionModal()">
+    <app-update-sub-form
+      [subscription]="updatingSubscription()!"
+      (close)="closeEditSubscriptionModal()"
+      (update)="updateSubscription($event)"
+    />
+  </app-modal-dialog>
+}

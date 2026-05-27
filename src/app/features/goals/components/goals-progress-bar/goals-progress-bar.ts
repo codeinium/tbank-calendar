@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { GoalService } from '../../services/goal.service';
+import { GoalPageUiService } from '../../service/goal-page-ui.service';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -10,6 +10,6 @@ import { NgClass } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoalsProgressBar {
-  private service = inject(GoalService);
+  private service = inject(GoalPageUiService);
   readonly progressData = this.service.weeklyProgress;
 }
