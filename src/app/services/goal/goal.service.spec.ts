@@ -7,7 +7,11 @@ import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
+import { environment } from '@/environments/environment';
 import { GoalsService } from './goal.service';
+
+environment.useMock = false;
+environment.mockDelay = 0;
 
 describe('GoalsService', () => {
   let service: GoalsService;

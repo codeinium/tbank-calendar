@@ -8,8 +8,13 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 
+import { environment } from '@/environments/environment';
 import { AuthService } from './auth.service';
 import type { LoginRequest, RegisterRequest, AuthTokens } from '@/app/models/auth/auth.model';
+
+// Force HTTP mode — Angular test runner loads development env (useMock: true) by default
+environment.useMock = false;
+environment.mockDelay = 0;
 
 describe('AuthService', () => {
   let service: AuthService;

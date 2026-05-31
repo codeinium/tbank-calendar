@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SceletonLine } from './skeleton-line';
+import { SkeletonLine } from './skeleton-line';
 
-describe('SceletonLine', () => {
-  let component: SceletonLine;
-  let fixture: ComponentFixture<SceletonLine>;
+describe('SkeletonLine', () => {
+  let component: SkeletonLine;
+  let fixture: ComponentFixture<SkeletonLine>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SceletonLine],
+      imports: [SkeletonLine],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SceletonLine);
+    fixture = TestBed.createComponent(SkeletonLine);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

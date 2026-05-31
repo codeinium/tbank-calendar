@@ -8,8 +8,12 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 
+import { environment } from '@/environments/environment';
 import { TransactionService } from './transaction.service';
 import { Transaction } from '@/app/models/transaction/transaction.model';
+
+environment.useMock = false;
+environment.mockDelay = 0;
 
 describe('TransactionService', () => {
   let service: TransactionService;

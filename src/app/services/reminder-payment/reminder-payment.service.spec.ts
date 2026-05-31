@@ -7,7 +7,11 @@ import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
+import { environment } from '@/environments/environment';
 import { ReminderPaymentService } from './reminder-payment.service';
+
+environment.useMock = false;
+environment.mockDelay = 0;
 
 describe('ReminderPaymentService', () => {
   let service: ReminderPaymentService;

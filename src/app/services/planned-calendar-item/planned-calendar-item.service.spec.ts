@@ -7,7 +7,11 @@ import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
+import { environment } from '@/environments/environment';
 import { PlannedCalendarPaymentService } from './planned-calendar-item.service';
+
+environment.useMock = false;
+environment.mockDelay = 0;
 
 describe('PlannedCalendarPaymentService', () => {
   let service: PlannedCalendarPaymentService;
