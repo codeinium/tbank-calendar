@@ -5,6 +5,8 @@ tmp/
 app/**/*.js
 app/**/*.js.map
 
+AGENTS.md
+
 # dependencies
 node_modules/
 bower_components/
