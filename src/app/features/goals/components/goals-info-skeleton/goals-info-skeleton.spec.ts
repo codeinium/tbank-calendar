@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GoalsInfSceleton } from './goals-info-skeleton';
+import { GoalsInfoSkeleton } from './goals-info-skeleton';
 
-describe('GoalsInfSceleton', () => {
-  let component: GoalsInfSceleton;
-  let fixture: ComponentFixture<GoalsInfSceleton>;
+describe('GoalsInfoSkeleton', () => {
+  let component: GoalsInfoSkeleton;
+  let fixture: ComponentFixture<GoalsInfoSkeleton>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GoalsInfSceleton],
+      imports: [GoalsInfoSkeleton],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(GoalsInfSceleton);
+    fixture = TestBed.createComponent(GoalsInfoSkeleton);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
